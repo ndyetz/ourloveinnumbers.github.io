@@ -1,2 +1,2 @@
 # ourloveinnumbers.github.io
-Repository for Neil and Karina's weddign charts
+Repository for Neil and Karina's wedding charts
