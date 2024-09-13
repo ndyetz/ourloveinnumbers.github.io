@@ -283,5 +283,213 @@ p_character_sent <- ggplot(text_character_graph, aes(x = `Sent by`, y = `Average
 
 
 
+#SP500 Absolute units
+
+sp500 <- macro_data$`S&P 500`
+
+texts_count_date <- texts_quant %>% 
+  group_by(date) %>% 
+  summarize(n_texts = n()) %>% 
+  rename(Date = "date") 
+
+
+sp_500_filter <- sp500 %>% 
+  filter(Date > min(texts_count_date$Date) & Date < max(texts_count_date$Date))
+
+
+textcount_sp500 <- texts_count_date %>%
+  inner_join(sp_500_filter, by = "Date")
+
+
+
+model <- lm( `Close/Last` ~ n_texts, data = textcount_sp500)
+
+confs <- confint(model)
+mod_sum <- summary(model)
+
+#Get R
+r      <- as_tibble(cor(textcount_sp500$n_texts, textcount_sp500$`Close/Last`)); 
+r      <- r %>% rename(R = "value") %>%  mutate(name = "sp500"); 
+rfinal <- r
+
+#Get R^2
+r2      <- as_tibble(summary(model)$r.squared); 
+r2      <- r2 %>% rename(`R-squared` = "value" ) %>%  mutate(name = "sp500"); 
+r2final <- r2
+
+#Get f
+f <- as_tibble(summary(model)$fstatistic[1])
+f <- f %>% rename(`F-value` = "value") %>% mutate(name = "sp500")
+ffinal <- f
+
+#Get Numerator DF
+numdf <- as_tibble(summary(model)$fstatistic[2])
+numdf <- numdf %>% rename(`Numerator DF` = "value") %>% mutate(name = "sp500")
+numdffinal <- numdf
+
+#Get Denominator DF
+dendf <- as_tibble(summary(model)$fstatistic[3])
+dendf <- dendf %>% rename(`Denominator DF` = "value") %>% mutate(name = "sp500")
+dendffinal <- dendf
+
+#Get Omnibus P-value (overall_p() is a custom function)
+pval <- as_tibble(overall_p(model))
+pval <- pval %>% rename(`p-value` = "value") %>% mutate(name = "sp500")
+pvalfinal <- pval
+
+
+
+#SP500 Difference
+
+sp500_all <- macro_data$`S&P 500`
+
+sp500_all <- sp500_all %>% 
+  mutate(diff = `Close/Last` - Open)
+
+sp_500_diff <- sp500_all %>% 
+  filter(Date > min(texts_count_date$Date) & Date < max(texts_count_date$Date)) 
+
+textcount_sp500_diff <- texts_count_date %>%
+  inner_join(sp_500_diff, by = "Date")
+
+
+model <- lm( `diff` ~ n_texts, data = textcount_sp500_diff)
+
+confs   <- confint(model)
+mod_sum <- summary(model)
+
+#Get R
+r      <- as_tibble(cor(textcount_sp500_diff$n_texts, textcount_sp500_diff$`diff`)); 
+r      <- r %>% rename(R = "value") %>%  mutate(name = "sp500 difference"); 
+rfinal <- bind_rows(rfinal, r)
+
+#Get R^2
+r2      <- as_tibble(summary(model)$r.squared); 
+r2      <- r2 %>% rename(`R-squared` = "value" ) %>% mutate(name = "sp500 difference"); 
+r2final <- bind_rows(r2final, r2)
+
+#Get f
+f <- as_tibble(summary(model)$fstatistic[1])
+f <- f %>% rename(`F-value` = "value") %>% mutate(name = "sp500 difference");
+ffinal <- bind_rows(ffinal, f)
+
+#Get Numerator DF
+numdf <- as_tibble(summary(model)$fstatistic[2])
+numdf <- numdf %>% rename(`Numerator DF` = "value") %>% mutate(name = "sp500 difference");
+numdffinal <- bind_rows(numdffinal, numdf)
+
+#Get Denominator DF
+dendf <- as_tibble(summary(model)$fstatistic[3])
+dendf <- dendf %>% rename(`Denominator DF` = "value") %>% mutate(name = "sp500 difference");
+dendffinal <- bind_rows(dendffinal, dendf)
+
+#Get Omnibus P-value (overall_p() is a custom function)
+pval <- as_tibble(overall_p(model))
+pval <- pval %>% rename(`p-value` = "value") %>% mutate(name = "sp500 difference");
+pvalfinal <- bind_rows(pvalfinal, pval)
+
+
+
+
+# Dow Jones Absolute
+
+dj_all <- macro_data$`Dow Jones`
+
+dj_filter <- dj_all %>% 
+  filter(Date > min(texts_count_date$Date) & Date < max(texts_count_date$Date)) 
+
+
+textcount_dj <- texts_count_date %>%
+  inner_join(dj_filter, by = "Date")
+
+
+model <- lm( `Close` ~ n_texts, data = textcount_dj)
+
+confs <- confint(model)
+mod_sum <- summary(model)
+
+
+#Get R
+r      <- as_tibble(cor(textcount_dj$n_texts, textcount_dj$`Close`)); 
+r      <- r %>% rename(R = "value") %>%  mutate(name = "Dow Jones"); 
+rfinal <- bind_rows(rfinal, r)
+
+#Get R^2
+r2      <- as_tibble(summary(model)$r.squared); 
+r2      <- r2 %>% rename(`R-squared` = "value" ) %>% mutate(name = "Dow Jones"); 
+r2final <- bind_rows(r2final, r2)
+
+#Get f
+f <- as_tibble(summary(model)$fstatistic[1])
+f <- f %>% rename(`F-value` = "value") %>% mutate(name = "Dow Jones");
+ffinal <- bind_rows(ffinal, f)
+
+#Get Numerator DF
+numdf <- as_tibble(summary(model)$fstatistic[2])
+numdf <- numdf %>% rename(`Numerator DF` = "value") %>% mutate(name = "Dow Jones");
+numdffinal <- bind_rows(numdffinal, numdf)
+
+#Get Denominator DF
+dendf <- as_tibble(summary(model)$fstatistic[3])
+dendf <- dendf %>% rename(`Denominator DF` = "value") %>% mutate(name = "Dow Jones");
+dendffinal <- bind_rows(dendffinal, dendf)
+
+#Get Omnibus P-value (overall_p() is a custom function)
+pval <- as_tibble(overall_p(model))
+pval <- pval %>% rename(`p-value` = "value") %>% mutate(name = "Dow Jones");
+pvalfinal <- bind_rows(pvalfinal, pval)
+
+
+
+
+#Dow Jones Difference
+
+dj_all <- dj_all %>% 
+  mutate(diff = `Close` - Open)
+
+dj_diff <- dj_all %>% 
+  filter(Date > min(texts_count_date$Date) & Date < max(texts_count_date$Date)) 
+
+textcount_dj_diff <- texts_count_date %>%
+  inner_join(dj_diff, by = "Date")
+
+model <- lm( `diff` ~ n_texts, data = textcount_dj_diff)
+
+confs <- confint(model)
+mod_sum <- summary(model)
+
+#Get R
+r      <- as_tibble(cor(textcount_dj_diff$n_texts, textcount_dj_diff$`diff`)); 
+r      <- r %>% rename(R = "value") %>%  mutate(name = "Dow Jones difference"); 
+rfinal <- bind_rows(rfinal, r)
+
+#Get R^2
+r2      <- as_tibble(summary(model)$r.squared); 
+r2      <- r2 %>% rename(`R-squared` = "value" ) %>% mutate(name = "Dow Jones difference"); 
+r2final <- bind_rows(r2final, r2)
+
+#Get f
+f <- as_tibble(summary(model)$fstatistic[1])
+f <- f %>% rename(`F-value` = "value") %>% mutate(name = "Dow Jones difference"); 
+ffinal <- bind_rows(ffinal, f)
+
+#Get Numerator DF
+numdf <- as_tibble(summary(model)$fstatistic[2])
+numdf <- numdf %>% rename(`Numerator DF` = "value") %>% mutate(name = "Dow Jones difference"); 
+numdffinal <- bind_rows(numdffinal, numdf)
+
+#Get Denominator DF
+dendf <- as_tibble(summary(model)$fstatistic[3])
+dendf <- dendf %>% rename(`Denominator DF` = "value") %>% mutate(name = "Dow Jones difference"); 
+dendffinal <- bind_rows(dendffinal, dendf)
+
+#Get Omnibus P-value (overall_p() is a custom function)
+pval <- as_tibble(overall_p(model))
+pval <- pval %>% rename(`p-value` = "value") %>% mutate(name = "Dow Jones difference"); 
+pvalfinal <- bind_rows(pvalfinal, pval)
+
+
+
+
 
 

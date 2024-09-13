@@ -720,266 +720,6 @@ ggplotly(dowjones_graph) %>%
 
 # Regression Analyses {.tabset}
 
-```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 10, fig.width = 12 }
-
-#SP500 Absolute
-
-texts_count_date <- texts_quant %>% 
-  group_by(date) %>% 
-  summarize(n_texts = n()) %>% 
-  rename(Date = "date") 
-
-
-sp_500_filter <- sp500 %>% 
-  filter(Date > min(texts_count_date$Date) & Date < max(texts_count_date$Date)) %>% 
-  select(-source)
-
-
-textcount_sp500 <- texts_count_date %>%
-  inner_join(sp_500_filter, by = "Date")
-
-
-
-model <- lm( `Close/Last` ~ n_texts, data = textcount_sp500)
-
-confs <- confint(model)
-mod_sum <- summary(model)
-
-#Get R
-r      <- as_tibble(cor(textcount_sp500$n_texts, textcount_sp500$`Close/Last`)); 
-r      <- r %>% rename(R = "value") %>%  mutate(name = "sp500"); 
-rfinal <- r
-
-#Get R^2
-r2      <- as_tibble(summary(model)$r.squared); 
-r2      <- r2 %>% rename(`R-squared` = "value" ) %>%  mutate(name = "sp500"); 
-r2final <- r2
-
-#Get f
-f <- as_tibble(summary(model)$fstatistic[1])
-f <- f %>% rename(`F-value` = "value") %>% mutate(name = "sp500")
-ffinal <- f
-
-#Get Numerator DF
-numdf <- as_tibble(summary(model)$fstatistic[2])
-numdf <- numdf %>% rename(`Numerator DF` = "value") %>% mutate(name = "sp500")
-numdffinal <- numdf
-
-#Get Denominator DF
-dendf <- as_tibble(summary(model)$fstatistic[3])
-dendf <- dendf %>% rename(`Denominator DF` = "value") %>% mutate(name = "sp500")
-dendffinal <- dendf
-
-#Get Omnibus P-value (overall_p() is a custom function)
-pval <- as_tibble(overall_p(model))
-pval <- pval %>% rename(`p-value` = "value") %>% mutate(name = "sp500")
-pvalfinal <- pval
-
-
-
-p_sp500 <- ggplot(textcount_sp500, aes(x = n_texts, y = `Close/Last`)) +
-  geom_point() + 
-  geom_smooth(method = "lm", formula = y ~ x) +
-  theme_classic() +
-  labs(caption = paste0("Our model (Sp500 regressed on number of texts sent) was statistically significant at p <.05. \nThe single regression model (F(", mod_sum$fstatistic[2], ",",  mod_sum$fstatistic[3], ") =", round(mod_sum$fstatistic[1], 2), " p<.05) \nindicates that for every 1 text we send, the SP500 drops about ", round(abs(model$coefficients[2]), 2), " points" )) +
-  theme(plot.caption = element_text(hjust=0)) +
-  annotate("text", label = paste0("Equation: SP500score = ", round(model$coefficients[2],2), "(texts) + e"), x = 200, y = max(textcount_sp500$`Close/Last`))
-
-```
-
-
-
-
-```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 10, fig.width = 12 }
-
-#SP500 Difference
-
-sp500_all <- macro_data$`S&P 500`
-
-sp500_all <- sp500_all %>% 
-  mutate(diff = `Close/Last` - Open)
-
-sp_500_diff <- sp500_all %>% 
-  filter(Date > min(texts_count_date$Date) & Date < max(texts_count_date$Date)) 
-
-textcount_sp500_diff <- texts_count_date %>%
-  inner_join(sp_500_diff, by = "Date")
-
-
-model <- lm( `diff` ~ n_texts, data = textcount_sp500_diff)
-
-confs   <- confint(model)
-mod_sum <- summary(model)
-
-#Get R
-r      <- as_tibble(cor(textcount_sp500_diff$n_texts, textcount_sp500_diff$`diff`)); 
-r      <- r %>% rename(R = "value") %>%  mutate(name = "sp500 difference"); 
-rfinal <- bind_rows(rfinal, r)
-
-#Get R^2
-r2      <- as_tibble(summary(model)$r.squared); 
-r2      <- r2 %>% rename(`R-squared` = "value" ) %>% mutate(name = "sp500 difference"); 
-r2final <- bind_rows(r2final, r2)
-
-#Get f
-f <- as_tibble(summary(model)$fstatistic[1])
-f <- f %>% rename(`F-value` = "value") %>% mutate(name = "sp500 difference");
-ffinal <- bind_rows(ffinal, f)
-
-#Get Numerator DF
-numdf <- as_tibble(summary(model)$fstatistic[2])
-numdf <- numdf %>% rename(`Numerator DF` = "value") %>% mutate(name = "sp500 difference");
-numdffinal <- bind_rows(numdffinal, numdf)
-
-#Get Denominator DF
-dendf <- as_tibble(summary(model)$fstatistic[3])
-dendf <- dendf %>% rename(`Denominator DF` = "value") %>% mutate(name = "sp500 difference");
-dendffinal <- bind_rows(dendffinal, dendf)
-
-#Get Omnibus P-value (overall_p() is a custom function)
-pval <- as_tibble(overall_p(model))
-pval <- pval %>% rename(`p-value` = "value") %>% mutate(name = "sp500 difference");
-pvalfinal <- bind_rows(pvalfinal, pval)
-
-
-p_sp500_diff <- ggplot(textcount_sp500_diff, aes(x = n_texts, y = `diff`)) +
-  geom_point() + 
-  geom_smooth(method = "lm", formula = y ~ x) +
-  theme_classic() +
-  labs(caption = paste0("Our model (Sp500 regressed on number of texts sent) was NOT statistically significant at p <.05. \nThe single regression model (F(", mod_sum$fstatistic[2], ",",  mod_sum$fstatistic[3], ") =",
-                        round(mod_sum$fstatistic[1], 2), " p>.05)")) +
-  theme(plot.caption = element_text(hjust=0)) +
-  annotate("text", label = paste0("Equation: SP500score difference = ", round(model$coefficients[2],2), "(texts) + e"), x = 200, y = max(textcount_sp500_diff$`diff`))
-
-```
-
-
-
-
-```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 10, fig.width = 12 }
-
-# Dow Jones Absolute
-
-dj_all <- macro_data$`Dow Jones`
-
-dj_filter <- dj_all %>% 
-  filter(Date > min(texts_count_date$Date) & Date < max(texts_count_date$Date)) 
-
-
-textcount_dj <- texts_count_date %>%
-  inner_join(dj_filter, by = "Date")
-
-
-model <- lm( `Close` ~ n_texts, data = textcount_dj)
-
-confs <- confint(model)
-mod_sum <- summary(model)
-
-
-#Get R
-r      <- as_tibble(cor(textcount_dj$n_texts, textcount_dj$`Close`)); 
-r      <- r %>% rename(R = "value") %>%  mutate(name = "Dow Jones"); 
-rfinal <- bind_rows(rfinal, r)
-
-#Get R^2
-r2      <- as_tibble(summary(model)$r.squared); 
-r2      <- r2 %>% rename(`R-squared` = "value" ) %>% mutate(name = "Dow Jones"); 
-r2final <- bind_rows(r2final, r2)
-
-#Get f
-f <- as_tibble(summary(model)$fstatistic[1])
-f <- f %>% rename(`F-value` = "value") %>% mutate(name = "Dow Jones");
-ffinal <- bind_rows(ffinal, f)
-
-#Get Numerator DF
-numdf <- as_tibble(summary(model)$fstatistic[2])
-numdf <- numdf %>% rename(`Numerator DF` = "value") %>% mutate(name = "Dow Jones");
-numdffinal <- bind_rows(numdffinal, numdf)
-
-#Get Denominator DF
-dendf <- as_tibble(summary(model)$fstatistic[3])
-dendf <- dendf %>% rename(`Denominator DF` = "value") %>% mutate(name = "Dow Jones");
-dendffinal <- bind_rows(dendffinal, dendf)
-
-#Get Omnibus P-value (overall_p() is a custom function)
-pval <- as_tibble(overall_p(model))
-pval <- pval %>% rename(`p-value` = "value") %>% mutate(name = "Dow Jones");
-pvalfinal <- bind_rows(pvalfinal, pval)
-
-
-
-p_dj <- ggplot(textcount_dj, aes(x = n_texts, y = `Close`)) +
-  geom_point() + 
-  geom_smooth(method = "lm", formula = y ~ x) +
-  theme_classic() +
-  labs(caption = paste0("Our model (Sp500 regressed on number of texts sent) was statistically significant at p <.05. \nThe single regression model (F(", mod_sum$fstatistic[2], ",",  mod_sum$fstatistic[3], ") =", round(mod_sum$fstatistic[1], 2), " p<.05) \nindicates that for every 1 text we send, the SP500 drops about ", round(abs(model$coefficients[2]), 2), " points" )) +
-  theme(plot.caption = element_text(hjust=0)) +
-  annotate("text", label = paste0("Equation: Dow Jones score = ", round(model$coefficients[2],2), "(texts) + e"), x = 80, y = max(textcount_dj$`Close`))
-
-```
-
-
-
-```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 10, fig.width = 12 }
-
-#Dow Jones Difference
-
-dj_all <- dj_all %>% 
-  mutate(diff = `Close` - Open)
-
-dj_diff <- dj_all %>% 
-  filter(Date > min(texts_count_date$Date) & Date < max(texts_count_date$Date)) 
-
-textcount_dj_diff <- texts_count_date %>%
-  inner_join(dj_diff, by = "Date")
-
-model <- lm( `diff` ~ n_texts, data = textcount_dj_diff)
-
-confs <- confint(model)
-mod_sum <- summary(model)
-
-#Get R
-r      <- as_tibble(cor(textcount_dj_diff$n_texts, textcount_dj_diff$`diff`)); 
-r      <- r %>% rename(R = "value") %>%  mutate(name = "Dow Jones difference"); 
-rfinal <- bind_rows(rfinal, r)
-
-#Get R^2
-r2      <- as_tibble(summary(model)$r.squared); 
-r2      <- r2 %>% rename(`R-squared` = "value" ) %>% mutate(name = "Dow Jones difference"); 
-r2final <- bind_rows(r2final, r2)
-
-#Get f
-f <- as_tibble(summary(model)$fstatistic[1])
-f <- f %>% rename(`F-value` = "value") %>% mutate(name = "Dow Jones difference"); 
-ffinal <- bind_rows(ffinal, f)
-
-#Get Numerator DF
-numdf <- as_tibble(summary(model)$fstatistic[2])
-numdf <- numdf %>% rename(`Numerator DF` = "value") %>% mutate(name = "Dow Jones difference"); 
-numdffinal <- bind_rows(numdffinal, numdf)
-
-#Get Denominator DF
-dendf <- as_tibble(summary(model)$fstatistic[3])
-dendf <- dendf %>% rename(`Denominator DF` = "value") %>% mutate(name = "Dow Jones difference"); 
-dendffinal <- bind_rows(dendffinal, dendf)
-
-#Get Omnibus P-value (overall_p() is a custom function)
-pval <- as_tibble(overall_p(model))
-pval <- pval %>% rename(`p-value` = "value") %>% mutate(name = "Dow Jones difference"); 
-pvalfinal <- bind_rows(pvalfinal, pval)
-
-
-p_dj_diff <- ggplot(textcount_dj_diff, aes(x = n_texts, y = `diff`)) +
-  geom_point() + 
-  geom_smooth(method = "lm", formula = y ~ x) +
-  theme_classic() +
-  labs(caption = paste0("Our model (dj diff regressed on number of texts sent) was NOT statistically significant at p <.05. \nThe single regression model (F(", mod_sum$fstatistic[2], ",",  mod_sum$fstatistic[3], ") =",
-                        round(mod_sum$fstatistic[1], 2), " p>.05)")) +
-  theme(plot.caption = element_text(hjust=0)) +
-  annotate("text", label = paste0("Equation: Dow Jones difference = ", round(model$coefficients[2],2), "(texts) + e"), x = 90, y = max(textcount_dj_diff$`diff`))
-
-```
-
 ## Table {.tabset}
 ```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 10, fig.width = 12 }
 
@@ -1012,21 +752,62 @@ reg_table %>%
 ## Scatterplots {.tabset}
 SP 500 scatter plot (By absolute daily closing price)
 ```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 10, fig.width = 12 }
+
+p_sp500 <- ggplot(textcount_sp500, aes(x = n_texts, y = `Close/Last`)) +
+  geom_point() + 
+  geom_smooth(method = "lm", formula = y ~ x) +
+  theme_classic() +
+  labs(caption = paste0("Our model (Sp500 regressed on number of texts sent) was statistically significant at p <.05. \nThe single regression model (F(", mod_sum$fstatistic[2], ",",  mod_sum$fstatistic[3], ") =", round(mod_sum$fstatistic[1], 2), " p<.05) \nindicates that for every 1 text we send, the SP500 drops about ", round(abs(model$coefficients[2]), 2), " points" )) +
+  theme(plot.caption = element_text(hjust=0)) +
+  annotate("text", label = paste0("Equation: SP500score = ", round(model$coefficients[2],2), "(texts) + e"), x = 200, y = max(textcount_sp500$`Close/Last`))
+
+
 ggplotly(p_sp500)
 ```
 
 SP 500 scatter plot (By Difference daily closing price)
 ```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 10, fig.width = 12 }
+
+p_sp500_diff <- ggplot(textcount_sp500_diff, aes(x = n_texts, y = `diff`)) +
+  geom_point() + 
+  geom_smooth(method = "lm", formula = y ~ x) +
+  theme_classic() +
+  labs(caption = paste0("Our model (Sp500 regressed on number of texts sent) was NOT statistically significant at p <.05. \nThe single regression model (F(", mod_sum$fstatistic[2], ",",  mod_sum$fstatistic[3], ") =",
+                        round(mod_sum$fstatistic[1], 2), " p>.05)")) +
+  theme(plot.caption = element_text(hjust=0)) +
+  annotate("text", label = paste0("Equation: SP500score difference = ", round(model$coefficients[2],2), "(texts) + e"), x = 200, y = max(textcount_sp500_diff$`diff`))
+
+
 ggplotly(p_sp500_diff)
 ```
 
 Dow Jones scatterplot (By absolute daily closing price)
 ```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 10, fig.width = 12 }
+p_dj <- ggplot(textcount_dj, aes(x = n_texts, y = `Close`)) +
+  geom_point() + 
+  geom_smooth(method = "lm", formula = y ~ x) +
+  theme_classic() +
+  labs(caption = paste0("Our model (Sp500 regressed on number of texts sent) was statistically significant at p <.05. \nThe single regression model (F(", mod_sum$fstatistic[2], ",",  mod_sum$fstatistic[3], ") =", round(mod_sum$fstatistic[1], 2), " p<.05) \nindicates that for every 1 text we send, the SP500 drops about ", round(abs(model$coefficients[2]), 2), " points" )) +
+  theme(plot.caption = element_text(hjust=0)) +
+  annotate("text", label = paste0("Equation: Dow Jones score = ", round(model$coefficients[2],2), "(texts) + e"), x = 80, y = max(textcount_dj$`Close`))
+
+
 ggplotly(p_dj)
 ```
 
 Dow Jones scatter plot (By Difference daily closing price)
 ```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 10, fig.width = 12 }
+
+p_dj_diff <- ggplot(textcount_dj_diff, aes(x = n_texts, y = `diff`)) +
+  geom_point() + 
+  geom_smooth(method = "lm", formula = y ~ x) +
+  theme_classic() +
+  labs(caption = paste0("Our model (dj diff regressed on number of texts sent) was NOT statistically significant at p <.05. \nThe single regression model (F(", mod_sum$fstatistic[2], ",",  mod_sum$fstatistic[3], ") =",
+                        round(mod_sum$fstatistic[1], 2), " p>.05)")) +
+  theme(plot.caption = element_text(hjust=0)) +
+  annotate("text", label = paste0("Equation: Dow Jones difference = ", round(model$coefficients[2],2), "(texts) + e"), x = 90, y = max(textcount_dj_diff$`diff`))
+
+
 ggplotly(p_dj_diff)
 ```
 
