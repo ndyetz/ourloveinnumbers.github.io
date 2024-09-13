@@ -1,0 +1,1244 @@
+---
+title: "&nbsp;"
+output:
+  html_document:
+    author: "Karina and Neil"
+    df_print: paged
+  html_notebook:
+    toc: true
+    toc_float: true
+---
+
+```{r, echo = FALSE}
+# Change to html if necessary
+#
+#<!-- html code to remove Rmarkdown size containment -->
+#
+#<style type="text/css">
+#.main-container {
+#  max-width: 100% !important;
+#  margin: auto;
+#}
+#</style>
+```
+
+```{=html}
+
+<style>
+    body { background-color: #FFFFFF; }
+    pre, pre:not([class]) { background-color: #FFFFFF; }
+</style>
+```
+```{=html}
+
+<style type="text/css">
+.hovertext text {
+    font-size: 18px !important;
+    font-family: Georgia, serif;
+}
+</style>
+```
+```{css, echo=FALSE}
+p {
+  font-size: 18px;
+  font-family: Georgia, serif;
+  color: #64798B;
+}
+```
+
+```{css, echo=FALSE}
+h1, h2, h3 {
+  font-family: Georgia, serif;
+  font-weight: bold;
+  color: #64798B;
+}
+```
+
+<center><img src="mountain_website.png"/></center>
+<center><img src="love_in_charts.png"/></center>
+<center><img src="names.png"/></center>
+<center><img src="together.png"/></center>
+
+```{r, message = FALSE, echo = FALSE, warning = FALSE}
+#Clear Environment
+rm(list = ls())
+```
+
+```{r, message = FALSE, echo = FALSE, warning = FALSE}
+
+#Clear Environment
+rm(list = ls())
+
+#Libraries and functions (Includes Dates)
+source("source_functions.R")
+
+# Load data and formatting
+source("source_file.R")
+
+# Google API. for google_maps(). Function will not work without API key.
+source("private_key.R")
+```
+
+
+# What is our texting like?
+
+From the start, we began a relationship by texting back and forth. In the tabs below, you can see how our texting has changed at different points in time.
+
+## Quantitative Analyses {.tabset}
+
+```{r, echo = FALSE, fig.height= 10, fig.width = 12}
+
+
+```
+
+### Total Number of texts Sent {.tabset}
+
+#### Across Time {.tabset}
+
+```{r, echo = FALSE, fig.height= 10, fig.width = 12, warning = FALSE}
+#Custom Functions
+p_texts_quant_time <- line_plots_quant(data = texts_quant_graph, x = week_of, y = `# of texts sent`)
+hover_range_quant(p_texts_quant_time)
+```
+
+#### Overall {.tabset}
+
+```{r, echo = FALSE, fig.height= 10, fig.width = 12}
+#Overall texts
+ggplotly(p_sent) #%>% 
+ # layout(hovermode = 'x')
+```
+
+### Average Character Count of texts Sent {.tabset}
+
+#### Across Time {.tabset}
+
+```{r, echo = FALSE, fig.height= 10, fig.width = 12, warning = FALSE}
+
+
+texts_char_time_graph <- line_plots_quant(data = texts_char_time, x = week_of, y = `Average character count`)
+hover_range_quant(texts_char_time_graph)
+```
+
+#### Overall {.tabset}
+
+```{r, echo = FALSE, fig.height= 10, fig.width = 12}
+
+```
+
+```{r, echo = FALSE, fig.height= 10, fig.width = 12}
+ggplotly(p_character_sent) %>% 
+#  layout(hovermode = 'x')
+  style(hoverinfo = "none", traces = 3:4) 
+```
+
+## Qualitative Analysis {.tabset}
+
+```{r, echo = FALSE}
+#Word cloud image in markdown below. 
+```
+
+<center><img src="word_cloud.png"/></center>
+
+### What words are we using most often while texting?
+
+```{r, echo = FALSE, fig.height= 10, fig.width = 12}
+# Count of chosen words.
+final_text_search_graph <- final_text_search %>% 
+  pivot_longer(-`Sent by`, values_to = "# of times word(s) was used") %>% 
+  filter(`Sent by` != "Total") %>% 
+    mutate(name = factor(name, levels = c("Love you", "Babe", "Baby", "Ben", "Laika", "Good morning","Good night", "Lol"),    labels = c(1,2,3,4,5,6,7,8)),
+         name = factor(name,   labels = c("Love you", "Babe", "Baby", "Ben", "Laika", "Good morning", "Good night", "Lol" ),  levels = c(1,2,3,4,5,6,7,8)),
+         ) %>% 
+  rename(`Word(s)` = "name")
+
+ptotal <- ggplot(final_text_search_graph, aes(x = `Word(s)`, y = `# of times word(s) was used`, fill = `Sent by`)) +
+  geom_col(position = "dodge") +
+  scale_y_continuous(expand = c(0, 0, .14, 0)) +
+  geom_text(
+    aes(label = paste0(`# of times word(s) was used`, "\n "), lineheight = .83),
+    position = position_dodge(.8),
+    vjust = 30,
+    size = 4.5) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45,  hjust=1))  +
+  theme(axis.text.x = element_text(size=11, face="bold", color = "black"), legend.title=element_blank()) +
+  labs(title = "Count of particular word(s) used in our texts",
+       x = "") 
+  
+ggplotly(ptotal)  %>% 
+ # layout(hovermode = 'x')
+    style(hoverinfo = "none", traces = 3:4) 
+
+
+```
+
+### A timeline of our texting word usage {.tabset}
+
+```{r, echo = FALSE}
+
+texts_combine_filter_graph_groups  <- texts_combine_filter %>% 
+  arrange(title, week_of) %>% 
+  dplyr::group_by(title, week_of, .add = TRUE) %>% 
+  summarize(
+            #`Love` = sum(Love, na.rm = TRUE), 
+            `Love you` = sum(`Love you`, na.rm = TRUE),
+            #`I love you` = sum(`I love you`, na.rm = TRUE),
+            `Babe` = sum(`Babe`, na.rm = TRUE),
+            `Baby` = sum(`Baby`, na.rm = TRUE),
+            `Ben` = sum(`Ben`, na.rm = TRUE),
+            `Laika` = sum(`Laika`, na.rm = TRUE),
+            `Good morning` = sum(`Good morning`, na.rm = TRUE),
+            `Good night` = sum(`Good night`, na.rm = TRUE),
+            `Lol` = sum(`Lol`, na.rm = TRUE),
+            .groups = "keep") %>% 
+  ungroup() %>% 
+  pivot_longer(cols = `Love you`:`Lol`, names_to = "word") %>% 
+  mutate(word = factor(word, levels = c("Love you", "Babe", "Baby", "Ben", "Laika", "Good morning","Good night", "Lol"),    labels = c(1,2,3,4,5,6,7,8)),
+         word = factor(word, labels = c("Love you", "Babe", "Baby", "Ben", "Laika", "Good morning", "Good night", "Lol" ),  levels = c(1,2,3,4,5,6,7,8)),
+         )%>% 
+    rename(`Word(s)` = "word", `Count of particular word(s) used in our texts` = "value")
+
+
+texts_combine_filter_graph_total  <- texts_combine_filter %>% 
+  dplyr::group_by(week_of) %>% 
+  summarize(title = "Combined",
+          #  `Love` = sum(Love, na.rm = TRUE), 
+            `Love you` = sum(`Love you`, na.rm = TRUE),
+          #  `I love you` = sum(`I love you`, na.rm = TRUE),
+            `Babe` = sum(`Babe`, na.rm = TRUE),
+            `Baby` = sum(`Baby`, na.rm = TRUE),
+            `Ben` = sum(`Ben`, na.rm = TRUE),
+            `Laika` = sum(`Laika`, na.rm = TRUE),
+            `Good morning` = sum(`Good morning`, na.rm = TRUE),
+            `Good night` = sum(`Good night`, na.rm = TRUE),
+            `Lol` = sum(`Lol`, na.rm = TRUE)
+            ) %>% 
+  pivot_longer(cols = `Love you`:`Lol`, names_to = "word") %>% 
+  mutate(word = factor(word, levels = c("Love you", "Babe", "Baby", "Ben", "Laika", "Good morning","Good night", "Lol"),  labels = c(1,2,3,4,5,6,7,8)),
+         word = factor(word, labels = c("Love you", "Babe", "Baby", "Ben", "Laika", "Good morning", "Good night","Lol" ),  levels = c(1,2,3,4,5,6,7,8)),
+         ) %>% 
+    rename(`Word(s)` = "word", `Count of particular word(s) used in our texts` = "value")
+
+
+texts_combine_filter_graph <- bind_rows(texts_combine_filter_graph_groups, texts_combine_filter_graph_total)
+
+```
+
+#### Separated by Neil and Karina {.tabset}
+
+```{r, fig.height= 10, fig.width = 18, echo = FALSE, warning = FALSE}
+
+  
+
+p2 <- ggplot(texts_combine_filter_graph_groups, aes(x = week_of, y = `Count of particular word(s) used in our texts`, color = `Word(s)`)) +
+  geom_line(linewidth = .6) + 
+  facet_wrap(~title) +
+  theme_classic() +
+  scale_y_continuous(expand = c(0, 0, .14, 0)) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
+  scale_x_date(date_labels="%b %Y",date_breaks  ="1 month") + 
+  labs(title = "How our usage of words has changed over time",
+       x = "") +
+  theme(
+#   strip.background = element_rect(
+#     color="#64798B",  linewidth =1, linetype="solid"
+#     ),
+   strip.text.x = element_text(
+        size = 12, color = "black", face = "bold.italic"
+        )
+   ) +
+  geom_point(aes(x = (`First Kiss`)     , y = max(`Count of particular word(s) used in our texts`) , color = "First Kiss"      ), shape=18, size = 2.5) +
+  geom_point(aes(x = (`New York`)       , y = max(`Count of particular word(s) used in our texts`) , color = "New York"        ), shape=18, size = 2.5) +
+  geom_point(aes(x = (`Snowboarding`)   , y = max(`Count of particular word(s) used in our texts`) , color = "Snowboarding"    ), shape=18, size = 2.5) +
+  geom_point(aes(x = (`Meet Parents`)   , y = max(`Count of particular word(s) used in our texts`) , color = "Meet Parents"    ), shape=18, size = 2.5) +
+  geom_point(aes(x = (Relationship)     , y = max(`Count of particular word(s) used in our texts`) , color = "Relationship"    ), shape=18, size = 2.5) +
+  geom_point(aes(x = (`Neil Meets Ben`) , y = max(`Count of particular word(s) used in our texts`) , color = "Neil Meets Ben"  ), shape=18, size = 2.5) +
+  geom_point(aes(x = (`Build Furniture`), y = max(`Count of particular word(s) used in our texts`) , color = "Build Furniture" ), shape=18, size = 2.5) +
+  geom_point(aes(x = (`Duck Fence`)     , y = max(`Count of particular word(s) used in our texts`) , color = "Duck Fence"      ), shape=18, size = 2.5) +
+  geom_point(aes(x = (`Chicago`)        , y = max(`Count of particular word(s) used in our texts`) , color = "Chicago"         ), shape=18, size = 2.5) +
+  geom_point(aes(x = (`Duck Pond`)      , y = max(`Count of particular word(s) used in our texts`) , color = "Duck Pond"       ), shape=18, size = 2.5) +
+  geom_point(aes(x = (`Dirt Bikes`)     , y = max(`Count of particular word(s) used in our texts`) , color = "Dirt Bikes"      ), shape=18, size = 2.5) +
+  geom_point(aes(x = (`Neil moves in` ) , y = max(`Count of particular word(s) used in our texts`) , color = "Neil moves in"   ), shape=18, size = 2.5) +
+  geom_point(aes(x = (`Scuba Diving` )  , y = max(`Count of particular word(s) used in our texts`) , color = "Scuba Diving"    ), shape=18, size = 2.5) +
+  geom_point(aes(x = (`We Get Engaged!`), y = max(`Count of particular word(s) used in our texts`) , color = "We Get Engaged!" ), shape=18, size = 2.5) +   
+  geom_point(aes(x = (`Tahiti Trip`)    , y = max(`Count of particular word(s) used in our texts`) , color = "Tahiti Trip"     ), shape=18, size = 2.5) +
+  geom_point(aes(x = (`We Buy Property`), y = max(`Count of particular word(s) used in our texts`) , color = "We Buy Property" ), shape=18, size = 2.5) +
+  
+  
+  geom_segment(aes(x=       (`First Kiss`)            ,         xend=   (`First Kiss`)         , y=0, yend= `Count of particular word(s) used in our texts` , color =            "First Kiss"            ), linewidth = .05) +
+  geom_segment(aes(x=       (`New York`)              ,         xend=   (`New York`)           , y=0, yend= `Count of particular word(s) used in our texts` , color =            "New York"              ), linewidth = .05) +
+  geom_segment(aes(x=       (`Snowboarding`)          ,         xend=   (`Snowboarding`)       , y=0, yend= `Count of particular word(s) used in our texts` , color =            "Snowboarding"          ), linewidth = .05) +
+  geom_segment(aes(x=       (`Meet Parents`)          ,         xend=   (`Meet Parents`)       , y=0, yend= `Count of particular word(s) used in our texts` , color =            "Meet Parents"          ), linewidth = .05) +
+  geom_segment(aes(x=       (Relationship)            ,         xend=   (Relationship)         , y=0, yend= `Count of particular word(s) used in our texts` , color =            "Relationship"          ), linewidth = .05) +
+  geom_segment(aes(x=       (`Neil Meets Ben`)        ,         xend=   (`Neil Meets Ben`)     , y=0, yend= `Count of particular word(s) used in our texts` , color =            "Neil Meets Ben"        ), linewidth = .05) +
+  geom_segment(aes(x=       (`Build Furniture`)       ,         xend=   (`Build Furniture`)    , y=0, yend= `Count of particular word(s) used in our texts` , color =            "Build Furniture"       ), linewidth = .05) +
+  geom_segment(aes(x=       (`Duck Fence`)            ,         xend=   (`Duck Fence`)         , y=0, yend= `Count of particular word(s) used in our texts` , color =            "Duck Fence"            ), linewidth = .05) +
+  geom_segment(aes(x=       (`Chicago`)               ,         xend=   (`Chicago`)            , y=0, yend= `Count of particular word(s) used in our texts` , color =            "Chicago"               ), linewidth = .05) +
+  geom_segment(aes(x=       (`Duck Pond`)             ,         xend=   (`Duck Pond`)          , y=0, yend= `Count of particular word(s) used in our texts` , color =            "Duck Pond"             ), linewidth = .05) +
+  geom_segment(aes(x=       (`Dirt Bikes`)            ,         xend=   (`Dirt Bikes`)         , y=0, yend= `Count of particular word(s) used in our texts` , color =            "Dirt Bikes"            ), linewidth = .05) +
+  geom_segment(aes(x=       (`Neil moves in` )        ,         xend=   (`Neil moves in` )     , y=0, yend= `Count of particular word(s) used in our texts` , color =            "Neil moves in"         ), linewidth = .05) +
+  geom_segment(aes(x=       (`Scuba Diving` )         ,         xend=   (`Scuba Diving` )      , y=0, yend= `Count of particular word(s) used in our texts` , color =            "Scuba Diving"          ), linewidth = .05) +
+  geom_segment(aes(x=       (`We Get Engaged!`)       ,         xend=   (`We Get Engaged!`)    , y=0, yend= `Count of particular word(s) used in our texts` , color =            "We Get Engaged!"       ), linewidth = .05) +
+  geom_segment(aes(x=       (`Tahiti Trip`)           ,         xend=   (`Tahiti Trip`)        , y=0, yend= `Count of particular word(s) used in our texts` , color =            "Tahiti Trip"           ), linewidth = .05) +
+  geom_segment(aes(x=       (`We Buy Property`)       ,         xend=   (`We Buy Property`)    , y=0, yend= `Count of particular word(s) used in our texts` , color =            "We Buy Property"       ), linewidth = .05) 
+
+ggplotly(p2) %>% 
+#  layout(hovermode = 'x') %>%
+  style(hovertext = paste0("Our first kiss was on "                                            , format(as_date(`First Kiss`), "%b %d, %Y"), "!")                                                                                      , traces = 15:16  ) %>% 
+  style(hovertext = paste0("We take our first trip to New York together on "                   , format(as_date(`New York`), "%b %d, %Y"), ". \nThis is also the first time Neil Met Karina's parents.")                               , traces = 17:18  ) %>% 
+  style(hovertext = paste0("Our first time ever snowboarding together was on "                 , format(as_date(`Snowboarding`), "%b %d, %Y"), ". \nNeil proved he can shred to Karina!")                                              , traces = 19:20  ) %>% 
+  style(hovertext = paste0("Karina flies to Alpine, CA to meet Neil's parents on "             , format(as_date(`Meet Parents`), "%b %d, %Y"), ". \nWe played card games all New Years Eve and kissed at midnight!")                   , traces = 21:22  ) %>% 
+  style(hovertext = paste0("We make it official, we decide we want to be in a relationship on" , format(as_date(Relationship), "%b %d, %Y"), '. \nWe also said "I love you" in person for the first time on this day.')                , traces = 23:24  ) %>% 
+  style(hovertext = paste0("We go snow boarding with Karina's son, Ben, on "                   , format(as_date(`Neil Meets Ben`), "%b %d, %Y"), ". It's the first time Neil met Ben.")                                                , traces = 25:26  ) %>% 
+  style(hovertext = paste0("We build our first piece of IKEA furniture together on "           , format(as_date(`Build Furniture`), "%b %d, %Y"), ". Safe to say we fight while building it.")                                         , traces = 27:28  ) %>% 
+  style(hovertext = paste0("We built a duck fence on "                                         , format(as_date(`Duck Fence`), "%b %d, %Y"), ". Our first outside project!")                                                           , traces = 29:30 ) %>% 
+  style(hovertext = paste0("We take a trip to Chicago on "                                     , format(as_date(`Chicago`), "%b %d, %Y"), ". Neil got to meet some of Karina's grad school peers.")                                    , traces = 31:32 ) %>% 
+  style(hovertext = paste0("We built a duck pond on "                                          , format(as_date(`Duck Pond`), "%b %d, %Y"), ". A continuation of the duck fence project.")                                             , traces = 33:34 ) %>% 
+  style(hovertext = paste0("We bought our dirt bikes on "                                      , format(as_date(`Dirt Bikes`), "%b %d, %Y"), ". We each have a Yamaha TTR230 and we love them!")                                       , traces = 35:36 ) %>% 
+  style(hovertext = paste0("Neil moved in with Karina on "                                     , format(as_date(`Neil moves in`), "%b %d, %Y"), ".")                                                                                   , traces = 37:38 ) %>% 
+  style(hovertext = paste0("We go scuba diving for the first time in Key Largo, FL on "        , format(as_date(`Scuba Diving`), "%b %d, %Y"), "!")                                                                                    , traces = 39:40 ) %>%
+  style(hovertext = paste0("We got engaged on "                                                , format(as_date(`We Get Engaged!`), "%b %d, %Y"), "! Neil hired a photographer to capture the moment at Mt. Hood Meadows ski resort.") , traces = 41:42 ) %>%
+  style(hovertext = paste0("We take our first trip as an engaged coupel to Tahiti on"          , format(as_date(`Tahiti Trip`), "%b %d, %Y"), ". We sailed on a Yach to different islabds for 10 days!")                               , traces = 43:44 ) %>% 
+  style(hovertext = paste0("We bought a 1 acre piece of land in La Pine, OR on "               , format(as_date(`We Buy Property`), "%b %d, %Y"), ". Our plan is to build a getaway cabin on the land!")                               , traces = 45:46 ) %>% 
+  style(hoverinfo = "none", traces = 47:78) 
+```
+
+#### Overall {.tabset}
+
+```{r, fig.height= 10, fig.width = 12, echo = FALSE, warning = FALSE}
+
+
+p1 <- line_plots_words(texts_combine_filter_graph_total, x = week_of, y = `Count of particular word(s) used in our texts`); 
+hover_range_words(p1)
+  
+```
+
+# All of the Places we have visited since the start of our relationship
+
+Hover over the markers to get information and see when we last visited each place!
+
+```{r, echo = FALSE}
+
+
+travel <- suppress(read_csv("travel_neil.csv"))
+
+travel <- travel %>% 
+  mutate(info = paste0(place, "<br>", country, ifelse(country == "USA", ", ", ""), ifelse(!is.na(state), state, ""), "<br>", "We last visited ", place, " on ", date))
+  
+register_google(key = private_key, account_type = "standard")
+
+
+map <- google_map(
+  key = private_key,
+  data = travel, 
+  search_box = TRUE,
+  width = 1500,
+  height = 800
+)
+
+map %>%
+  googleway::add_markers(lat = "lat", lon = "lon",  mouse_over = "info")
+```
+
+# Check Out How Much We Snowboard!
+
+# Take a look at the Runs! {.tabset}
+
+## Mt. Hood Meadows Ski Resort Runs on Google {.tabset}
+
+Hover over the marker to see where we got engaged!
+
+```{r, echo = FALSE}
+
+mt_hood <- google_map(
+  key = private_key,
+  data = travel, 
+  search_box = TRUE,
+  width = 1000,
+  height = 800, 
+  location = c(45.3318, -121.6652), 
+  zoom = 14,
+  map_type = "hybrid"
+) 
+
+mt_hood %>% 
+  googleway::add_markers(lat = 45.34802365909766, lon = -121.65863752775641, mouse_over = "This is where we got engaged! <br>Right in front of a waterfall in Heather Canyon!", update_map_view = FALSE)
+
+```
+
+## Mt. Hood Trail Map {.tabset}
+
+<center><img src="meadow_map.jpg"/></center>
+
+```{r, echo = FALSE, fig.height= 10, fig.width = 12}
+hood_runs <- relationship_data$`Snowboarding Runs at Meadows`
+
+hood_runs <- hood_runs %>% 
+  filter(str_detect(Runs, ".*[0-9].*") == FALSE) %>% 
+  mutate(
+    Date = parse_date_time(Date, orders = "%m/%d/%y%H:%M:%S"),
+    Date2 = lubridate::date(Date)
+  )
+
+```
+
+# How often did we take each of the chairlifts at Mt. Hood Meadows?
+
+# By Chairlift {.tabset}
+
+```{r, echo = FALSE}
+hood_runs_tree <- hood_runs %>% 
+  group_by(Runs) %>% 
+  summarize(`Total Runs` = n(),
+            `Vertical Ft. Gained` = sum(`Vertical Ft.`))
+```
+
+## In vertical feet gained {.tabset}
+
+Hover over each square to see how much vertical feet we gained on each chairlift!
+
+```{r, echo = FALSE, fig.height= 10, fig.width = 12}
+plot_ly(
+  hood_runs_tree,
+  labels = ~ Runs,
+  parents = NA,
+  values = ~ `Vertical Ft. Gained`,
+  type = 'treemap',
+  hovertemplate = "Chair lift: %{label}<br>We've ridden up %{value} ft. on %{label}!<extra></extra>"
+) %>% 
+  layout(title= list(text = "Vertical feet gained on ski lifts we've gained at Mt. Hood Meadows ski resort!"))
+
+```
+
+## In number of runs {.tabset}
+
+Hover over each square to see how many times we took each chairlift!
+
+```{r, echo = FALSE, fig.height= 10, fig.width = 12}
+
+plot_ly(
+  hood_runs_tree,
+  labels = ~Runs,
+  parents = NA,
+  values = ~ `Total Runs`,
+  type = 'treemap',
+  hovertemplate = "Chair lift: %{label}<br>We've ridden %{label} %{value} times!<extra></extra>"
+) %>% 
+  layout(title= list(text = "Number of times we've taken each lift at Mt. Hood Meadows ski resort!"))
+
+```
+
+# Lollipop Graphs
+
+# By Date {.tabset}
+
+## By Vertical Feet Gained {.tabset}
+
+Hover over each dot to see how much vertical feet we gained and each date.
+
+```{r, echo = FALSE, fig.height= 10, fig.width = 12}
+hood_vert_graph <- hood_runs %>% 
+  group_by(Date2) %>% 
+  summarize(`Vertical Ft. Gained` = sum(`Vertical Ft.`, na.rm = TRUE)) %>% 
+  filter(Date2 >= Snowboarding) %>% 
+  ungroup() %>% 
+  mutate(Season = ifelse(Date2 < as_date("2023-05-27"), "2022-23 Season", "2023-24 Season")) %>% 
+  select(Date = "Date2", everything()) 
+  
+
+max_date_vert <- hood_vert_graph %>% 
+  filter(`Vertical Ft. Gained` == max(`Vertical Ft. Gained`)) %>% 
+  select(Date)
+
+
+proposal_date_vert <- hood_vert_graph %>% 
+  filter(Date == as_date(`We Get Engaged!`)) %>% 
+  select(`Vertical Ft. Gained`)
+
+vertical_feet <- ggplot(hood_vert_graph, aes(x = Date, y =  `Vertical Ft. Gained`, color = Season)) +
+  geom_point(size = 3) +
+  geom_segment(aes(x=Date, xend=Date, y=0, yend= `Vertical Ft. Gained`)) +
+  #  annotate("rect", xmin = as_date("2023-04-07"), xmax = as_date("2023-12-22"), ymin = 0.0, ymax = 16000, 
+   #        alpha = .25) + 
+ #   annotate("pointrange", x = as_date("2023-08-15"), y = 7500, 
+  #         label = "<b>Off Season</b>") +
+  theme_classic() +
+  scale_y_continuous(expand = c(0, 0, .14, 0)) +
+    scale_x_date(date_labels="%b %Y",date_breaks  ="1 month", expand = c(.4,0,.1,0)) +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+ # geom_point(aes(x = as_date(max_date_vert$Date), max(`Vertical Ft. Gained`)), fill = "blue", color = "blue", shape=18, size = 2.5) +
+  # geom_point(aes(x = as_date(`We Get Engaged!`), y =  proposal_date_vert$`Vertical Ft. Gained`),color = "red", fill = "red", shape=18, size = 2.5) +
+  labs(title = "Vertical Feet gained at Mt. Hood Meadows ski resort on days we snowboard!",
+       x = "") +
+  facet_wrap(~Season, scales = "free_x") +
+  theme(legend.position="none")
+  
+
+ # scale_x_date(date_breaks = "1 year", date_labels = "%Y") +
+#  theme(axis.text.x.top = element_blank(), axis.ticks.x.top = element_blank())
+
+ggplotly(vertical_feet) %>% 
+  layout(hovermode = 'x') %>% 
+  #style(hovertext = paste0("The most vertical feet we have ever gained\n in a day was ", format(max(hood_vert_graph $`Vertical Ft. Gained`), big.mark=","), " feet on ", format(as_date(max_date_vert$Date), "%b %d, %Y"), "!"), traces = 5) %>%
+  #style(hovertext = paste0("We got engaged on ", format(as_date(`We Get Engaged!`), "%b %d, %Y"), "!"), traces = 6) %>% 
+  style(hoverinfo = "none", traces = 3:4)
+
+```
+
+## By number of Runs Completed {.tabset}
+
+Hover over each dot to see how many runs we took and each date.
+
+```{r, echo = FALSE, fig.height= 10, fig.width = 12}
+hood_runs_graph <- hood_runs %>% 
+  group_by(Date2) %>% 
+  summarize(`Total Runs` = n()) %>% 
+  filter(Date2 >= Snowboarding) %>% 
+  ungroup() %>% 
+  mutate(Season = ifelse(Date2 < as_date("2023-05-27"), "2022-23 Season", "2023-24 Season")) %>% 
+  select(Date = "Date2", everything()) 
+
+
+max_date_runs <- hood_runs_graph %>% 
+  filter(`Total Runs` == max(`Total Runs`)) %>% 
+  select(Date)
+
+proposal_date_runs <- hood_runs_graph %>% 
+  filter(Date == as_date(`We Get Engaged!`)) %>% 
+  select(`Total Runs`)
+
+
+total_runs <- ggplot(hood_runs_graph, aes(x = Date, y =  `Total Runs`, color = Season)) +
+  geom_point(size = 3) +
+  geom_segment(aes(x=Date, xend=Date, y=0, yend= `Total Runs`)) +
+  #  annotate("rect", xmin = as_date("2024-01-01"), xmax = as_date("2024-01-05"), ymin = 0.0, ymax = 16, 
+   #        alpha = .25) + 
+ #   annotate("text", x = as_date("2023-08-15"), y = 8, 
+ #          label = "<b>Off Season</b>") +
+  theme_classic() +
+  scale_y_continuous(expand = c(0, 0, .14, 0)) +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
+   #  geom_point(aes(x = as_date(max_date_runs$Date)[1], max(`Total Runs`)), color = "blue", fill = "blue", shape=18, size = 2.5) +
+    # geom_point(aes(x = as_date(max_date_runs$Date)[2], max(`Total Runs`)), color = "blue", fill = "blue", shape=18, size = 2.5) +
+     #geom_point(aes(x = as_date(`We Get Engaged!`), y =  proposal_date_runs$`Total Runs`), color = "red", fill = "red", shape=18, size = 2.5) +
+  labs(title = "Number of runs we take at Mt. Hood Meadows ski resort on days we snowboard!",
+       x = "") +
+  facet_wrap(~Season, scales = "free_x") +
+  scale_x_date(date_labels="%b %Y",date_breaks  ="1 month", expand = c(.4,0,.1,0)) +
+  theme(legend.position="none")
+
+  
+ggplotly(total_runs) %>% 
+  layout(hovermode = 'x')  %>% 
+#  style(hovertext = paste0("The most runs we have ever completed\n in a day was ", format(max(hood_runs_graph$`Total Runs`), big.mark=","), " runs on ", format(as_date(max_date_runs$Date[1]), "%b %d, %Y" ), " & ", format(as_date(max_date_runs$Date[2]), "%b %d, %Y"), "!"), traces = 5:6) %>% 
+ #   style(hovertext = paste0("We got engaged on ", format(as_date(`We Get Engaged!`), "%b %d, %Y"), "!"), traces = 7) %>% 
+  style(hoverinfo = "none", traces = 3:4)
+
+```
+
+# Macro indicators {.tabset}
+
+## S&P500 {.tabset}
+
+```{r, echo = FALSE, fig.height= 10, fig.width = 12, warning = FALSE}
+sp500 <- macro_data$`S&P 500`
+
+
+
+
+sp500 <- sp500 %>% 
+  mutate(Date = as_date(Date)) %>% 
+  select(Date, `Close/Last`) %>% 
+  mutate(source = "S&P 500")
+
+
+
+
+
+sp500_graph <- ggplot(sp500, aes(x = Date, y = `Close/Last`) )+
+ geom_line(linewidth = .6) + 
+#  scale_y_continuous("S&P500", sec.axis = sec_axis(~(.), name = "Dow Jones"), limits = c(3500, max(sp500$`Close`)), , expand = c(0, 0, .14, 0)) +
+  theme_classic() +
+  scale_y_continuous(limits = c(3500, max(sp500$`Close/Last`)), expand = c(0, 0, .14, 0)) +
+  labs(title="S&P 500 and  our Milestones", x="", color = "Special Event") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
+  scale_x_date(date_labels="%b %Y",date_breaks  ="1 month") +
+
+  geom_point(aes(x = (`Tinder Match`)   , y = max(`Close/Last`) , color = "Tinder Match"    ), shape=18, size = 4) +    
+  geom_point(aes(x = (`First Kiss`)     , y = max(`Close/Last`) , color = "First Kiss"      ), shape=18, size = 4) +
+  geom_point(aes(x = (`New York`)       , y = max(`Close/Last`) , color = "New York"        ), shape=18, size = 4) +
+  geom_point(aes(x = (`Snowboarding`)   , y = max(`Close/Last`) , color = "Snowboarding"    ), shape=18, size = 4) +
+  geom_point(aes(x = (`Meet Parents`)   , y = max(`Close/Last`) , color = "Meet Parents"    ), shape=18, size = 4) +
+  geom_point(aes(x = (Relationship)     , y = max(`Close/Last`) , color = "Relationship"    ), shape=18, size = 4) +
+  geom_point(aes(x = (`Neil Meets Ben`) , y = max(`Close/Last`) , color = "Neil Meets Ben"  ), shape=18, size = 4) +
+  geom_point(aes(x = (`Build Furniture`), y = max(`Close/Last`) , color = "Build Furniture" ), shape=18, size = 4) +
+  geom_point(aes(x = (`Duck Fence`)     , y = max(`Close/Last`) , color = "Duck Fence"      ), shape=18, size = 4) +
+  geom_point(aes(x = (`Chicago`)        , y = max(`Close/Last`) , color = "Chicago"         ), shape=18, size = 4) +
+  geom_point(aes(x = (`Duck Pond`)      , y = max(`Close/Last`) , color = "Duck Pond"       ), shape=18, size = 4) +
+  geom_point(aes(x = (`Dirt Bikes`)     , y = max(`Close/Last`) , color = "Dirt Bikes"      ), shape=18, size = 4) +
+  geom_point(aes(x = (`Neil moves in` ) , y = max(`Close/Last`) , color = "Neil moves in"   ), shape=18, size = 4) +
+  geom_point(aes(x = (`Scuba Diving` )  , y = max(`Close/Last`) , color = "Scuba Diving"    ), shape=18, size = 4) +
+  geom_point(aes(x = (`We Get Engaged!`), y = max(`Close/Last`) , color = "We Get Engaged!" ), shape=18, size = 4) +   
+  geom_point(aes(x = (`Tahiti Trip`)    , y = max(`Close/Last`) , color = "Tahiti Trip"     ), shape=18, size = 4) +
+  geom_point(aes(x = (`We Buy Property`), y = max(`Close/Last`) , color = "We Buy Property" ), shape=18, size = 4) +
+  
+  
+  geom_segment(aes(x=       (`Tinder Match`)            ,       xend=   (`Tinder Match`)                        , y=3500, yend= `Close/Last` , color =                          "Tinder Match"                        ), linewidth = .05) +
+  geom_segment(aes(x=       (`First Kiss`)            ,         xend=   (`First Kiss`)                          , y=3500, yend= `Close/Last` , color =                            "First Kiss"                        ), linewidth = .05) +
+  geom_segment(aes(x=       (`New York`)              ,         xend=   (`New York`)                            , y=3500, yend= `Close/Last` , color =                             "New York"                         ), linewidth = .05) +
+  geom_segment(aes(x=       (`Snowboarding`)          ,         xend=   (`Snowboarding`)                        , y=3500, yend= `Close/Last` , color =                            "Snowboarding"                      ), linewidth = .05) +
+  geom_segment(aes(x=       (`Meet Parents`)          ,         xend=   (`Meet Parents`)                        , y=3500, yend= `Close/Last` , color =                            "Meet Parents"                      ), linewidth = .05) +
+  geom_segment(aes(x=       (Relationship)            ,         xend=   (Relationship)                          , y=3500, yend= `Close/Last` , color =                            "Relationship"                      ), linewidth = .05) +
+  geom_segment(aes(x=       (`Neil Meets Ben`)        ,         xend=   (`Neil Meets Ben`)                      , y=3500, yend= `Close/Last` , color =                            "Neil Meets Ben"                    ), linewidth = .05) +
+  geom_segment(aes(x=       (`Build Furniture`)       ,         xend=   (`Build Furniture`)                     , y=3500, yend= `Close/Last` , color =                            "Build Furniture"                   ), linewidth = .05) +
+  geom_segment(aes(x=       (`Duck Fence`)            ,         xend=   (`Duck Fence`)                          , y=3500, yend= `Close/Last` , color =                            "Duck Fence"                        ), linewidth = .05) +
+  geom_segment(aes(x=       (`Chicago`)               ,         xend=   (`Chicago`)                             , y=3500, yend= `Close/Last` , color =                            "Chicago"                           ), linewidth = .05) +
+  geom_segment(aes(x=       (`Duck Pond`)             ,         xend=   (`Duck Pond`)                           , y=3500, yend= `Close/Last` , color =                            "Duck Pond"                         ), linewidth = .05) +
+  geom_segment(aes(x=       (`Dirt Bikes`)            ,         xend=   (`Dirt Bikes`)                          , y=3500, yend= `Close/Last` , color =                            "Dirt Bikes"                        ), linewidth = .05) +
+  geom_segment(aes(x=       (`Neil moves in` )        ,         xend=   (`Neil moves in` )                      , y=3500, yend= `Close/Last` , color =                            "Neil moves in"                     ), linewidth = .05) +
+  geom_segment(aes(x=       (`Scuba Diving` )         ,         xend=   (`Scuba Diving` )                       , y=3500, yend= `Close/Last` , color =                            "Scuba Diving"                      ), linewidth = .05) +
+  geom_segment(aes(x=       (`We Get Engaged!`)       ,         xend=   (`We Get Engaged!`)                     , y=3500, yend= `Close/Last` , color =                            "We Get Engaged!"                   ), linewidth = .05) +
+  geom_segment(aes(x=       (`Tahiti Trip`)           ,         xend=   (`Tahiti Trip`)                         , y=3500, yend= `Close/Last` , color =                            "Tahiti Trip"                       ), linewidth = .05) +
+  geom_segment(aes(x=       (`We Buy Property`)       ,         xend=   (`We Buy Property`)                     , y=3500, yend= `Close/Last` , color =                            "We Buy Property"                   ), linewidth = .05) 
+  
+
+
+ggplotly(sp500_graph) %>% 
+#  layout(hovermode = 'x') %>%
+  style(hovertext = paste0("We matched on Tinder on "                                          , format(as_date(`Tinder Match`), "%b %d, %Y"), "!")                                                                                      , traces = 2  ) %>% 
+  style(hovertext = paste0("Our first kiss was on "                                            , format(as_date(`First Kiss`), "%b %d, %Y"), "!")                                                                                      , traces = 3  ) %>% 
+  style(hovertext = paste0("We take our first trip to New York together on "                   , format(as_date(`New York`), "%b %d, %Y"), ". \nThis is also the first time Neil Met Karina's parents.")                               , traces = 4  ) %>% 
+  style(hovertext = paste0("Our first time ever snowboarding together was on "                 , format(as_date(`Snowboarding`), "%b %d, %Y"), ". \nNeil proved he can shred to Karina!")                                              , traces = 5  ) %>% 
+  style(hovertext = paste0("Karina flies to Alpine, CA to meet Neil's parents on "             , format(as_date(`Meet Parents`), "%b %d, %Y"), ". \nWe played card games all New Years Eve and kissed at midnight!")                   , traces = 6  ) %>% 
+  style(hovertext = paste0("We make it official, we decide we want to be in a relationship on" , format(as_date(Relationship), "%b %d, %Y"), '. \nWe also said "I love you" in person for the first time on this day.')                , traces = 7  ) %>% 
+  style(hovertext = paste0("We go snow boarding with Karina's son, Ben, on "                   , format(as_date(`Neil Meets Ben`), "%b %d, %Y"), ". It's the first time Neil met Ben.")                                                , traces = 8  ) %>% 
+  style(hovertext = paste0("We build our first piece of IKEA furniture together on "           , format(as_date(`Build Furniture`), "%b %d, %Y"), ". Safe to say we fight while building it.")                                         , traces = 9  ) %>% 
+  style(hovertext = paste0("We built a duck fence on "                                         , format(as_date(`Duck Fence`), "%b %d, %Y"), ". Our first outside project!")                                                           , traces = 10 ) %>% 
+  style(hovertext = paste0("We take a trip to Chicago on "                                     , format(as_date(`Chicago`), "%b %d, %Y"), ". Neil got to meet some of Karina's grad school peers.")                                    , traces = 11 ) %>% 
+  style(hovertext = paste0("We built a duck pond on "                                          , format(as_date(`Duck Pond`), "%b %d, %Y"), ". A continuation of the duck fence project.")                                             , traces =  12) %>% 
+  style(hovertext = paste0("We bought our dirt bikes on "                                      , format(as_date(`Dirt Bikes`), "%b %d, %Y"), ". We each have a Yamaha TTR230 and we love them!")                                       , traces =  13) %>% 
+  style(hovertext = paste0("Neil moved in with Karina on "                                     , format(as_date(`Neil moves in`), "%b %d, %Y"), ".")                                                                                   , traces =  14) %>% 
+  style(hovertext = paste0("We go scuba diving for the first time in Key Largo, FL on "        , format(as_date(`Scuba Diving`), "%b %d, %Y"), "!")                                                                                    , traces =  15) %>%
+  style(hovertext = paste0("We got engaged on "                                                , format(as_date(`We Get Engaged!`), "%b %d, %Y"), "! Neil hired a photographer to capture the moment at Mt. Hood Meadows ski resort.") , traces = 16 ) %>%
+  style(hovertext = paste0("We take our first trip as an engaged coupel to Tahiti on"          , format(as_date(`Tahiti Trip`), "%b %d, %Y"), ". We sailed on a Yach to different islabds for 10 days!")                               , traces =  17) %>% 
+  style(hovertext = paste0("We bought a 1 acre piece of land in La Pine, OR on "               , format(as_date(`We Buy Property`), "%b %d, %Y"), ". Our plan is to build a getaway cabin on the land!")                               , traces =  18) %>% 
+  style(hoverinfo = "none", traces = 19:35)
+
+```
+
+
+
+
+
+
+
+
+## Dow Jones {.tabset}
+
+```{r, echo = FALSE, fig.height= 10, fig.width = 12, warning = FALSE}
+dowjones <- macro_data$`Dow Jones`
+
+dowjones <- dowjones %>% 
+  mutate(Date = as_date(Date)) %>% 
+  select(Date, `Close/Last` = "Close") %>% 
+  mutate(source = "Dow Jones")
+
+dowjones_graph <- ggplot(dowjones, aes(x = Date, y = `Close/Last`) )+
+ geom_line(linewidth = .6) + 
+#  scale_y_continuous("S&P500", sec.axis = sec_axis(~(.), name = "Dow Jones"), limits = c(3500, max(sp500$`Close`)), , expand = c(0, 0, .14, 0)) +
+  theme_classic() +
+  scale_y_continuous(limits = c(30000, max(dowjones$`Close/Last`)), expand = c(0, 0, .14, 0)) +
+  labs(title="Dow Jones and  our Milestones", x="", color = "Special Event") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
+  scale_x_date(date_labels="%b %Y",date_breaks  ="1 month") +
+
+  geom_point(aes(x = (`Tinder Match`)   , y = max(`Close/Last`) , color = "Tinder Match"    ), shape=18, size = 4) +    
+  geom_point(aes(x = (`First Kiss`)     , y = max(`Close/Last`) , color = "First Kiss"      ), shape=18, size = 4) +
+  geom_point(aes(x = (`New York`)       , y = max(`Close/Last`) , color = "New York"        ), shape=18, size = 4) +
+  geom_point(aes(x = (`Snowboarding`)   , y = max(`Close/Last`) , color = "Snowboarding"    ), shape=18, size = 4) +
+  geom_point(aes(x = (`Meet Parents`)   , y = max(`Close/Last`) , color = "Meet Parents"    ), shape=18, size = 4) +
+  geom_point(aes(x = (Relationship)     , y = max(`Close/Last`) , color = "Relationship"    ), shape=18, size = 4) +
+  geom_point(aes(x = (`Neil Meets Ben`) , y = max(`Close/Last`) , color = "Neil Meets Ben"  ), shape=18, size = 4) +
+  geom_point(aes(x = (`Build Furniture`), y = max(`Close/Last`) , color = "Build Furniture" ), shape=18, size = 4) +
+  geom_point(aes(x = (`Duck Fence`)     , y = max(`Close/Last`) , color = "Duck Fence"      ), shape=18, size = 4) +
+  geom_point(aes(x = (`Chicago`)        , y = max(`Close/Last`) , color = "Chicago"         ), shape=18, size = 4) +
+  geom_point(aes(x = (`Duck Pond`)      , y = max(`Close/Last`) , color = "Duck Pond"       ), shape=18, size = 4) +
+  geom_point(aes(x = (`Dirt Bikes`)     , y = max(`Close/Last`) , color = "Dirt Bikes"      ), shape=18, size = 4) +
+  geom_point(aes(x = (`Neil moves in` ) , y = max(`Close/Last`) , color = "Neil moves in"   ), shape=18, size = 4) +
+  geom_point(aes(x = (`Scuba Diving` )  , y = max(`Close/Last`) , color = "Scuba Diving"    ), shape=18, size = 4) +
+  geom_point(aes(x = (`We Get Engaged!`), y = max(`Close/Last`) , color = "We Get Engaged!" ), shape=18, size = 4) +   
+  geom_point(aes(x = (`Tahiti Trip`)    , y = max(`Close/Last`) , color = "Tahiti Trip"     ), shape=18, size = 4) +
+  geom_point(aes(x = (`We Buy Property`), y = max(`Close/Last`) , color = "We Buy Property" ), shape=18, size = 4) +
+  
+  
+  geom_segment(aes(x=       (`Tinder Match`)            ,       xend=   (`Tinder Match`)                        , y=30000, yend= `Close/Last` , color =                          "Tinder Match"                        ), linewidth = .05) +
+  geom_segment(aes(x=       (`First Kiss`)            ,         xend=   (`First Kiss`)                          , y=30000, yend= `Close/Last` , color =                            "First Kiss"                        ), linewidth = .05) +
+  geom_segment(aes(x=       (`New York`)              ,         xend=   (`New York`)                            , y=30000, yend= `Close/Last` , color =                             "New York"                         ), linewidth = .05) +
+  geom_segment(aes(x=       (`Snowboarding`)          ,         xend=   (`Snowboarding`)                        , y=30000, yend= `Close/Last` , color =                            "Snowboarding"                      ), linewidth = .05) +
+  geom_segment(aes(x=       (`Meet Parents`)          ,         xend=   (`Meet Parents`)                        , y=30000, yend= `Close/Last` , color =                            "Meet Parents"                      ), linewidth = .05) +
+  geom_segment(aes(x=       (Relationship)            ,         xend=   (Relationship)                          , y=30000, yend= `Close/Last` , color =                            "Relationship"                      ), linewidth = .05) +
+  geom_segment(aes(x=       (`Neil Meets Ben`)        ,         xend=   (`Neil Meets Ben`)                      , y=30000, yend= `Close/Last` , color =                            "Neil Meets Ben"                    ), linewidth = .05) +
+  geom_segment(aes(x=       (`Build Furniture`)       ,         xend=   (`Build Furniture`)                     , y=30000, yend= `Close/Last` , color =                            "Build Furniture"                   ), linewidth = .05) +
+  geom_segment(aes(x=       (`Duck Fence`)            ,         xend=   (`Duck Fence`)                          , y=30000, yend= `Close/Last` , color =                            "Duck Fence"                        ), linewidth = .05) +
+  geom_segment(aes(x=       (`Chicago`)               ,         xend=   (`Chicago`)                             , y=30000, yend= `Close/Last` , color =                            "Chicago"                           ), linewidth = .05) +
+  geom_segment(aes(x=       (`Duck Pond`)             ,         xend=   (`Duck Pond`)                           , y=30000, yend= `Close/Last` , color =                            "Duck Pond"                         ), linewidth = .05) +
+  geom_segment(aes(x=       (`Dirt Bikes`)            ,         xend=   (`Dirt Bikes`)                          , y=30000, yend= `Close/Last` , color =                            "Dirt Bikes"                        ), linewidth = .05) +
+  geom_segment(aes(x=       (`Neil moves in` )        ,         xend=   (`Neil moves in` )                      , y=30000, yend= `Close/Last` , color =                            "Neil moves in"                     ), linewidth = .05) +
+  geom_segment(aes(x=       (`Scuba Diving` )         ,         xend=   (`Scuba Diving` )                       , y=30000, yend= `Close/Last` , color =                            "Scuba Diving"                      ), linewidth = .05) +
+  geom_segment(aes(x=       (`We Get Engaged!`)       ,         xend=   (`We Get Engaged!`)                     , y=30000, yend= `Close/Last` , color =                            "We Get Engaged!"                   ), linewidth = .05) +
+  geom_segment(aes(x=       (`Tahiti Trip`)           ,         xend=   (`Tahiti Trip`)                         , y=30000, yend= `Close/Last` , color =                            "Tahiti Trip"                       ), linewidth = .05) +
+  geom_segment(aes(x=       (`We Buy Property`)       ,         xend=   (`We Buy Property`)                     , y=30000, yend= `Close/Last` , color =                            "We Buy Property"                   ), linewidth = .05) 
+  
+
+
+ggplotly(dowjones_graph) %>% 
+#  layout(hovermode = 'x') %>%
+  style(hovertext = paste0("We matched on Tinder on "                                          , format(as_date(`Tinder Match`), "%b %d, %Y"), "!")                                                                                      , traces = 2  ) %>% 
+  style(hovertext = paste0("Our first kiss was on "                                            , format(as_date(`First Kiss`), "%b %d, %Y"), "!")                                                                                      , traces = 3  ) %>% 
+  style(hovertext = paste0("We take our first trip to New York together on "                   , format(as_date(`New York`), "%b %d, %Y"), ". \nThis is also the first time Neil Met Karina's parents.")                               , traces = 4  ) %>% 
+  style(hovertext = paste0("Our first time ever snowboarding together was on "                 , format(as_date(`Snowboarding`), "%b %d, %Y"), ". \nNeil proved he can shred to Karina!")                                              , traces = 5  ) %>% 
+  style(hovertext = paste0("Karina flies to Alpine, CA to meet Neil's parents on "             , format(as_date(`Meet Parents`), "%b %d, %Y"), ". \nWe played card games all New Years Eve and kissed at midnight!")                   , traces = 6  ) %>% 
+  style(hovertext = paste0("We make it official, we decide we want to be in a relationship on" , format(as_date(Relationship), "%b %d, %Y"), '. \nWe also said "I love you" in person for the first time on this day.')                , traces = 7  ) %>% 
+  style(hovertext = paste0("We go snow boarding with Karina's son, Ben, on "                   , format(as_date(`Neil Meets Ben`), "%b %d, %Y"), ". It's the first time Neil met Ben.")                                                , traces = 8  ) %>% 
+  style(hovertext = paste0("We build our first piece of IKEA furniture together on "           , format(as_date(`Build Furniture`), "%b %d, %Y"), ". Safe to say we fight while building it.")                                         , traces = 9  ) %>% 
+  style(hovertext = paste0("We built a duck fence on "                                         , format(as_date(`Duck Fence`), "%b %d, %Y"), ". Our first outside project!")                                                           , traces = 10 ) %>% 
+  style(hovertext = paste0("We take a trip to Chicago on "                                     , format(as_date(`Chicago`), "%b %d, %Y"), ". Neil got to meet some of Karina's grad school peers.")                                    , traces = 11 ) %>% 
+  style(hovertext = paste0("We built a duck pond on "                                          , format(as_date(`Duck Pond`), "%b %d, %Y"), ". A continuation of the duck fence project.")                                             , traces =  12) %>% 
+  style(hovertext = paste0("We bought our dirt bikes on "                                      , format(as_date(`Dirt Bikes`), "%b %d, %Y"), ". We each have a Yamaha TTR230 and we love them!")                                       , traces =  13) %>% 
+  style(hovertext = paste0("Neil moved in with Karina on "                                     , format(as_date(`Neil moves in`), "%b %d, %Y"), ".")                                                                                   , traces =  14) %>% 
+  style(hovertext = paste0("We go scuba diving for the first time in Key Largo, FL on "        , format(as_date(`Scuba Diving`), "%b %d, %Y"), "!")                                                                                    , traces =  15) %>%
+  style(hovertext = paste0("We got engaged on "                                                , format(as_date(`We Get Engaged!`), "%b %d, %Y"), "! Neil hired a photographer to capture the moment at Mt. Hood Meadows ski resort.") , traces = 16 ) %>%
+  style(hovertext = paste0("We take our first trip as an engaged coupel to Tahiti on"          , format(as_date(`Tahiti Trip`), "%b %d, %Y"), ". We sailed on a Yach to different islabds for 10 days!")                               , traces =  17) %>% 
+  style(hovertext = paste0("We bought a 1 acre piece of land in La Pine, OR on "               , format(as_date(`We Buy Property`), "%b %d, %Y"), ". Our plan is to build a getaway cabin on the land!")                               , traces =  18) %>% 
+  style(hoverinfo = "none", traces = 19:35)
+
+
+```
+
+
+
+# Regression Analyses {.tabset}
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 10, fig.width = 12 }
+
+#SP500 Absolute
+
+texts_count_date <- texts_quant %>% 
+  group_by(date) %>% 
+  summarize(n_texts = n()) %>% 
+  rename(Date = "date") 
+
+
+sp_500_filter <- sp500 %>% 
+  filter(Date > min(texts_count_date$Date) & Date < max(texts_count_date$Date)) %>% 
+  select(-source)
+
+
+textcount_sp500 <- texts_count_date %>%
+  inner_join(sp_500_filter, by = "Date")
+
+
+
+model <- lm( `Close/Last` ~ n_texts, data = textcount_sp500)
+
+confs <- confint(model)
+mod_sum <- summary(model)
+
+#Get R
+r      <- as_tibble(cor(textcount_sp500$n_texts, textcount_sp500$`Close/Last`)); 
+r      <- r %>% rename(R = "value") %>%  mutate(name = "sp500"); 
+rfinal <- r
+
+#Get R^2
+r2      <- as_tibble(summary(model)$r.squared); 
+r2      <- r2 %>% rename(`R-squared` = "value" ) %>%  mutate(name = "sp500"); 
+r2final <- r2
+
+#Get f
+f <- as_tibble(summary(model)$fstatistic[1])
+f <- f %>% rename(`F-value` = "value") %>% mutate(name = "sp500")
+ffinal <- f
+
+#Get Numerator DF
+numdf <- as_tibble(summary(model)$fstatistic[2])
+numdf <- numdf %>% rename(`Numerator DF` = "value") %>% mutate(name = "sp500")
+numdffinal <- numdf
+
+#Get Denominator DF
+dendf <- as_tibble(summary(model)$fstatistic[3])
+dendf <- dendf %>% rename(`Denominator DF` = "value") %>% mutate(name = "sp500")
+dendffinal <- dendf
+
+#Get Omnibus P-value (overall_p() is a custom function)
+pval <- as_tibble(overall_p(model))
+pval <- pval %>% rename(`p-value` = "value") %>% mutate(name = "sp500")
+pvalfinal <- pval
+
+
+
+p_sp500 <- ggplot(textcount_sp500, aes(x = n_texts, y = `Close/Last`)) +
+  geom_point() + 
+  geom_smooth(method = "lm", formula = y ~ x) +
+  theme_classic() +
+  labs(caption = paste0("Our model (Sp500 regressed on number of texts sent) was statistically significant at p <.05. \nThe single regression model (F(", mod_sum$fstatistic[2], ",",  mod_sum$fstatistic[3], ") =", round(mod_sum$fstatistic[1], 2), " p<.05) \nindicates that for every 1 text we send, the SP500 drops about ", round(abs(model$coefficients[2]), 2), " points" )) +
+  theme(plot.caption = element_text(hjust=0)) +
+  annotate("text", label = paste0("Equation: SP500score = ", round(model$coefficients[2],2), "(texts) + e"), x = 200, y = max(textcount_sp500$`Close/Last`))
+
+```
+
+
+
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 10, fig.width = 12 }
+
+#SP500 Difference
+
+sp500_all <- macro_data$`S&P 500`
+
+sp500_all <- sp500_all %>% 
+  mutate(diff = `Close/Last` - Open)
+
+sp_500_diff <- sp500_all %>% 
+  filter(Date > min(texts_count_date$Date) & Date < max(texts_count_date$Date)) 
+
+textcount_sp500_diff <- texts_count_date %>%
+  inner_join(sp_500_diff, by = "Date")
+
+
+model <- lm( `diff` ~ n_texts, data = textcount_sp500_diff)
+
+confs   <- confint(model)
+mod_sum <- summary(model)
+
+#Get R
+r      <- as_tibble(cor(textcount_sp500_diff$n_texts, textcount_sp500_diff$`diff`)); 
+r      <- r %>% rename(R = "value") %>%  mutate(name = "sp500 difference"); 
+rfinal <- bind_rows(rfinal, r)
+
+#Get R^2
+r2      <- as_tibble(summary(model)$r.squared); 
+r2      <- r2 %>% rename(`R-squared` = "value" ) %>% mutate(name = "sp500 difference"); 
+r2final <- bind_rows(r2final, r2)
+
+#Get f
+f <- as_tibble(summary(model)$fstatistic[1])
+f <- f %>% rename(`F-value` = "value") %>% mutate(name = "sp500 difference");
+ffinal <- bind_rows(ffinal, f)
+
+#Get Numerator DF
+numdf <- as_tibble(summary(model)$fstatistic[2])
+numdf <- numdf %>% rename(`Numerator DF` = "value") %>% mutate(name = "sp500 difference");
+numdffinal <- bind_rows(numdffinal, numdf)
+
+#Get Denominator DF
+dendf <- as_tibble(summary(model)$fstatistic[3])
+dendf <- dendf %>% rename(`Denominator DF` = "value") %>% mutate(name = "sp500 difference");
+dendffinal <- bind_rows(dendffinal, dendf)
+
+#Get Omnibus P-value (overall_p() is a custom function)
+pval <- as_tibble(overall_p(model))
+pval <- pval %>% rename(`p-value` = "value") %>% mutate(name = "sp500 difference");
+pvalfinal <- bind_rows(pvalfinal, pval)
+
+
+p_sp500_diff <- ggplot(textcount_sp500_diff, aes(x = n_texts, y = `diff`)) +
+  geom_point() + 
+  geom_smooth(method = "lm", formula = y ~ x) +
+  theme_classic() +
+  labs(caption = paste0("Our model (Sp500 regressed on number of texts sent) was NOT statistically significant at p <.05. \nThe single regression model (F(", mod_sum$fstatistic[2], ",",  mod_sum$fstatistic[3], ") =",
+                        round(mod_sum$fstatistic[1], 2), " p>.05)")) +
+  theme(plot.caption = element_text(hjust=0)) +
+  annotate("text", label = paste0("Equation: SP500score difference = ", round(model$coefficients[2],2), "(texts) + e"), x = 200, y = max(textcount_sp500_diff$`diff`))
+
+```
+
+
+
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 10, fig.width = 12 }
+
+# Dow Jones Absolute
+
+dj_all <- macro_data$`Dow Jones`
+
+dj_filter <- dj_all %>% 
+  filter(Date > min(texts_count_date$Date) & Date < max(texts_count_date$Date)) 
+
+
+textcount_dj <- texts_count_date %>%
+  inner_join(dj_filter, by = "Date")
+
+
+model <- lm( `Close` ~ n_texts, data = textcount_dj)
+
+confs <- confint(model)
+mod_sum <- summary(model)
+
+
+#Get R
+r      <- as_tibble(cor(textcount_dj$n_texts, textcount_dj$`Close`)); 
+r      <- r %>% rename(R = "value") %>%  mutate(name = "Dow Jones"); 
+rfinal <- bind_rows(rfinal, r)
+
+#Get R^2
+r2      <- as_tibble(summary(model)$r.squared); 
+r2      <- r2 %>% rename(`R-squared` = "value" ) %>% mutate(name = "Dow Jones"); 
+r2final <- bind_rows(r2final, r2)
+
+#Get f
+f <- as_tibble(summary(model)$fstatistic[1])
+f <- f %>% rename(`F-value` = "value") %>% mutate(name = "Dow Jones");
+ffinal <- bind_rows(ffinal, f)
+
+#Get Numerator DF
+numdf <- as_tibble(summary(model)$fstatistic[2])
+numdf <- numdf %>% rename(`Numerator DF` = "value") %>% mutate(name = "Dow Jones");
+numdffinal <- bind_rows(numdffinal, numdf)
+
+#Get Denominator DF
+dendf <- as_tibble(summary(model)$fstatistic[3])
+dendf <- dendf %>% rename(`Denominator DF` = "value") %>% mutate(name = "Dow Jones");
+dendffinal <- bind_rows(dendffinal, dendf)
+
+#Get Omnibus P-value (overall_p() is a custom function)
+pval <- as_tibble(overall_p(model))
+pval <- pval %>% rename(`p-value` = "value") %>% mutate(name = "Dow Jones");
+pvalfinal <- bind_rows(pvalfinal, pval)
+
+
+
+p_dj <- ggplot(textcount_dj, aes(x = n_texts, y = `Close`)) +
+  geom_point() + 
+  geom_smooth(method = "lm", formula = y ~ x) +
+  theme_classic() +
+  labs(caption = paste0("Our model (Sp500 regressed on number of texts sent) was statistically significant at p <.05. \nThe single regression model (F(", mod_sum$fstatistic[2], ",",  mod_sum$fstatistic[3], ") =", round(mod_sum$fstatistic[1], 2), " p<.05) \nindicates that for every 1 text we send, the SP500 drops about ", round(abs(model$coefficients[2]), 2), " points" )) +
+  theme(plot.caption = element_text(hjust=0)) +
+  annotate("text", label = paste0("Equation: Dow Jones score = ", round(model$coefficients[2],2), "(texts) + e"), x = 80, y = max(textcount_dj$`Close`))
+
+```
+
+
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 10, fig.width = 12 }
+
+#Dow Jones Difference
+
+dj_all <- dj_all %>% 
+  mutate(diff = `Close` - Open)
+
+dj_diff <- dj_all %>% 
+  filter(Date > min(texts_count_date$Date) & Date < max(texts_count_date$Date)) 
+
+textcount_dj_diff <- texts_count_date %>%
+  inner_join(dj_diff, by = "Date")
+
+model <- lm( `diff` ~ n_texts, data = textcount_dj_diff)
+
+confs <- confint(model)
+mod_sum <- summary(model)
+
+#Get R
+r      <- as_tibble(cor(textcount_dj_diff$n_texts, textcount_dj_diff$`diff`)); 
+r      <- r %>% rename(R = "value") %>%  mutate(name = "Dow Jones difference"); 
+rfinal <- bind_rows(rfinal, r)
+
+#Get R^2
+r2      <- as_tibble(summary(model)$r.squared); 
+r2      <- r2 %>% rename(`R-squared` = "value" ) %>% mutate(name = "Dow Jones difference"); 
+r2final <- bind_rows(r2final, r2)
+
+#Get f
+f <- as_tibble(summary(model)$fstatistic[1])
+f <- f %>% rename(`F-value` = "value") %>% mutate(name = "Dow Jones difference"); 
+ffinal <- bind_rows(ffinal, f)
+
+#Get Numerator DF
+numdf <- as_tibble(summary(model)$fstatistic[2])
+numdf <- numdf %>% rename(`Numerator DF` = "value") %>% mutate(name = "Dow Jones difference"); 
+numdffinal <- bind_rows(numdffinal, numdf)
+
+#Get Denominator DF
+dendf <- as_tibble(summary(model)$fstatistic[3])
+dendf <- dendf %>% rename(`Denominator DF` = "value") %>% mutate(name = "Dow Jones difference"); 
+dendffinal <- bind_rows(dendffinal, dendf)
+
+#Get Omnibus P-value (overall_p() is a custom function)
+pval <- as_tibble(overall_p(model))
+pval <- pval %>% rename(`p-value` = "value") %>% mutate(name = "Dow Jones difference"); 
+pvalfinal <- bind_rows(pvalfinal, pval)
+
+
+p_dj_diff <- ggplot(textcount_dj_diff, aes(x = n_texts, y = `diff`)) +
+  geom_point() + 
+  geom_smooth(method = "lm", formula = y ~ x) +
+  theme_classic() +
+  labs(caption = paste0("Our model (dj diff regressed on number of texts sent) was NOT statistically significant at p <.05. \nThe single regression model (F(", mod_sum$fstatistic[2], ",",  mod_sum$fstatistic[3], ") =",
+                        round(mod_sum$fstatistic[1], 2), " p>.05)")) +
+  theme(plot.caption = element_text(hjust=0)) +
+  annotate("text", label = paste0("Equation: Dow Jones difference = ", round(model$coefficients[2],2), "(texts) + e"), x = 90, y = max(textcount_dj_diff$`diff`))
+
+```
+
+## Table {.tabset}
+```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 10, fig.width = 12 }
+
+reg_table <- numdffinal %>% 
+  left_join(dendffinal, by = "name") %>% 
+  left_join(ffinal    , by = "name") %>% 
+  left_join(pvalfinal , by = "name") %>% 
+  left_join(rfinal    , by = "name") %>% 
+  left_join(r2final   , by = "name") %>% 
+  mutate(`Degrees of Freedom` = paste0("(", `Numerator DF`, ", " , `Denominator DF`, ")")) %>% 
+  select(Name = "name", `Degrees of Freedom`, `F-value`, `p-value`, R, `R-squared`) %>% 
+  mutate_if(is.numeric, round, 2) %>% 
+  mutate(
+    `F-value`   = ifelse(`F-value`     == 0.00, "< 0.01", `F-value`    ),
+    `p-value`   = ifelse(`p-value`     == 0.00, "< 0.01", `p-value`    ),
+    R           = ifelse( R            == 0.00, "< 0.01",  R           ),
+    `R-squared` = ifelse(`R-squared`   == 0.00, "< 0.01", `R-squared`  )
+  )
+
+
+reg_table %>% 
+  kbl(align = "c", escape = FALSE) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = TRUE, font_size = 16) %>% 
+  add_footnote(label = "\nOutcome variable = daily quanitity of texts sent between Neil and Karina",notation = "none")
+  
+
+```
+
+
+## Scatterplots {.tabset}
+SP 500 scatter plot (By absolute daily closing price)
+```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 10, fig.width = 12 }
+ggplotly(p_sp500)
+```
+
+SP 500 scatter plot (By Difference daily closing price)
+```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 10, fig.width = 12 }
+ggplotly(p_sp500_diff)
+```
+
+Dow Jones scatterplot (By absolute daily closing price)
+```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 10, fig.width = 12 }
+ggplotly(p_dj)
+```
+
+Dow Jones scatter plot (By Difference daily closing price)
+```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 10, fig.width = 12 }
+ggplotly(p_dj_diff)
+```
+
+
+
+# Financial Data {.tabset}
+```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 10, fig.width = 12 }
+finance <- finance %>% 
+  filter(`Proposed Category` != "0") %>% 
+  mutate(`Proposed Category` = ifelse(`Proposed Category` == "Zoos & Acquariums", "Zoos & Aquariums", `Proposed Category`)) 
+ 
+  
+finance_summ <- finance %>%   
+  group_by(`Proposed Category`) %>% 
+  summarize(Amount = sum(Amount)) %>% 
+  ungroup() %>% 
+  arrange(desc(Amount)) %>% 
+  mutate(Total = sum(Amount)) %>% 
+  rowwise() %>% 
+  mutate(Amount = round(Amount / Total * 100, 2)) %>% 
+  ungroup() %>% 
+  mutate(`Proposed Category` = ifelse(`Proposed Category` == "airbnb", "AirBnB", `Proposed Category`)) %>% 
+  arrange(`Proposed Category`)
+
+
+
+#table(finance$`Proposed Category`)
+```
+## Overall {.tabset}
+```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 10, fig.width = 12 }
+
+#pals::alphabet() are a list of 26 colors -using this to match the colors
+  #NOTE: the dataset must be arranged by Proposed category to match.
+col <- list(alphabet())
+names(col) <- c("name") 
+
+
+plot_ly(
+  finance_summ,
+  labels = ~`Proposed Category`,
+  parents = NA,
+  values = ~ Amount,
+  type = 'treemap',
+   marker=list(colors=col[["name"]]),
+  marker = list(`Proposed Category` = ~`Proposed Category`),
+  hovertemplate = "%{value}% of our spending is on %{label}.<extra></extra>"
+) %>% 
+  layout(title= list(text = "Percent spent on categories"))
+
+```
+
+## Separated by Karina & Neil {.tabset}
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+finance_summ_group <- finance %>%   
+  group_by(User, `Proposed Category`) %>% 
+  summarize(Amount = sum(Amount), .groups = "keep") %>% 
+  ungroup() %>% 
+  group_by(User) %>% 
+  mutate(Total = sum(Amount)) %>% 
+  arrange(desc(Amount)) %>%
+  rowwise() %>% 
+  mutate(Amount = round(Amount / Total * 100, 2)) %>% 
+  ungroup() %>% 
+  mutate(`Proposed Category` = ifelse(`Proposed Category` == "airbnb", "AirBnB", `Proposed Category`))
+```
+
+
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 10, fig.width = 12, fig.show='hold'}
+
+finance_summ_Neil <- finance_summ_group  %>% 
+  filter(User == "Neil") %>% 
+  arrange(`Proposed Category`) 
+
+finance_summ_Karina <- finance_summ_group  %>% 
+  filter(User == "Karina")
+
+cats_all <- finance_summ_group %>% 
+  select(`Proposed Category`)
+
+cats_neil <- finance_summ_Neil %>% 
+  select(`Proposed Category`)
+
+cats_karina <- finance_summ_Karina %>% 
+  select(`Proposed Category`)
+
+
+cats_no_neil <- cats_all %>% 
+  anti_join(cats_neil, by = "Proposed Category") %>% 
+  mutate(User = "Neil",
+         Amount = 0, 
+         Total = 0 ) %>% 
+  select(User, `Proposed Category`, Amount, Total )
+
+
+cats_no_karina <- cats_all %>% 
+  anti_join(cats_karina, by = "Proposed Category") %>% 
+  mutate(User = "Karina",
+         Amount = 0, 
+         Total = 0 ) %>% 
+  select(User, `Proposed Category`, Amount, Total )
+
+
+finance_summ_Neil <- finance_summ_Neil %>% 
+  bind_rows(cats_no_neil) %>% 
+  arrange(`Proposed Category`) %>% 
+  mutate(`Proposed Category` = factor(`Proposed Category`))
+  
+  
+
+finance_summ_Karina <- finance_summ_Karina %>% 
+  bind_rows(cats_no_karina) %>% 
+  arrange(`Proposed Category`) %>% 
+  mutate(`Proposed Category` = factor(`Proposed Category`))
+
+#finance_summ_Neil <- arrange(finance_summ_Neil, desc(`Proposed Category`))
+
+
+
+
+Neil_fig <- plot_ly(
+  finance_summ_Neil,
+  labels = ~`Proposed Category`,
+  parents = NA,
+  values = ~Amount,
+  type = 'treemap',
+ # color = ~`Proposed Category`,
+  marker=list(colors=col[["name"]]),
+ # marker = list(`Proposed Category` = ~`Proposed Category`),
+  hovertemplate = "%{value}% of Neil's spending is on %{label}.<extra></extra>"
+) 
+
+Karina_fig <- plot_ly(
+  finance_summ_Karina,
+  labels = ~`Proposed Category`,
+  parents = NA,
+  values = ~ Amount,
+  type = 'treemap',
+   marker=list(colors=col[["name"]]),
+  marker = list(`Proposed Category` = ~`Proposed Category`),
+  hovertemplate = "%{value}% of Karina's spending is on %{label}.<extra></extra>"
+) 
+par(mfrow=c(1,2))
+
+#Karina_fig
+#Neil_fig
+
+#manipulateWidget::combineWidgets(Karina_fig, Neil_fig, nrow = 1)
+
+```
+
+Karina's Spending 
+```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 7, fig.width = 9 }
+Karina_fig
+```
+Neil's Spending
+```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 7, fig.width = 9}
+Neil_fig
+```
+
+
+
+
+```{r, echo = FALSE, eval = FALSE}
+##For Karina
+#for_karina_mon <- finance %>% 
+#  mutate(`Month Year` = format(ymd(`Transaction Date`), "%B %Y")) %>% 
+#  group_by(User, `Proposed Category`, `Month Year`) %>% 
+#  summarize(Amount = sum(Amount), .groups = "keep") %>% 
+#  ungroup() %>% 
+#  group_by(User, `Month Year`) %>% 
+#  mutate(Total = sum(`Amount`)) %>% 
+#  ungroup() %>% 
+#  mutate(Amount = Amount / Total) %>% 
+#  #select(-Total) %>% 
+#  arrange(`Proposed Category`, `Month Year`, `User`)
+#
+#
+#
+#
+#for_karina_quar <- finance %>% 
+#  mutate(Quarter = zoo::as.yearqtr(`Transaction Date`, , format = "%Y-%m-%d"),
+#         Quarter =  format(Quarter, format = "Q%q'%y")) %>% 
+#  group_by(User, `Proposed Category`, `Quarter`) %>% 
+#  summarize(Amount = sum(Amount), .groups = "keep") %>% 
+#  ungroup() %>% 
+#  group_by(User, Quarter) %>% 
+#  mutate(Total = sum(`Amount`)) %>% 
+#  ungroup() %>% 
+#  mutate(Amount = Amount / Total) %>% 
+#  #select(-Total) %>% 
+#  arrange(`Proposed Category`, `User`)
+#
+#
+#write_xlsx(for_karina_mon ,"finance_summed_month.xlsx"  , format_headers = FALSE) 
+#write_xlsx(for_karina_quar,"finance_summed_quarter.xlsx", format_headers = FALSE) 
+```
+
+```{r, rows.print=100, eval = FALSE, echo = FALSE}
+#for_karina_mon %>% 
+#  group_by(`User`, `Month Year`) %>% 
+#  summarize(sum = sum(Amount))
+#
+#
+#for_karina_quar %>% 
+#  group_by(`User`, `Quarter`) %>% 
+#  summarize(sum = sum(Amount))
+```
+
+
+#  
+
+<center><img src="KN.png"/></center>
+
+<center><img src="final_image.png"/></center>
