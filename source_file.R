@@ -241,19 +241,6 @@ text_quant_graph <- text_quant %>%
   select(`Sent by` = "sent by", `# of texts sent` = "value") 
 
 
-p_sent <- ggplot(text_quant_graph, aes(x = `Sent by`, y = `# of texts sent` , fill = `Sent by`)) +
-  geom_col(position = "dodge") +
-  scale_y_continuous(expand = c(0, 0, .14, 0)) +
-  geom_text(
-    aes(label = paste0(`# of texts sent`, " Texts\n "), lineheight = .83),
-    position = position_dodge(.8),
-    vjust = 30,
-    size = 5) +
-  labs(title = "Total number of texts sent by Neil and Karina",
-       x = "") +
-  theme_minimal() +
-  #  theme(axis.text.x = element_text(angle = 45,  hjust=1))  +
-  theme(axis.text.x = element_text(size=11, face="bold", color = "black"), legend.title=element_blank()) 
 
 #text_quant %>% 
 # kbl(digits = 0) %>%
@@ -266,19 +253,111 @@ text_character_graph <- text_quant %>%
   filter(`sent by` != "Combined" & name != "# of texts sent") %>% 
   select(`Sent by` = "sent by", `Average number of characters in text` = "value") 
 
-p_character_sent <- ggplot(text_character_graph, aes(x = `Sent by`, y = `Average number of characters in text` , fill = `Sent by`)) +
-  geom_col(position = "dodge") +
-  scale_y_continuous(expand = c(0, 0, .14, 0)) +
-  geom_text(
-    aes(label = paste0(round(`Average number of characters in text`, 2) , "\n "), lineheight = .83),
-    position = position_dodge(.8),
-    vjust = 30,
-    size = 5) +
-  labs(title = "Average number of text characters in Neil's and Karina's text messages",
-       x = "") +
-  theme_classic() +
-  #  theme(axis.text.x = element_text(angle = 45,  hjust=1))  +
-  theme(axis.text.x = element_text(size=11, face="bold", color = "black"), legend.title=element_blank()) 
+texts_combine_filter_graph_groups  <- texts_combine_filter %>% 
+  arrange(title, week_of) %>% 
+  dplyr::group_by(title, week_of, .add = TRUE) %>% 
+  summarize(
+    #`Love` = sum(Love, na.rm = TRUE), 
+    `Love you` = sum(`Love you`, na.rm = TRUE),
+    #`I love you` = sum(`I love you`, na.rm = TRUE),
+    `Babe` = sum(`Babe`, na.rm = TRUE),
+    `Baby` = sum(`Baby`, na.rm = TRUE),
+    `Ben` = sum(`Ben`, na.rm = TRUE),
+    `Laika` = sum(`Laika`, na.rm = TRUE),
+    `Good morning` = sum(`Good morning`, na.rm = TRUE),
+    `Good night` = sum(`Good night`, na.rm = TRUE),
+    `Lol` = sum(`Lol`, na.rm = TRUE),
+    .groups = "keep") %>% 
+  ungroup() %>% 
+  pivot_longer(cols = `Love you`:`Lol`, names_to = "word") %>% 
+  mutate(word = factor(word, levels = c("Love you", "Babe", "Baby", "Ben", "Laika", "Good morning","Good night", "Lol"),    labels = c(1,2,3,4,5,6,7,8)),
+         word = factor(word, labels = c("Love you", "Babe", "Baby", "Ben", "Laika", "Good morning", "Good night", "Lol" ),  levels = c(1,2,3,4,5,6,7,8)),
+  )%>% 
+  rename(`Word(s)` = "word", `Count of particular word(s) used in our texts` = "value")
+
+
+texts_combine_filter_graph_total  <- texts_combine_filter %>% 
+  dplyr::group_by(week_of) %>% 
+  summarize(title = "Combined",
+            #  `Love` = sum(Love, na.rm = TRUE), 
+            `Love you` = sum(`Love you`, na.rm = TRUE),
+            #  `I love you` = sum(`I love you`, na.rm = TRUE),
+            `Babe` = sum(`Babe`, na.rm = TRUE),
+            `Baby` = sum(`Baby`, na.rm = TRUE),
+            `Ben` = sum(`Ben`, na.rm = TRUE),
+            `Laika` = sum(`Laika`, na.rm = TRUE),
+            `Good morning` = sum(`Good morning`, na.rm = TRUE),
+            `Good night` = sum(`Good night`, na.rm = TRUE),
+            `Lol` = sum(`Lol`, na.rm = TRUE)
+  ) %>% 
+  pivot_longer(cols = `Love you`:`Lol`, names_to = "word") %>% 
+  mutate(word = factor(word, levels = c("Love you", "Babe", "Baby", "Ben", "Laika", "Good morning","Good night", "Lol"),  labels = c(1,2,3,4,5,6,7,8)),
+         word = factor(word, labels = c("Love you", "Babe", "Baby", "Ben", "Laika", "Good morning", "Good night","Lol" ),  levels = c(1,2,3,4,5,6,7,8)),
+  ) %>% 
+  rename(`Word(s)` = "word", `Count of particular word(s) used in our texts` = "value")
+
+
+texts_combine_filter_graph <- bind_rows(texts_combine_filter_graph_groups, texts_combine_filter_graph_total)
+
+
+
+# Hood runs data
+hood_runs <- relationship_data$`Snowboarding Runs at Meadows`
+
+#Format
+hood_runs <- hood_runs %>% 
+  filter(str_detect(Runs, ".*[0-9].*") == FALSE) %>% 
+  mutate(
+    Date = parse_date_time(Date, orders = "%m/%d/%y%H:%M:%S"),
+    Date2 = lubridate::date(Date)
+  )
+
+
+#Total runs & Vertical feet
+hood_runs_tree <- hood_runs %>% 
+  group_by(Runs) %>% 
+  summarize(`Total Runs` = n(),
+            `Vertical Ft. Gained` = sum(`Vertical Ft.`))
+
+
+## Vertical feet and runs by date for lollipop graph
+#Vertical feet
+hood_vert_graph <- hood_runs %>% 
+  group_by(Date2) %>% 
+  summarize(`Vertical Ft. Gained` = sum(`Vertical Ft.`, na.rm = TRUE)) %>% 
+  filter(Date2 >= Snowboarding) %>% 
+  ungroup() %>% 
+  mutate(Season = ifelse(Date2 < as_date("2023-05-27"), "2022-23 Season", "2023-24 Season")) %>% 
+  select(Date = "Date2", everything()) 
+
+
+max_date_vert <- hood_vert_graph %>% 
+  filter(`Vertical Ft. Gained` == max(`Vertical Ft. Gained`)) %>% 
+  select(Date)
+
+
+proposal_date_vert <- hood_vert_graph %>% 
+  filter(Date == as_date(`We Get Engaged!`)) %>% 
+  select(`Vertical Ft. Gained`)
+
+#Runs
+hood_runs_graph <- hood_runs %>% 
+  group_by(Date2) %>% 
+  summarize(`Total Runs` = n()) %>% 
+  filter(Date2 >= Snowboarding) %>% 
+  ungroup() %>% 
+  mutate(Season = ifelse(Date2 < as_date("2023-05-27"), "2022-23 Season", "2023-24 Season")) %>% 
+  select(Date = "Date2", everything()) 
+
+
+max_date_runs <- hood_runs_graph %>% 
+  filter(`Total Runs` == max(`Total Runs`)) %>% 
+  select(Date)
+
+proposal_date_runs <- hood_runs_graph %>% 
+  filter(Date == as_date(`We Get Engaged!`)) %>% 
+  select(`Total Runs`)
+
 
 
 
@@ -302,10 +381,15 @@ textcount_sp500 <- texts_count_date %>%
 
 
 
-model <- lm( `Close/Last` ~ n_texts, data = textcount_sp500)
+model <- lm( `Close/Last` ~ n_texts + Date, data = textcount_sp500)
 
 confs <- confint(model)
 mod_sum <- summary(model)
+
+# Get Beta value 
+estimate      <- as_tibble(summary(model)$coefficients[2])
+estimate      <- estimate %>% rename(`Unstandardized Beta` = "value") %>%  mutate(name = "sp500"); 
+estimatefinal <- estimate
 
 #Get R
 r      <- as_tibble(cor(textcount_sp500$n_texts, textcount_sp500$`Close/Last`)); 
@@ -353,10 +437,16 @@ textcount_sp500_diff <- texts_count_date %>%
   inner_join(sp_500_diff, by = "Date")
 
 
-model <- lm( `diff` ~ n_texts, data = textcount_sp500_diff)
+model <- lm( `diff` ~ n_texts + Date, data = textcount_sp500_diff)
 
 confs   <- confint(model)
 mod_sum <- summary(model)
+
+
+# Get Beta value 
+estimate      <- as_tibble(summary(model)$coefficients[2])
+estimate      <- estimate %>% rename(`Unstandardized Beta` = "value") %>%  mutate(name = "sp500 difference"); 
+estimatefinal <- bind_rows(estimatefinal, estimate)
 
 #Get R
 r      <- as_tibble(cor(textcount_sp500_diff$n_texts, textcount_sp500_diff$`diff`)); 
@@ -403,11 +493,16 @@ textcount_dj <- texts_count_date %>%
   inner_join(dj_filter, by = "Date")
 
 
-model <- lm( `Close` ~ n_texts, data = textcount_dj)
+model <- lm( `Close` ~ n_texts + Date, data = textcount_dj)
 
 confs <- confint(model)
 mod_sum <- summary(model)
 
+
+# Get Beta value 
+estimate      <- as_tibble(summary(model)$coefficients[2])
+estimate      <- estimate %>% rename(`Unstandardized Beta` = "value") %>%  mutate(name = "Dow Jones"); 
+estimatefinal <- bind_rows(estimatefinal, estimate)
 
 #Get R
 r      <- as_tibble(cor(textcount_dj$n_texts, textcount_dj$`Close`)); 
@@ -441,7 +536,6 @@ pvalfinal <- bind_rows(pvalfinal, pval)
 
 
 
-
 #Dow Jones Difference
 
 dj_all <- dj_all %>% 
@@ -453,10 +547,16 @@ dj_diff <- dj_all %>%
 textcount_dj_diff <- texts_count_date %>%
   inner_join(dj_diff, by = "Date")
 
-model <- lm( `diff` ~ n_texts, data = textcount_dj_diff)
+model <- lm( `diff` ~ n_texts + Date, data = textcount_dj_diff)
 
 confs <- confint(model)
 mod_sum <- summary(model)
+
+# Get Beta value 
+estimate      <- as_tibble(summary(model)$coefficients[2])
+estimate      <- estimate %>% rename(`Unstandardized Beta` = "value") %>%  mutate(name = "Dow Jones difference"); 
+estimatefinal <- bind_rows(estimatefinal, estimate)
+
 
 #Get R
 r      <- as_tibble(cor(textcount_dj_diff$n_texts, textcount_dj_diff$`diff`)); 
@@ -490,6 +590,129 @@ pvalfinal <- bind_rows(pvalfinal, pval)
 
 
 
+#Financial data
+finance <- finance %>% 
+  filter(`Proposed Category` != "0") %>% 
+  mutate(`Proposed Category` = ifelse(`Proposed Category` == "Zoos & Acquariums", "Zoos & Aquariums", `Proposed Category`)) 
 
 
+#Set up for treemap plots
+finance_summ <- finance %>%   
+  group_by(`Proposed Category`) %>% 
+  summarize(Amount = sum(Amount)) %>% 
+  ungroup() %>% 
+  arrange(desc(Amount)) %>% 
+  mutate(Total = sum(Amount)) %>% 
+  rowwise() %>% 
+  mutate(Amount = round(Amount / Total * 100, 2)) %>% 
+  ungroup() %>% 
+  mutate(`Proposed Category` = ifelse(`Proposed Category` == "airbnb", "AirBnB", `Proposed Category`)) %>% 
+  arrange(`Proposed Category`)
+
+#table(finance$`Proposed Category`)
+
+#Grouping by user
+finance_summ_group <- finance %>%   
+  group_by(User, `Proposed Category`) %>% 
+  summarize(Amount = sum(Amount), .groups = "keep") %>% 
+  ungroup() %>% 
+  group_by(User) %>% 
+  mutate(Total = sum(Amount)) %>% 
+  arrange(desc(Amount)) %>%
+  rowwise() %>% 
+  mutate(Amount = round(Amount / Total * 100, 2)) %>% 
+  ungroup() %>% 
+  mutate(`Proposed Category` = ifelse(`Proposed Category` == "airbnb", "AirBnB", `Proposed Category`))
+
+finance_summ_Neil <- finance_summ_group  %>% 
+  filter(User == "Neil") %>% 
+  arrange(`Proposed Category`) 
+
+finance_summ_Karina <- finance_summ_group  %>% 
+  filter(User == "Karina")
+
+cats_all <- finance_summ_group %>% 
+  select(`Proposed Category`)
+
+cats_neil <- finance_summ_Neil %>% 
+  select(`Proposed Category`)
+
+cats_karina <- finance_summ_Karina %>% 
+  select(`Proposed Category`)
+
+
+cats_no_neil <- cats_all %>% 
+  anti_join(cats_neil, by = "Proposed Category") %>% 
+  mutate(User = "Neil",
+         Amount = 0, 
+         Total = 0 ) %>% 
+  select(User, `Proposed Category`, Amount, Total )
+
+
+cats_no_karina <- cats_all %>% 
+  anti_join(cats_karina, by = "Proposed Category") %>% 
+  mutate(User = "Karina",
+         Amount = 0, 
+         Total = 0 ) %>% 
+  select(User, `Proposed Category`, Amount, Total )
+
+
+finance_summ_Neil <- finance_summ_Neil %>% 
+  bind_rows(cats_no_neil) %>% 
+  arrange(`Proposed Category`) %>% 
+  mutate(`Proposed Category` = factor(`Proposed Category`))
+
+
+
+finance_summ_Karina <- finance_summ_Karina %>% 
+  bind_rows(cats_no_karina) %>% 
+  arrange(`Proposed Category`) %>% 
+  mutate(`Proposed Category` = factor(`Proposed Category`))
+
+#finance_summ_Neil <- arrange(finance_summ_Neil, desc(`Proposed Category`))
+
+
+## Fincance Data format for Karina
+
+#for_karina_mon <- finance %>% 
+#  mutate(`Month Year` = format(ymd(`Transaction Date`), "%B %Y")) %>% 
+#  group_by(User, `Proposed Category`, `Month Year`) %>% 
+#  summarize(Amount = sum(Amount), .groups = "keep") %>% 
+#  ungroup() %>% 
+#  group_by(User, `Month Year`) %>% 
+#  mutate(Total = sum(`Amount`)) %>% 
+#  ungroup() %>% 
+#  mutate(Amount = Amount / Total) %>% 
+#  #select(-Total) %>% 
+#  arrange(`Proposed Category`, `Month Year`, `User`)
+#
+#
+#
+#
+#for_karina_quar <- finance %>% 
+#  mutate(Quarter = zoo::as.yearqtr(`Transaction Date`, , format = "%Y-%m-%d"),
+#         Quarter =  format(Quarter, format = "Q%q'%y")) %>% 
+#  group_by(User, `Proposed Category`, `Quarter`) %>% 
+#  summarize(Amount = sum(Amount), .groups = "keep") %>% 
+#  ungroup() %>% 
+#  group_by(User, Quarter) %>% 
+#  mutate(Total = sum(`Amount`)) %>% 
+#  ungroup() %>% 
+#  mutate(Amount = Amount / Total) %>% 
+#  #select(-Total) %>% 
+#  arrange(`Proposed Category`, `User`)
+#
+#
+#write_xlsx(for_karina_mon ,"finance_summed_month.xlsx"  , format_headers = FALSE) 
+#write_xlsx(for_karina_quar,"finance_summed_quarter.xlsx", format_headers = FALSE) 
+
+
+#for_karina_mon %>% 
+#  group_by(`User`, `Month Year`) %>% 
+#  summarize(sum = sum(Amount))
+#
+#
+#for_karina_quar %>% 
+#  group_by(`User`, `Quarter`) %>% 
+#  summarize(sum = sum(Amount))
 

@@ -86,10 +86,6 @@ From the start, we began a relationship by texting back and forth. In the tabs b
 
 ## Quantitative Analyses {.tabset}
 
-```{r, echo = FALSE, fig.height= 10, fig.width = 12}
-
-
-```
 
 ### Total Number of texts Sent {.tabset}
 
@@ -105,6 +101,22 @@ hover_range_quant(p_texts_quant_time)
 
 ```{r, echo = FALSE, fig.height= 10, fig.width = 12}
 #Overall texts
+
+p_sent <- ggplot(text_quant_graph, aes(x = `Sent by`, y = `# of texts sent` , fill = `Sent by`)) +
+  geom_col(position = "dodge") +
+  scale_y_continuous(expand = c(0, 0, .14, 0)) +
+  geom_text(
+    aes(label = paste0(`# of texts sent`, " Texts\n "), lineheight = .83),
+    position = position_dodge(.8),
+    vjust = 30,
+    size = 5) +
+  labs(title = "Total number of texts sent by Neil and Karina",
+       x = "") +
+  theme_minimal() +
+  #  theme(axis.text.x = element_text(angle = 45,  hjust=1))  +
+  theme(axis.text.x = element_text(size=11, face="bold", color = "black"), legend.title=element_blank()) 
+
+
 ggplotly(p_sent) #%>% 
  # layout(hovermode = 'x')
 ```
@@ -127,6 +139,22 @@ hover_range_quant(texts_char_time_graph)
 ```
 
 ```{r, echo = FALSE, fig.height= 10, fig.width = 12}
+
+p_character_sent <- ggplot(text_character_graph, aes(x = `Sent by`, y = `Average number of characters in text` , fill = `Sent by`)) +
+  geom_col(position = "dodge") +
+  scale_y_continuous(expand = c(0, 0, .14, 0)) +
+  geom_text(
+    aes(label = paste0(round(`Average number of characters in text`, 2) , "\n "), lineheight = .83),
+    position = position_dodge(.8),
+    vjust = 30,
+    size = 5) +
+  labs(title = "Average number of text characters in Neil's and Karina's text messages",
+       x = "") +
+  theme_classic() +
+  #  theme(axis.text.x = element_text(angle = 45,  hjust=1))  +
+  theme(axis.text.x = element_text(size=11, face="bold", color = "black"), legend.title=element_blank()) 
+
+
 ggplotly(p_character_sent) %>% 
 #  layout(hovermode = 'x')
   style(hoverinfo = "none", traces = 3:4) 
@@ -175,55 +203,6 @@ ggplotly(ptotal)  %>%
 
 ### A timeline of our texting word usage {.tabset}
 
-```{r, echo = FALSE}
-
-texts_combine_filter_graph_groups  <- texts_combine_filter %>% 
-  arrange(title, week_of) %>% 
-  dplyr::group_by(title, week_of, .add = TRUE) %>% 
-  summarize(
-            #`Love` = sum(Love, na.rm = TRUE), 
-            `Love you` = sum(`Love you`, na.rm = TRUE),
-            #`I love you` = sum(`I love you`, na.rm = TRUE),
-            `Babe` = sum(`Babe`, na.rm = TRUE),
-            `Baby` = sum(`Baby`, na.rm = TRUE),
-            `Ben` = sum(`Ben`, na.rm = TRUE),
-            `Laika` = sum(`Laika`, na.rm = TRUE),
-            `Good morning` = sum(`Good morning`, na.rm = TRUE),
-            `Good night` = sum(`Good night`, na.rm = TRUE),
-            `Lol` = sum(`Lol`, na.rm = TRUE),
-            .groups = "keep") %>% 
-  ungroup() %>% 
-  pivot_longer(cols = `Love you`:`Lol`, names_to = "word") %>% 
-  mutate(word = factor(word, levels = c("Love you", "Babe", "Baby", "Ben", "Laika", "Good morning","Good night", "Lol"),    labels = c(1,2,3,4,5,6,7,8)),
-         word = factor(word, labels = c("Love you", "Babe", "Baby", "Ben", "Laika", "Good morning", "Good night", "Lol" ),  levels = c(1,2,3,4,5,6,7,8)),
-         )%>% 
-    rename(`Word(s)` = "word", `Count of particular word(s) used in our texts` = "value")
-
-
-texts_combine_filter_graph_total  <- texts_combine_filter %>% 
-  dplyr::group_by(week_of) %>% 
-  summarize(title = "Combined",
-          #  `Love` = sum(Love, na.rm = TRUE), 
-            `Love you` = sum(`Love you`, na.rm = TRUE),
-          #  `I love you` = sum(`I love you`, na.rm = TRUE),
-            `Babe` = sum(`Babe`, na.rm = TRUE),
-            `Baby` = sum(`Baby`, na.rm = TRUE),
-            `Ben` = sum(`Ben`, na.rm = TRUE),
-            `Laika` = sum(`Laika`, na.rm = TRUE),
-            `Good morning` = sum(`Good morning`, na.rm = TRUE),
-            `Good night` = sum(`Good night`, na.rm = TRUE),
-            `Lol` = sum(`Lol`, na.rm = TRUE)
-            ) %>% 
-  pivot_longer(cols = `Love you`:`Lol`, names_to = "word") %>% 
-  mutate(word = factor(word, levels = c("Love you", "Babe", "Baby", "Ben", "Laika", "Good morning","Good night", "Lol"),  labels = c(1,2,3,4,5,6,7,8)),
-         word = factor(word, labels = c("Love you", "Babe", "Baby", "Ben", "Laika", "Good morning", "Good night","Lol" ),  levels = c(1,2,3,4,5,6,7,8)),
-         ) %>% 
-    rename(`Word(s)` = "word", `Count of particular word(s) used in our texts` = "value")
-
-
-texts_combine_filter_graph <- bind_rows(texts_combine_filter_graph_groups, texts_combine_filter_graph_total)
-
-```
 
 #### Separated by Neil and Karina {.tabset}
 
@@ -371,28 +350,10 @@ mt_hood %>%
 
 <center><img src="meadow_map.jpg"/></center>
 
-```{r, echo = FALSE, fig.height= 10, fig.width = 12}
-hood_runs <- relationship_data$`Snowboarding Runs at Meadows`
-
-hood_runs <- hood_runs %>% 
-  filter(str_detect(Runs, ".*[0-9].*") == FALSE) %>% 
-  mutate(
-    Date = parse_date_time(Date, orders = "%m/%d/%y%H:%M:%S"),
-    Date2 = lubridate::date(Date)
-  )
-
-```
 
 # How often did we take each of the chairlifts at Mt. Hood Meadows?
 
 # By Chairlift {.tabset}
-
-```{r, echo = FALSE}
-hood_runs_tree <- hood_runs %>% 
-  group_by(Runs) %>% 
-  summarize(`Total Runs` = n(),
-            `Vertical Ft. Gained` = sum(`Vertical Ft.`))
-```
 
 ## In vertical feet gained {.tabset}
 
@@ -438,50 +399,22 @@ plot_ly(
 Hover over each dot to see how much vertical feet we gained and each date.
 
 ```{r, echo = FALSE, fig.height= 10, fig.width = 12}
-hood_vert_graph <- hood_runs %>% 
-  group_by(Date2) %>% 
-  summarize(`Vertical Ft. Gained` = sum(`Vertical Ft.`, na.rm = TRUE)) %>% 
-  filter(Date2 >= Snowboarding) %>% 
-  ungroup() %>% 
-  mutate(Season = ifelse(Date2 < as_date("2023-05-27"), "2022-23 Season", "2023-24 Season")) %>% 
-  select(Date = "Date2", everything()) 
-  
-
-max_date_vert <- hood_vert_graph %>% 
-  filter(`Vertical Ft. Gained` == max(`Vertical Ft. Gained`)) %>% 
-  select(Date)
-
-
-proposal_date_vert <- hood_vert_graph %>% 
-  filter(Date == as_date(`We Get Engaged!`)) %>% 
-  select(`Vertical Ft. Gained`)
 
 vertical_feet <- ggplot(hood_vert_graph, aes(x = Date, y =  `Vertical Ft. Gained`, color = Season)) +
   geom_point(size = 3) +
   geom_segment(aes(x=Date, xend=Date, y=0, yend= `Vertical Ft. Gained`)) +
-  #  annotate("rect", xmin = as_date("2023-04-07"), xmax = as_date("2023-12-22"), ymin = 0.0, ymax = 16000, 
-   #        alpha = .25) + 
- #   annotate("pointrange", x = as_date("2023-08-15"), y = 7500, 
-  #         label = "<b>Off Season</b>") +
   theme_classic() +
   scale_y_continuous(expand = c(0, 0, .14, 0)) +
     scale_x_date(date_labels="%b %Y",date_breaks  ="1 month", expand = c(.4,0,.1,0)) +
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
- # geom_point(aes(x = as_date(max_date_vert$Date), max(`Vertical Ft. Gained`)), fill = "blue", color = "blue", shape=18, size = 2.5) +
-  # geom_point(aes(x = as_date(`We Get Engaged!`), y =  proposal_date_vert$`Vertical Ft. Gained`),color = "red", fill = "red", shape=18, size = 2.5) +
   labs(title = "Vertical Feet gained at Mt. Hood Meadows ski resort on days we snowboard!",
        x = "") +
   facet_wrap(~Season, scales = "free_x") +
   theme(legend.position="none")
-  
 
- # scale_x_date(date_breaks = "1 year", date_labels = "%Y") +
-#  theme(axis.text.x.top = element_blank(), axis.ticks.x.top = element_blank())
 
 ggplotly(vertical_feet) %>% 
   layout(hovermode = 'x') %>% 
-  #style(hovertext = paste0("The most vertical feet we have ever gained\n in a day was ", format(max(hood_vert_graph $`Vertical Ft. Gained`), big.mark=","), " feet on ", format(as_date(max_date_vert$Date), "%b %d, %Y"), "!"), traces = 5) %>%
-  #style(hovertext = paste0("We got engaged on ", format(as_date(`We Get Engaged!`), "%b %d, %Y"), "!"), traces = 6) %>% 
   style(hoverinfo = "none", traces = 3:4)
 
 ```
@@ -491,37 +424,13 @@ ggplotly(vertical_feet) %>%
 Hover over each dot to see how many runs we took and each date.
 
 ```{r, echo = FALSE, fig.height= 10, fig.width = 12}
-hood_runs_graph <- hood_runs %>% 
-  group_by(Date2) %>% 
-  summarize(`Total Runs` = n()) %>% 
-  filter(Date2 >= Snowboarding) %>% 
-  ungroup() %>% 
-  mutate(Season = ifelse(Date2 < as_date("2023-05-27"), "2022-23 Season", "2023-24 Season")) %>% 
-  select(Date = "Date2", everything()) 
-
-
-max_date_runs <- hood_runs_graph %>% 
-  filter(`Total Runs` == max(`Total Runs`)) %>% 
-  select(Date)
-
-proposal_date_runs <- hood_runs_graph %>% 
-  filter(Date == as_date(`We Get Engaged!`)) %>% 
-  select(`Total Runs`)
-
 
 total_runs <- ggplot(hood_runs_graph, aes(x = Date, y =  `Total Runs`, color = Season)) +
   geom_point(size = 3) +
   geom_segment(aes(x=Date, xend=Date, y=0, yend= `Total Runs`)) +
-  #  annotate("rect", xmin = as_date("2024-01-01"), xmax = as_date("2024-01-05"), ymin = 0.0, ymax = 16, 
-   #        alpha = .25) + 
- #   annotate("text", x = as_date("2023-08-15"), y = 8, 
- #          label = "<b>Off Season</b>") +
   theme_classic() +
   scale_y_continuous(expand = c(0, 0, .14, 0)) +
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
-   #  geom_point(aes(x = as_date(max_date_runs$Date)[1], max(`Total Runs`)), color = "blue", fill = "blue", shape=18, size = 2.5) +
-    # geom_point(aes(x = as_date(max_date_runs$Date)[2], max(`Total Runs`)), color = "blue", fill = "blue", shape=18, size = 2.5) +
-     #geom_point(aes(x = as_date(`We Get Engaged!`), y =  proposal_date_runs$`Total Runs`), color = "red", fill = "red", shape=18, size = 2.5) +
   labs(title = "Number of runs we take at Mt. Hood Meadows ski resort on days we snowboard!",
        x = "") +
   facet_wrap(~Season, scales = "free_x") +
@@ -531,8 +440,6 @@ total_runs <- ggplot(hood_runs_graph, aes(x = Date, y =  `Total Runs`, color = S
   
 ggplotly(total_runs) %>% 
   layout(hovermode = 'x')  %>% 
-#  style(hovertext = paste0("The most runs we have ever completed\n in a day was ", format(max(hood_runs_graph$`Total Runs`), big.mark=","), " runs on ", format(as_date(max_date_runs$Date[1]), "%b %d, %Y" ), " & ", format(as_date(max_date_runs$Date[2]), "%b %d, %Y"), "!"), traces = 5:6) %>% 
- #   style(hovertext = paste0("We got engaged on ", format(as_date(`We Get Engaged!`), "%b %d, %Y"), "!"), traces = 7) %>% 
   style(hoverinfo = "none", traces = 3:4)
 
 ```
@@ -545,15 +452,10 @@ ggplotly(total_runs) %>%
 sp500 <- macro_data$`S&P 500`
 
 
-
-
 sp500 <- sp500 %>% 
   mutate(Date = as_date(Date)) %>% 
   select(Date, `Close/Last`) %>% 
   mutate(source = "S&P 500")
-
-
-
 
 
 sp500_graph <- ggplot(sp500, aes(x = Date, y = `Close/Last`) )+
@@ -724,118 +626,123 @@ ggplotly(dowjones_graph) %>%
 ```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 10, fig.width = 12 }
 
 reg_table <- numdffinal %>% 
-  left_join(dendffinal, by = "name") %>% 
-  left_join(ffinal    , by = "name") %>% 
-  left_join(pvalfinal , by = "name") %>% 
-  left_join(rfinal    , by = "name") %>% 
-  left_join(r2final   , by = "name") %>% 
+  left_join(estimatefinal, by = "name") %>% 
+  left_join(dendffinal   , by = "name") %>% 
+  left_join(ffinal       , by = "name") %>% 
+  left_join(pvalfinal    , by = "name") %>% 
+  left_join(rfinal       , by = "name") %>% 
+  left_join(r2final      , by = "name") %>% 
   mutate(`Degrees of Freedom` = paste0("(", `Numerator DF`, ", " , `Denominator DF`, ")")) %>% 
-  select(Name = "name", `Degrees of Freedom`, `F-value`, `p-value`, R, `R-squared`) %>% 
+  select(`Market Name` = "name", `Unstandardized Beta`, `Degrees of Freedom`, `F-value`, `p-value`, R, `R-squared`) %>% 
   mutate_if(is.numeric, round, 2) %>% 
   mutate(
-    `F-value`   = ifelse(`F-value`     == 0.00, "< 0.01", `F-value`    ),
-    `p-value`   = ifelse(`p-value`     == 0.00, "< 0.01", `p-value`    ),
-    R           = ifelse( R            == 0.00, "< 0.01",  R           ),
-    `R-squared` = ifelse(`R-squared`   == 0.00, "< 0.01", `R-squared`  )
-  )
+    `Unstandardized Beta`   = ifelse(`Unstandardized Beta`     == 0.00, "< 0.01", `Unstandardized Beta`),
+    `F-value`               = ifelse(`F-value`                 == 0.00, "< 0.01", `F-value`    ),
+    `p-value`               = ifelse(`p-value`                 == 0.00, "< 0.01", `p-value`    ),
+    R                       = ifelse( R                        == 0.00, "< 0.01",  R           ),
+    `R-squared`             = ifelse(`R-squared`               == 0.00, "< 0.01", `R-squared`  ),
+    
+    `Market Name` = ifelse(`Market Name` == "sp500", "S&P500 close price (Absolute)", `Market Name`),
+    `Market Name` = ifelse(`Market Name` == "sp500 difference", "S&P500 close price (Difference)", `Market Name`),
+    `Market Name` = ifelse(`Market Name` == "Dow Jones", "Dow Jones close price (Absolute)", `Market Name`),
+    `Market Name` = ifelse(`Market Name` == "Dow Jones difference", "Dow Jones close price (Difference)", `Market Name`)
+  ) 
 
 
 reg_table %>% 
   kbl(align = "c", escape = FALSE) %>% 
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = TRUE, font_size = 16) %>% 
-  add_footnote(label = "\nOutcome variable = daily quanitity of texts sent between Neil and Karina",notation = "none")
+  add_footnote(label = "\nPredictor variable = Daily quanitity of texts sent between Neil and Karina\nOutcome variable = Corresponding market closing price (Absolute closing value or Daily difference closing value)\nAll models controlled for time (Because the market is better than it was when we first started dating!)",notation = "none")
   
 
 ```
 
 
-## Scatterplots {.tabset}
+## Main Effect Models {.tabset}
 SP 500 scatter plot (By absolute daily closing price)
-```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 10, fig.width = 12 }
+```{r, message = FALSE, warning = FALSE, echo = FALSE}
 
-p_sp500 <- ggplot(textcount_sp500, aes(x = n_texts, y = `Close/Last`)) +
-  geom_point() + 
-  geom_smooth(method = "lm", formula = y ~ x) +
-  theme_classic() +
-  labs(caption = paste0("Our model (Sp500 regressed on number of texts sent) was statistically significant at p <.05. \nThe single regression model (F(", mod_sum$fstatistic[2], ",",  mod_sum$fstatistic[3], ") =", round(mod_sum$fstatistic[1], 2), " p<.05) \nindicates that for every 1 text we send, the SP500 drops about ", round(abs(model$coefficients[2]), 2), " points" )) +
-  theme(plot.caption = element_text(hjust=0)) +
-  annotate("text", label = paste0("Equation: SP500score = ", round(model$coefficients[2],2), "(texts) + e"), x = 200, y = max(textcount_sp500$`Close/Last`))
+textcount_sp500 <- textcount_sp500 %>% 
+  mutate(SP500_Closing_Price = `Close/Last`,
+         Number_of_texts_sent = n_texts,
+         `Days_since_first_text` = as.numeric(as_date(Date) - min(as_date(Date)))
+        )
 
 
-ggplotly(p_sp500)
+
+
+model <- lm(SP500_Closing_Price ~ Number_of_texts_sent + `Days_since_first_text` , data = textcount_sp500)
+ggPredict(model, se = TRUE, colorn = 4, interactive = TRUE, terms = "Number_of_texts_sent") 
+
 ```
 
 SP 500 scatter plot (By Difference daily closing price)
-```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 10, fig.width = 12 }
-
-p_sp500_diff <- ggplot(textcount_sp500_diff, aes(x = n_texts, y = `diff`)) +
-  geom_point() + 
-  geom_smooth(method = "lm", formula = y ~ x) +
-  theme_classic() +
-  labs(caption = paste0("Our model (Sp500 regressed on number of texts sent) was NOT statistically significant at p <.05. \nThe single regression model (F(", mod_sum$fstatistic[2], ",",  mod_sum$fstatistic[3], ") =",
-                        round(mod_sum$fstatistic[1], 2), " p>.05)")) +
-  theme(plot.caption = element_text(hjust=0)) +
-  annotate("text", label = paste0("Equation: SP500score difference = ", round(model$coefficients[2],2), "(texts) + e"), x = 200, y = max(textcount_sp500_diff$`diff`))
+```{r, message = FALSE, warning = FALSE, echo = FALSE}
 
 
-ggplotly(p_sp500_diff)
+
+textcount_sp500_diff <- textcount_sp500_diff %>% 
+  mutate(SP500_Daily_Closing_Difference_Price = diff,
+         Number_of_texts_sent = n_texts,
+         `Days_since_first_text` = as.numeric(as_date(Date) - min(as_date(Date)))
+        )
+
+
+model <- lm(SP500_Daily_Closing_Difference_Price ~ Number_of_texts_sent + `Days_since_first_text` , data = textcount_sp500_diff)
+ggPredict(model, se = TRUE, colorn = 4, interactive = TRUE, terms = "Number_of_texts_sent") 
 ```
 
 Dow Jones scatterplot (By absolute daily closing price)
-```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 10, fig.width = 12 }
-p_dj <- ggplot(textcount_dj, aes(x = n_texts, y = `Close`)) +
-  geom_point() + 
-  geom_smooth(method = "lm", formula = y ~ x) +
-  theme_classic() +
-  labs(caption = paste0("Our model (Sp500 regressed on number of texts sent) was statistically significant at p <.05. \nThe single regression model (F(", mod_sum$fstatistic[2], ",",  mod_sum$fstatistic[3], ") =", round(mod_sum$fstatistic[1], 2), " p<.05) \nindicates that for every 1 text we send, the SP500 drops about ", round(abs(model$coefficients[2]), 2), " points" )) +
-  theme(plot.caption = element_text(hjust=0)) +
-  annotate("text", label = paste0("Equation: Dow Jones score = ", round(model$coefficients[2],2), "(texts) + e"), x = 80, y = max(textcount_dj$`Close`))
+```{r, message = FALSE, warning = FALSE, echo = FALSE}
+
+textcount_dj <- textcount_dj %>% 
+  mutate(Dow_Jones_Daily_Closing_Price = Close,
+         Number_of_texts_sent = n_texts,
+         `Days_since_first_text` = as.numeric(as_date(Date) - min(as_date(Date)))
+        )
 
 
-ggplotly(p_dj)
+model <- lm(Dow_Jones_Daily_Closing_Price~ Number_of_texts_sent + `Days_since_first_text` , data = textcount_dj)
+ggPredict(model, se = TRUE, colorn = 4, interactive = TRUE) 
+
+
+
 ```
 
 Dow Jones scatter plot (By Difference daily closing price)
-```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 10, fig.width = 12 }
-
-p_dj_diff <- ggplot(textcount_dj_diff, aes(x = n_texts, y = `diff`)) +
-  geom_point() + 
-  geom_smooth(method = "lm", formula = y ~ x) +
-  theme_classic() +
-  labs(caption = paste0("Our model (dj diff regressed on number of texts sent) was NOT statistically significant at p <.05. \nThe single regression model (F(", mod_sum$fstatistic[2], ",",  mod_sum$fstatistic[3], ") =",
-                        round(mod_sum$fstatistic[1], 2), " p>.05)")) +
-  theme(plot.caption = element_text(hjust=0)) +
-  annotate("text", label = paste0("Equation: Dow Jones difference = ", round(model$coefficients[2],2), "(texts) + e"), x = 90, y = max(textcount_dj_diff$`diff`))
+```{r, message = FALSE, warning = FALSE, echo = FALSE}
 
 
-ggplotly(p_dj_diff)
+textcount_dj_diff <- textcount_dj_diff %>% 
+  mutate(Dow_Jones_Daily_Closing_Difference_Price = diff,
+         Number_of_texts_sent = n_texts,
+         `Days_since_first_text` = as.numeric(as_date(Date) - min(as_date(Date)))
+        )
+
+
+model <- lm(Dow_Jones_Daily_Closing_Difference_Price ~ Number_of_texts_sent + `Days_since_first_text` , data = textcount_dj_diff)
+ggPredict(model, se = TRUE, colorn = 4, interactive = TRUE) 
 ```
 
+## Interaction Model
+```{r, message = FALSE, warning = FALSE, echo = FALSE}
+textcount_sp500 <- textcount_sp500 %>% 
+  mutate(SP500_Closing_Price = `Close/Last`,
+         Number_of_texts_sent = n_texts,
+         Date_f = factor(Date),
+         `Days_since_first_text` = as.numeric(as_date(Date) - min(as_date(Date)))
+         )
+
+model <- lm( `SP500_Closing_Price` ~ Number_of_texts_sent + `Days_since_first_text` + Number_of_texts_sent*`Days_since_first_text`, data = textcount_sp500)
+#summary(model)
+
+
+ggPredict(model, se = TRUE,  interactive = TRUE, terms = c("n_texts", "Days_since_first_text")) 
+```
 
 
 # Financial Data {.tabset}
-```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 10, fig.width = 12 }
-finance <- finance %>% 
-  filter(`Proposed Category` != "0") %>% 
-  mutate(`Proposed Category` = ifelse(`Proposed Category` == "Zoos & Acquariums", "Zoos & Aquariums", `Proposed Category`)) 
- 
-  
-finance_summ <- finance %>%   
-  group_by(`Proposed Category`) %>% 
-  summarize(Amount = sum(Amount)) %>% 
-  ungroup() %>% 
-  arrange(desc(Amount)) %>% 
-  mutate(Total = sum(Amount)) %>% 
-  rowwise() %>% 
-  mutate(Amount = round(Amount / Total * 100, 2)) %>% 
-  ungroup() %>% 
-  mutate(`Proposed Category` = ifelse(`Proposed Category` == "airbnb", "AirBnB", `Proposed Category`)) %>% 
-  arrange(`Proposed Category`)
 
-
-
-#table(finance$`Proposed Category`)
-```
 ## Overall {.tabset}
 ```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 10, fig.width = 12 }
 
@@ -860,73 +767,24 @@ plot_ly(
 ```
 
 ## Separated by Karina & Neil {.tabset}
-```{r, echo = FALSE, message = FALSE, warning = FALSE}
-finance_summ_group <- finance %>%   
-  group_by(User, `Proposed Category`) %>% 
-  summarize(Amount = sum(Amount), .groups = "keep") %>% 
-  ungroup() %>% 
-  group_by(User) %>% 
-  mutate(Total = sum(Amount)) %>% 
-  arrange(desc(Amount)) %>%
-  rowwise() %>% 
-  mutate(Amount = round(Amount / Total * 100, 2)) %>% 
-  ungroup() %>% 
-  mutate(`Proposed Category` = ifelse(`Proposed Category` == "airbnb", "AirBnB", `Proposed Category`))
+
+Karina's Spending 
+```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 7, fig.width = 9 }
+Karina_fig <- plot_ly(
+  finance_summ_Karina,
+  labels = ~`Proposed Category`,
+  parents = NA,
+  values = ~ Amount,
+  type = 'treemap',
+   marker=list(colors=col[["name"]]),
+  marker = list(`Proposed Category` = ~`Proposed Category`),
+  hovertemplate = "%{value}% of Karina's spending is on %{label}.<extra></extra>"
+) 
+
+Karina_fig
 ```
-
-
-
-```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 10, fig.width = 12, fig.show='hold'}
-
-finance_summ_Neil <- finance_summ_group  %>% 
-  filter(User == "Neil") %>% 
-  arrange(`Proposed Category`) 
-
-finance_summ_Karina <- finance_summ_group  %>% 
-  filter(User == "Karina")
-
-cats_all <- finance_summ_group %>% 
-  select(`Proposed Category`)
-
-cats_neil <- finance_summ_Neil %>% 
-  select(`Proposed Category`)
-
-cats_karina <- finance_summ_Karina %>% 
-  select(`Proposed Category`)
-
-
-cats_no_neil <- cats_all %>% 
-  anti_join(cats_neil, by = "Proposed Category") %>% 
-  mutate(User = "Neil",
-         Amount = 0, 
-         Total = 0 ) %>% 
-  select(User, `Proposed Category`, Amount, Total )
-
-
-cats_no_karina <- cats_all %>% 
-  anti_join(cats_karina, by = "Proposed Category") %>% 
-  mutate(User = "Karina",
-         Amount = 0, 
-         Total = 0 ) %>% 
-  select(User, `Proposed Category`, Amount, Total )
-
-
-finance_summ_Neil <- finance_summ_Neil %>% 
-  bind_rows(cats_no_neil) %>% 
-  arrange(`Proposed Category`) %>% 
-  mutate(`Proposed Category` = factor(`Proposed Category`))
-  
-  
-
-finance_summ_Karina <- finance_summ_Karina %>% 
-  bind_rows(cats_no_karina) %>% 
-  arrange(`Proposed Category`) %>% 
-  mutate(`Proposed Category` = factor(`Proposed Category`))
-
-#finance_summ_Neil <- arrange(finance_summ_Neil, desc(`Proposed Category`))
-
-
-
+Neil's Spending
+```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 7, fig.width = 9}
 
 Neil_fig <- plot_ly(
   finance_summ_Neil,
@@ -940,85 +798,17 @@ Neil_fig <- plot_ly(
   hovertemplate = "%{value}% of Neil's spending is on %{label}.<extra></extra>"
 ) 
 
-Karina_fig <- plot_ly(
-  finance_summ_Karina,
-  labels = ~`Proposed Category`,
-  parents = NA,
-  values = ~ Amount,
-  type = 'treemap',
-   marker=list(colors=col[["name"]]),
-  marker = list(`Proposed Category` = ~`Proposed Category`),
-  hovertemplate = "%{value}% of Karina's spending is on %{label}.<extra></extra>"
-) 
-par(mfrow=c(1,2))
 
-#Karina_fig
-#Neil_fig
-
-#manipulateWidget::combineWidgets(Karina_fig, Neil_fig, nrow = 1)
-
-```
-
-Karina's Spending 
-```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 7, fig.width = 9 }
-Karina_fig
-```
-Neil's Spending
-```{r, message = FALSE, warning = FALSE, echo = FALSE, fig.height= 7, fig.width = 9}
 Neil_fig
 ```
 
 
 
 
-```{r, echo = FALSE, eval = FALSE}
-##For Karina
-#for_karina_mon <- finance %>% 
-#  mutate(`Month Year` = format(ymd(`Transaction Date`), "%B %Y")) %>% 
-#  group_by(User, `Proposed Category`, `Month Year`) %>% 
-#  summarize(Amount = sum(Amount), .groups = "keep") %>% 
-#  ungroup() %>% 
-#  group_by(User, `Month Year`) %>% 
-#  mutate(Total = sum(`Amount`)) %>% 
-#  ungroup() %>% 
-#  mutate(Amount = Amount / Total) %>% 
-#  #select(-Total) %>% 
-#  arrange(`Proposed Category`, `Month Year`, `User`)
-#
-#
-#
-#
-#for_karina_quar <- finance %>% 
-#  mutate(Quarter = zoo::as.yearqtr(`Transaction Date`, , format = "%Y-%m-%d"),
-#         Quarter =  format(Quarter, format = "Q%q'%y")) %>% 
-#  group_by(User, `Proposed Category`, `Quarter`) %>% 
-#  summarize(Amount = sum(Amount), .groups = "keep") %>% 
-#  ungroup() %>% 
-#  group_by(User, Quarter) %>% 
-#  mutate(Total = sum(`Amount`)) %>% 
-#  ungroup() %>% 
-#  mutate(Amount = Amount / Total) %>% 
-#  #select(-Total) %>% 
-#  arrange(`Proposed Category`, `User`)
-#
-#
-#write_xlsx(for_karina_mon ,"finance_summed_month.xlsx"  , format_headers = FALSE) 
-#write_xlsx(for_karina_quar,"finance_summed_quarter.xlsx", format_headers = FALSE) 
-```
 
-```{r, rows.print=100, eval = FALSE, echo = FALSE}
-#for_karina_mon %>% 
-#  group_by(`User`, `Month Year`) %>% 
-#  summarize(sum = sum(Amount))
-#
-#
-#for_karina_quar %>% 
-#  group_by(`User`, `Quarter`) %>% 
-#  summarize(sum = sum(Amount))
-```
+# Interested in how these charts were made?
+[Click here to see our Github repository!](https://github.com/ndyetz/ourloveinnumbers.github.io)
 
-
-#  
 
 <center><img src="KN.png"/></center>
 

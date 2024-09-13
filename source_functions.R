@@ -12,6 +12,9 @@ library(scales)
 library(manipulateWidget)
 library(writexl)
 library(pals)
+library(ggiraph)
+library(ggiraphExtra)
+library(ggeffects)
 
 
 # Special Dates - Keep at top - add any more special ones!
