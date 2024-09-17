@@ -61,22 +61,21 @@ h1, h2, h3 {
 
 ```{r, message = FALSE, echo = FALSE, warning = FALSE}
 #Clear Environment
-rm(list = ls())
+#rm(list = ls())
 ```
 
 ```{r, message = FALSE, echo = FALSE, warning = FALSE}
 
-#Clear Environment
-rm(list = ls())
+#Currently being run in "run.R"
 
 #Libraries and functions (Includes Dates)
-source("source_functions.R")
+#source("source_functions.R")
 
 # Load data and formatting
-source("source_file.R")
+#source("source_file.R")
 
 # Google API. for google_maps(). Function will not work without API key.
-source("private_key.R")
+#source("private_key.R")
 ```
 
 
@@ -320,7 +319,9 @@ map %>%
   googleway::add_markers(lat = "lat", lon = "lon",  mouse_over = "info")
 ```
 
-# Check Out How Much We Snowboard!
+# Snowboarding data!
+
+![](nkmeadows.png){ width=150% height=150% }
 
 # Take a look at the Runs! {.tabset}
 
@@ -444,7 +445,10 @@ ggplotly(total_runs) %>%
 
 ```
 
-# Macro indicators {.tabset}
+# Market Comparison {.tabset}
+
+
+<center><img src="sp500dow.png"/></center>
 
 ## S&P500 {.tabset}
 
