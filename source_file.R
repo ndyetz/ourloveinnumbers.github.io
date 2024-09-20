@@ -270,8 +270,8 @@ texts_combine_filter_graph_groups  <- texts_combine_filter %>%
     .groups = "keep") %>% 
   ungroup() %>% 
   pivot_longer(cols = `Love you`:`Lol`, names_to = "word") %>% 
-  mutate(word = factor(word, levels = c("Love you", "Babe", "Baby", "Ben", "Laika", "Good morning","Good night", "Lol"),    labels = c(1,2,3,4,5,6,7,8)),
-         word = factor(word, labels = c("Love you", "Babe", "Baby", "Ben", "Laika", "Good morning", "Good night", "Lol" ),  levels = c(1,2,3,4,5,6,7,8)),
+  mutate(word = factor(word, levels = c("Baby",  "Babe", "Love you", "Ben", "Laika", "Good morning", "Good night", "Lol"),    labels = c(1,2,3,4,5,6,7,8)),
+         word = factor(word, labels = c("Baby",  "Babe", "Love you", "Ben", "Laika", "Good morning", "Good night", "Lol" ),  levels = c(1,2,3,4,5,6,7,8)),
   )%>% 
   rename(`Word(s)` = "word", `Count of particular word(s) used in our texts` = "value")
 
@@ -291,8 +291,8 @@ texts_combine_filter_graph_total  <- texts_combine_filter %>%
             `Lol` = sum(`Lol`, na.rm = TRUE)
   ) %>% 
   pivot_longer(cols = `Love you`:`Lol`, names_to = "word") %>% 
-  mutate(word = factor(word, levels = c("Love you", "Babe", "Baby", "Ben", "Laika", "Good morning","Good night", "Lol"),  labels = c(1,2,3,4,5,6,7,8)),
-         word = factor(word, labels = c("Love you", "Babe", "Baby", "Ben", "Laika", "Good morning", "Good night","Lol" ),  levels = c(1,2,3,4,5,6,7,8)),
+  mutate(word = factor(word, levels = c( "Baby","Babe",  "Love you",  "Ben", "Laika", "Good morning","Good night"  , "Lol"),  labels = c(1,2,7,4,5,6,3,8)),
+         word = factor(word, labels = c("Baby" ,"Babe",  "Love you",  "Ben", "Laika", "Good morning", "Good night" , "Lol" ),  levels = c(1,2,3,4,5,6,7,8)),
   ) %>% 
   rename(`Word(s)` = "word", `Count of particular word(s) used in our texts` = "value")
 
@@ -588,6 +588,69 @@ pval <- as_tibble(overall_p(model))
 pval <- pval %>% rename(`p-value` = "value") %>% mutate(name = "Dow Jones difference"); 
 pvalfinal <- bind_rows(pvalfinal, pval)
 
+
+
+
+
+
+# S&P 500 Interaction 
+
+textcount_sp500 <- textcount_sp500 %>% 
+  mutate(SP500_Closing_Price = `Close/Last`,
+         Number_of_texts_sent = n_texts,
+         Date_f = factor(Date),
+         `Days_since_first_text` = as.numeric(as_date(Date) - min(as_date(Date)))
+  )
+
+model <- lm( `SP500_Closing_Price` ~ Number_of_texts_sent + `Days_since_first_text` + Number_of_texts_sent*`Days_since_first_text`, data = textcount_sp500)
+#summary(model)
+
+
+confs_in <- confint(model)
+mod_sum_in <- summary(model)
+
+# Get Beta value 
+estimate_in      <- as_tibble(summary(model)$coefficients[2])
+estimate_in      <- estimate_in %>% rename(`Unstandardized Beta` = "value") %>%  mutate(name = "sp500"); 
+estimatefinal_in <- estimate_in
+
+
+# Get Beta value 
+estimate_in2      <- as_tibble(summary(model)$coefficients[4])
+estimate_in2      <- estimate_in2 %>% rename(`Unstandardized Beta (texts*time)` = "value") %>%  mutate(name = "sp500"); 
+estimatefinal_in2 <- estimate_in2
+
+
+
+#Get R
+r_in      <- as_tibble(cor(textcount_sp500$n_texts, textcount_sp500$`Close/Last`)); 
+r_in      <- r_in %>% rename(R = "value") %>%  mutate(name = "sp500"); 
+rfinal_in <- r_in
+
+#Get R^2
+r2_in      <- as_tibble(summary(model)$r.squared); 
+r2_in      <- r2_in %>% rename(`R-squared` = "value" ) %>%  mutate(name = "sp500"); 
+r2final_in <- r2_in
+
+#Get f
+f_in <- as_tibble(summary(model)$fstatistic[1])
+f_in <- f_in %>% rename(`F-value` = "value") %>% mutate(name = "sp500")
+ffinal_in <- f_in
+
+#Get Numerator DF
+numdf_in <- as_tibble(summary(model)$fstatistic[2])
+numdf_in <- numdf_in %>% rename(`Numerator DF` = "value") %>% mutate(name = "sp500")
+numdffinal_in <- numdf_in
+
+#Get Denominator DF
+dendf_in <- as_tibble(summary(model)$fstatistic[3])
+dendf_in <- dendf_in %>% rename(`Denominator DF` = "value") %>% mutate(name = "sp500")
+dendffinal_in <- dendf_in
+
+#Get Omnibus P-value (overall_p() is a custom function)
+pval_in <- as_tibble(overall_p(model))
+pval_in <- pval_in %>% rename(`p-value` = "value") %>% mutate(name = "sp500")
+pvalfinal_in <- pval_in
 
 
 #Financial data
