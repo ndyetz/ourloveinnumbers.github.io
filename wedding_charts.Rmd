@@ -601,7 +601,8 @@ hover_range_words(pall)
 travel <- suppress(read_csv("travel_neil.csv"))
 
 travel <- travel %>% 
-  mutate(info = paste0(place, "<br>", country, ifelse(country == "USA", ", ", ""), ifelse(!is.na(state), state, ""), "<br>", "We last visited ", place, " on ", date))
+  mutate(date = ifelse(is.na(date), "...", date)) %>% 
+  mutate(info = paste0(place, "<br>", country, ifelse(country == "USA", ", ", ""), ifelse(!is.na(state), state, ""), "<br>", "We last visited ", place, " on ", date, "<br>", describe))
   
 register_google(key = private_key, account_type = "standard")
 
@@ -932,6 +933,75 @@ ggplotly(dowjones_graph) %>%
 ```
 <sup>*Hover over the chart and milestones for more information about our milestones and the market price. Or click on the chart legend to show/hide any trends.*</sup>
 
+## Financial<br>Data {.tabset .tabset-fade .tabset-pills}
+
+### Our Overall Spending Habits {.tabset .tabset-fade .tabset-pills}
+
+Each square below corresponds to the percentage *disposable income* (i.e. necessary expenses like mortgage, utilities, car payments, etc. are not included) we spend on selected categories. We seem especially interested in spending our disposable income on bars/restaurants and Amazon products!
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%" }
+
+
+plot_ly(
+  finance_summ,
+  labels = ~`Proposed Category`,
+  parents = NA,
+  values = ~ Amount,
+  type = 'treemap',
+   marker=list(colors=col[["name"]]),
+  marker = list(`Proposed Category` = ~`Proposed Category`),
+  hovertemplate = "%{value}% of our spending is on %{label}.<extra></extra>"
+) %>% 
+  layout(title= list(text = ""))
+
+```
+<sup>*Hover over each box to see what percentage we spend on each category*</sup>
+
+### Our Individual Spending Habits {.tabset .tabset-fade .tabset-pills}
+
+**Karina's Spending**
+
+Karina spends the most percentage of her disposable income on Amazon purchases and other merchandise!
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE, out.height= "100%", out.width = "100%" }
+Karina_fig <- plot_ly(
+  finance_summ_Karina,
+  labels = ~`Proposed Category`,
+  parents = NA,
+  values = ~ Amount,
+  type = 'treemap',
+   marker=list(colors=col[["name"]]),
+  marker = list(`Proposed Category` = ~`Proposed Category`),
+  hovertemplate = "%{value}% of Karina's spending is on %{label}.<extra></extra>"
+) 
+
+Karina_fig
+```
+<sup>*Hover over each box to see what percentage Karina spends on each category.*</sup>
+
+**Neil's Spending**
+
+Neil spends the majority of his disposable income on bars & Restaurants. Makes sense, he loves to eat and drink!
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
+
+Neil_fig <- plot_ly(
+  finance_summ_Neil,
+  labels = ~`Proposed Category`,
+  parents = NA,
+  values = ~Amount,
+  type = 'treemap',
+ # color = ~`Proposed Category`,
+  marker=list(colors=col[["name"]]),
+ # marker = list(`Proposed Category` = ~`Proposed Category`),
+  hovertemplate = "%{value}% of Neil's spending is on %{label}.<extra></extra>"
+) 
+
+
+Neil_fig
+```
+<sup>*Hover over each box to see what percentage Neil spends on each category.*</sup>
+
 ## Texting Data & Market <br>Correlates {.tabset .tabset-fade .tabset-pills}
 
 **For fun, we decided to see if our texting data is predictive of the S&P 500 and Dow Jones market prices.** **We share a passion for working with quantitative data and this was a fun way for us to show off that passion.**
@@ -1102,74 +1172,7 @@ ggPredict(model, se = TRUE,  interactive = TRUE, terms = c("n_texts", "Days_sinc
 
 This model *is* statistically significant: F(3,407) = 1347.84, p \<.01, R<sup>2</sup> = 0.91. Suggesting that, for every 1 text we send, the S&P 500 market price is expected to increase 1.07 points - however, for every day that passes, the beta (slope) is expected to *decrease* by 0.0028 points. The chart above shows the expected change in slope at 0, 200, 400, 600, & 800 days since we started texting. As can be seen from the chart above, after enough time, the relationship turns from positive to negative!
 
-## Financial<br>Data {.tabset .tabset-fade .tabset-pills}
 
-### Our Overall Spending Habits {.tabset .tabset-fade .tabset-pills}
-
-Each square below corresponds to the percentage we spend on selected categories. We seem especially interested in spending money on bars/restaraunts and Amazon products!
-
-```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%" }
-
-
-plot_ly(
-  finance_summ,
-  labels = ~`Proposed Category`,
-  parents = NA,
-  values = ~ Amount,
-  type = 'treemap',
-   marker=list(colors=col[["name"]]),
-  marker = list(`Proposed Category` = ~`Proposed Category`),
-  hovertemplate = "%{value}% of our spending is on %{label}.<extra></extra>"
-) %>% 
-  layout(title= list(text = ""))
-
-```
-<sup>*Hover over each box to see what percentage we spend on each category*</sup>
-
-### Our Individual Spending Habits {.tabset .tabset-fade .tabset-pills}
-
-**Karina's Spending**
-
-Karina spends the most percentage of her money on Amazon purchases and other merchandise!
-
-```{r, message = FALSE, warning = FALSE, echo = FALSE, out.height= "100%", out.width = "100%" }
-Karina_fig <- plot_ly(
-  finance_summ_Karina,
-  labels = ~`Proposed Category`,
-  parents = NA,
-  values = ~ Amount,
-  type = 'treemap',
-   marker=list(colors=col[["name"]]),
-  marker = list(`Proposed Category` = ~`Proposed Category`),
-  hovertemplate = "%{value}% of Karina's spending is on %{label}.<extra></extra>"
-) 
-
-Karina_fig
-```
-<sup>*Hover over each box to see what percentage Karina spends on each category.*</sup>
-
-**Neil's Spending**
-
-Neil spends the majority of his money on bars & Restaurants. Makes sense, he loves to eat and drink!
-
-```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
-
-Neil_fig <- plot_ly(
-  finance_summ_Neil,
-  labels = ~`Proposed Category`,
-  parents = NA,
-  values = ~Amount,
-  type = 'treemap',
- # color = ~`Proposed Category`,
-  marker=list(colors=col[["name"]]),
- # marker = list(`Proposed Category` = ~`Proposed Category`),
-  hovertemplate = "%{value}% of Neil's spending is on %{label}.<extra></extra>"
-) 
-
-
-Neil_fig
-```
-<sup>*Hover over each box to see what percentage Neil spends on each category.*</sup>
 
 # 
 
