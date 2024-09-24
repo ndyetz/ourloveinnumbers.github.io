@@ -597,6 +597,7 @@ pvalfinal <- bind_rows(pvalfinal, pval)
 
 textcount_sp500 <- textcount_sp500 %>% 
   mutate(SP500_Closing_Price = `Close/Last`,
+         diff = `Close/Last` - Open,
          Number_of_texts_sent = n_texts,
          Date_f = factor(Date),
          `Days_since_first_text` = as.numeric(as_date(Date) - min(as_date(Date)))
@@ -609,23 +610,23 @@ model <- lm( `SP500_Closing_Price` ~ Number_of_texts_sent + `Days_since_first_te
 confs_in <- confint(model)
 mod_sum_in <- summary(model)
 
+
 # Get Beta value 
 estimate_in      <- as_tibble(summary(model)$coefficients[2])
-estimate_in      <- estimate_in %>% rename(`Unstandardized Beta` = "value") %>%  mutate(name = "sp500"); 
+estimate_in      <- estimate_in %>% rename(`Unstandardized Beta (texts)` = "value") %>%  mutate(name = "sp500"); 
 estimatefinal_in <- estimate_in
 
-
 # Get Beta value 
-estimate_in2      <- as_tibble(summary(model)$coefficients[4])
-estimate_in2      <- estimate_in2 %>% rename(`Unstandardized Beta (texts*time)` = "value") %>%  mutate(name = "sp500"); 
+estimate_in2      <- as_tibble(summary(model)$coefficients[3])
+estimate_in2      <- estimate_in2 %>% rename(`Unstandardized Beta (time)` = "value") %>%  mutate(name = "sp500"); 
 estimatefinal_in2 <- estimate_in2
 
+# Get Beta value 
+estimate_in3      <- as_tibble(summary(model)$coefficients[4])
+estimate_in3      <- estimate_in3 %>% rename(`Unstandardized Beta (texts*time)` = "value") %>%  mutate(name = "sp500"); 
+estimatefinal_in3 <- estimate_in3
 
 
-#Get R
-r_in      <- as_tibble(cor(textcount_sp500$n_texts, textcount_sp500$`Close/Last`)); 
-r_in      <- r_in %>% rename(R = "value") %>%  mutate(name = "sp500"); 
-rfinal_in <- r_in
 
 #Get R^2
 r2_in      <- as_tibble(summary(model)$r.squared); 
@@ -651,6 +652,189 @@ dendffinal_in <- dendf_in
 pval_in <- as_tibble(overall_p(model))
 pval_in <- pval_in %>% rename(`p-value` = "value") %>% mutate(name = "sp500")
 pvalfinal_in <- pval_in
+
+
+
+
+
+
+# S&P 500 Daily Difference Interaction 
+
+model <- lm( `diff` ~ Number_of_texts_sent + `Days_since_first_text` + Number_of_texts_sent*`Days_since_first_text`, data = textcount_sp500)
+#summary(model)
+
+
+confs_in <- confint(model)
+mod_sum_in <- summary(model)
+
+# Get Beta value 
+estimate_in      <- as_tibble(summary(model)$coefficients[2])
+estimate_in      <- estimate_in %>% rename(`Unstandardized Beta (texts)` = "value") %>%  mutate(name = "sp500 difference"); 
+estimatefinal_in <- bind_rows(estimatefinal_in, estimate_in)
+
+# Get Beta value 
+estimate_in2      <- as_tibble(summary(model)$coefficients[3])
+estimate_in2      <- estimate_in2 %>% rename(`Unstandardized Beta (time)` = "value") %>%  mutate(name = "sp500 difference"); 
+estimatefinal_in2 <- bind_rows(estimatefinal_in2, estimate_in2)
+
+# Get Beta value 
+estimate_in3      <- as_tibble(summary(model)$coefficients[4])
+estimate_in3      <- estimate_in3 %>% rename(`Unstandardized Beta (texts*time)` = "value") %>%  mutate(name = "sp500 difference"); 
+estimatefinal_in3 <- bind_rows(estimatefinal_in3 ,estimate_in3)
+
+
+
+#Get R^2
+r2_in      <- as_tibble(summary(model)$r.squared); 
+r2_in      <- r2_in %>% rename(`R-squared` = "value" ) %>%  mutate(name = "sp500 difference"); 
+r2final_in <- bind_rows(r2final_in, r2_in)
+
+#Get f
+f_in <- as_tibble(summary(model)$fstatistic[1])
+f_in <- f_in %>% rename(`F-value` = "value") %>% mutate(name = "sp500 difference")
+ffinal_in <- bind_rows(ffinal_in,f_in)
+
+#Get Numerator DF
+numdf_in <- as_tibble(summary(model)$fstatistic[2])
+numdf_in <- numdf_in %>% rename(`Numerator DF` = "value") %>% mutate(name = "sp500 difference")
+numdffinal_in <- bind_rows(numdffinal_in, numdf_in)
+
+#Get Denominator DF
+dendf_in <- as_tibble(summary(model)$fstatistic[3])
+dendf_in <- dendf_in %>% rename(`Denominator DF` = "value") %>% mutate(name = "sp500 difference")
+dendffinal_in <- bind_rows(dendffinal_in, dendf_in)
+
+#Get Omnibus P-value (overall_p() is a custom function)
+pval_in <- as_tibble(overall_p(model))
+pval_in <- pval_in %>% rename(`p-value` = "value") %>% mutate(name = "sp500 difference")
+pvalfinal_in <- bind_rows(pvalfinal_in, pval_in)
+
+
+
+
+
+textcount_dj <- textcount_dj %>% 
+  mutate(`Dow_Jones_Daily_Closing_Price` = `Close`,
+         diff = `Close` - Open,
+         Number_of_texts_sent = n_texts,
+         Date_f = factor(Date),
+         `Days_since_first_text` = as.numeric(as_date(Date) - min(as_date(Date)))
+  )
+
+
+
+# Dow Jones Interaction 
+
+model <- lm( `Dow_Jones_Daily_Closing_Price` ~ Number_of_texts_sent + `Days_since_first_text` + Number_of_texts_sent*`Days_since_first_text`, data = textcount_dj)
+#summary(model)
+
+
+confs_in <- confint(model)
+mod_sum_in <- summary(model)
+
+# Get Beta value 
+estimate_in      <- as_tibble(summary(model)$coefficients[2])
+estimate_in      <- estimate_in %>% rename(`Unstandardized Beta (texts)` = "value") %>%  mutate(name = "Dow Jones"); 
+estimatefinal_in <- bind_rows(estimatefinal_in, estimate_in)
+
+# Get Beta value 
+estimate_in2      <- as_tibble(summary(model)$coefficients[3])
+estimate_in2      <- estimate_in2 %>% rename(`Unstandardized Beta (time)` = "value") %>%  mutate(name = "Dow Jones"); 
+estimatefinal_in2 <- bind_rows(estimatefinal_in2, estimate_in2)
+
+# Get Beta value 
+estimate_in3      <- as_tibble(summary(model)$coefficients[4])
+estimate_in3      <- estimate_in3 %>% rename(`Unstandardized Beta (texts*time)` = "value") %>%  mutate(name = "Dow Jones"); 
+estimatefinal_in3 <- bind_rows(estimatefinal_in3 ,estimate_in3)
+
+
+
+#Get R^2
+r2_in      <- as_tibble(summary(model)$r.squared); 
+r2_in      <- r2_in %>% rename(`R-squared` = "value" ) %>%  mutate(name = "Dow Jones"); 
+r2final_in <- bind_rows(r2final_in, r2_in)
+
+#Get f
+f_in <- as_tibble(summary(model)$fstatistic[1])
+f_in <- f_in %>% rename(`F-value` = "value") %>% mutate(name = "Dow Jones")
+ffinal_in <- bind_rows(ffinal_in,f_in)
+
+#Get Numerator DF
+numdf_in <- as_tibble(summary(model)$fstatistic[2])
+numdf_in <- numdf_in %>% rename(`Numerator DF` = "value") %>% mutate(name = "Dow Jones")
+numdffinal_in <- bind_rows(numdffinal_in, numdf_in)
+
+#Get Denominator DF
+dendf_in <- as_tibble(summary(model)$fstatistic[3])
+dendf_in <- dendf_in %>% rename(`Denominator DF` = "value") %>% mutate(name = "Dow Jones")
+dendffinal_in <- bind_rows(dendffinal_in, dendf_in)
+
+#Get Omnibus P-value (overall_p() is a custom function)
+pval_in <- as_tibble(overall_p(model))
+pval_in <- pval_in %>% rename(`p-value` = "value") %>% mutate(name = "Dow Jones")
+pvalfinal_in <- bind_rows(pvalfinal_in, pval_in)
+
+
+
+
+# Dow Jones Daily Difference Interaction 
+
+model <- lm( `diff` ~ Number_of_texts_sent + `Days_since_first_text` + Number_of_texts_sent*`Days_since_first_text`, data = textcount_dj)
+#summary(model)
+
+
+confs_in <- confint(model)
+mod_sum_in <- summary(model)
+
+# Get Beta value 
+estimate_in      <- as_tibble(summary(model)$coefficients[2])
+estimate_in      <- estimate_in %>% rename(`Unstandardized Beta (texts)` = "value") %>%  mutate(name = "Dow Jones difference"); 
+estimatefinal_in <- bind_rows(estimatefinal_in, estimate_in)
+
+# Get Beta value 
+estimate_in2      <- as_tibble(summary(model)$coefficients[3])
+estimate_in2      <- estimate_in2 %>% rename(`Unstandardized Beta (time)` = "value") %>%  mutate(name = "Dow Jones difference"); 
+estimatefinal_in2 <- bind_rows(estimatefinal_in2, estimate_in2)
+
+# Get Beta value 
+estimate_in3      <- as_tibble(summary(model)$coefficients[4])
+estimate_in3      <- estimate_in3 %>% rename(`Unstandardized Beta (texts*time)` = "value") %>%  mutate(name = "Dow Jones difference"); 
+estimatefinal_in3 <- bind_rows(estimatefinal_in3 ,estimate_in3)
+
+
+
+#Get R^2
+r2_in      <- as_tibble(summary(model)$r.squared); 
+r2_in      <- r2_in %>% rename(`R-squared` = "value" ) %>%  mutate(name = "Dow Jones difference"); 
+r2final_in <- bind_rows(r2final_in, r2_in)
+
+#Get f
+f_in <- as_tibble(summary(model)$fstatistic[1])
+f_in <- f_in %>% rename(`F-value` = "value") %>% mutate(name = "Dow Jones difference")
+ffinal_in <- bind_rows(ffinal_in,f_in)
+
+#Get Numerator DF
+numdf_in <- as_tibble(summary(model)$fstatistic[2])
+numdf_in <- numdf_in %>% rename(`Numerator DF` = "value") %>% mutate(name = "Dow Jones difference")
+numdffinal_in <- bind_rows(numdffinal_in, numdf_in)
+
+#Get Denominator DF
+dendf_in <- as_tibble(summary(model)$fstatistic[3])
+dendf_in <- dendf_in %>% rename(`Denominator DF` = "value") %>% mutate(name = "Dow Jones difference")
+dendffinal_in <- bind_rows(dendffinal_in, dendf_in)
+
+#Get Omnibus P-value (overall_p() is a custom function)
+pval_in <- as_tibble(overall_p(model))
+pval_in <- pval_in %>% rename(`p-value` = "value") %>% mutate(name = "Dow Jones difference")
+pvalfinal_in <- bind_rows(pvalfinal_in, pval_in)
+
+
+
+
+
+
+
+
 
 
 #Financial data

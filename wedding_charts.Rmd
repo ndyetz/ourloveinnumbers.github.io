@@ -151,21 +151,22 @@ h1 {
 
 <center>![](together.png){width="70%"}</center>
 
-<center>[**Click here to go back to our wedding website**](https://www.theknot.com/us/karina-convers-and-neil-yetz-aug-2025)</center>
-
 ## Texting<br>Data {.tabset .tabset-fade .tabset-pills}
 
 ### Word<br>Cloud {.tabset .tabset-fade .tabset-pills}
 
-**Over the course of our relationship, we texted some words more than other. See our word cloud below.**
+**Over the course of our relationship, we texted some words more than others. See our word cloud below.**
+<br>
 
 ```{r, echo = FALSE}
 #Word cloud image in markdown below. 
 ```
 
+**"Baby", "Babe", "Love", and "Lol" are a few of our most frequently used words!**
+
 <center><img src="word_cloud.png" width="80%"/></center>
 
-**"*Baby*", "*Babe*", "*Love*", and "*Lol*" are a few of our most frequently used words!**
+**"ETA", "BTW", and "FYI" also make the top list.**
 
 ### Our Texts Over Time {.tabset .tabset-fade .tabset-pills}
 
@@ -743,7 +744,7 @@ ggplotly(vertical_feet) %>%
 
 <sup>*Hover over each dot to see how much vertical feet we gained on each date we snowboarded at Mt. Hood Meadows ski resort.*</sup>
 
-**We seem to tap out around 15 runs in a day!**
+**We seem to tap out around 15 runs in a day...**
 
 **By number of Runs Completed**
 
@@ -798,7 +799,7 @@ plot_ly(
 
 <sup>*Hover over each box to see how much vertical feet we have gained on each chairlift at Mt. Hood Meadows ski resort!*</sup>
 
-**But we are not ashamed to take Easy Rider to get us to the Beginners Freestyle Park!**
+**But we are not ashamed to take Easy Rider to get us to our favorite beginners Freestyle Park!**
 
 **By number of runs**
 
@@ -822,11 +823,10 @@ plot_ly(
 
 ## Discretionary<br>Spending {.tabset .tabset-fade .tabset-pills}
 
-### Our Overall Spending Habits {.tabset .tabset-fade .tabset-pills}
-
-**Each square below corresponds to a percentage of our disposable income spent on a given category (i.e. this excludes boring spending like mortgage, utilities, student loans, or car payments).**
-
+**Each box below corresponds to a percentage of our disposable income spent on a given category (i.e. this excludes boring spending like mortgage, utilities, student loans, or car payments).**
 <br>
+
+### Our Overall Spending Habits {.tabset .tabset-fade .tabset-pills}
 
 **Besides the obvious Bars & Restaruants and Amazon spending, we were surprised to see how much we spent on Chipotle and Golf!**
 
@@ -851,11 +851,11 @@ plot_ly(
 
 ### Our Individual Spending Habits {.tabset .tabset-fade .tabset-pills}
 
-**Karina's Spending**
+**Karina likes to buy things and and stay at AirBNBs. Activities and subscriptions also add up quite a bit.**
 
 <br>
 
-**Karina likes to buy things and travel!**
+**Karina's Spending**
 
 ```{r, message = FALSE, warning = FALSE, echo = FALSE, out.height= "100%", out.width = "100%" }
 Karina_fig <- plot_ly(
@@ -874,11 +874,13 @@ Karina_fig
 
 <sup>*Hover over each box to see what percentage Karina spends on each category.*</sup>
 
-**Neil's Spending**
-
 <br>
 
 **Neil like Bars & Restaurants. Makes sense, he loves to eat and drink! Some notable mentions include Pet Expenses, Snowboarding Gear, and Concerts!**
+
+<br>
+
+**Neil's Spending**
 
 ```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
 
@@ -1085,11 +1087,11 @@ ggplotly(dowjones_graph) %>%
 
 ## Deeper<br>Dive {.tabset .tabset-fade .tabset-pills}
 
-***First, w*****e decided to see if our texting data is predictive of the market.**
+**We decided to see if our texting data is predictive of the market.**
 
 <br>
 
-**According to the models in the table below, when correlated to the closing daily values of the S&P 500 and Dow Jones indices (controlling for time), *our texting is predictive of the change in the absolute market price*. The relationship is positive and statistically significant.**
+**According to the models in the table below, when correlated to the closing daily values of the S&P 500 and Dow Jones indices (controlling for time), our texting is predictive of the change in the absolute market price. The relationship is positive and statistically significant and our impact on the absolute market changes over time.**
 
 <br>
 
@@ -1101,168 +1103,80 @@ ggplotly(dowjones_graph) %>%
 
 <br>
 
-### Main Effect Model Tables and visuals {.tabset .tabset-fade .tabset-pills}
+**Model Descriptives**
 
-```{r, message = FALSE, warning = FALSE, echo = FALSE, out.height= "100%", out.width = "100%" }
-
-reg_table <- numdffinal %>% 
-  left_join(estimatefinal, by = "name") %>% 
-  left_join(dendffinal   , by = "name") %>% 
-  left_join(ffinal       , by = "name") %>% 
-  left_join(pvalfinal    , by = "name") %>% 
-  left_join(rfinal       , by = "name") %>% 
-  left_join(r2final      , by = "name") %>% 
-  mutate(`Degrees of Freedom` = paste0("(", `Numerator DF`, ", " , `Denominator DF`, ")")) %>% 
-  select(`Market Name` = "name", `Unstandardized Beta`, `Degrees of Freedom`, `F-value`, `p-value`, R, `R-squared`) %>% 
-  mutate_if(is.numeric, round, 2) %>% 
-  mutate(
-    `Unstandardized Beta`   = ifelse(`Unstandardized Beta`     == 0.00, "< 0.01", `Unstandardized Beta`),
-    `F-value`               = ifelse(`F-value`                 == 0.00, "< 0.01", `F-value`    ),
-    `p-value`               = ifelse(`p-value`                 == 0.00, "< 0.01", `p-value`    ),
-    R                       = ifelse( R                        == 0.00, "< 0.01",  R           ),
-    `R-squared`             = ifelse(`R-squared`               == 0.00, "< 0.01", `R-squared`  ),
-    
-    `Market Name` = ifelse(`Market Name` == "sp500", "S&P 500 close price (Absolute)", `Market Name`),
-    `Market Name` = ifelse(`Market Name` == "sp500 difference", "S&P 500 close price (Daily Change)", `Market Name`),
-    `Market Name` = ifelse(`Market Name` == "Dow Jones", "Dow Jones close price (Absolute)", `Market Name`),
-    `Market Name` = ifelse(`Market Name` == "Dow Jones difference", "Dow Jones close price (Daily Change)", `Market Name`)
-  ) %>% 
-    rename(`Unstandardized Statistical Beta` = "Unstandardized Beta")
-
-
-reg_table %>% 
-  kbl(align = "c", escape = FALSE) %>% 
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = TRUE, font_size = 16) %>% 
-  add_footnote(label = "\nPredictor variable = Daily quantity of texts sent between Neil and Karina\nOutcome variable = Corresponding market closing price (Absolute closing value or Daily difference closing value)\nAll models controlled for time",notation = "none")
-  
-
-```
-
-**Model Scatterplots & Interpretations**
-
-#### S&P 500 (Absolute) {.tabset .tabset-fade .tabset-pills}
 
 ```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
 
-textcount_sp500 <- textcount_sp500 %>% 
-  mutate(SP500_Closing_Price = `Close/Last`,
-         Number_of_texts_sent = n_texts,
-         `Days_since_first_text` = as.numeric(as_date(Date) - min(as_date(Date)))
-        )
-
-
-model <- lm(SP500_Closing_Price ~ Number_of_texts_sent + `Days_since_first_text` , data = textcount_sp500)
-ggPredict(model, se = TRUE, colorn = 4, interactive = TRUE, terms = "Number_of_texts_sent") 
-
-```
-
-***Statistical Interpretation:*** This model *is* statistically significant: F(2, 408) = 2003.30, p \<.01, R<sup>2</sup> = 0.91. Suggesting that, for every 1 text we send, the S&P 500 market price is expected to increase 0.47 points, after controlling for time. The statistical beta (slope) for our texts was significant at p \< 0.05, indicating that, after controlling for time, our texts have a *slight* influence on the market. The overall model explains 91% of the variance in the market price (Mostly explained by time, but it's fun to think our texts influence it a little bit!).
-
-#### S&P 500 (Daily Difference) {.tabset .tabset-fade .tabset-pills}
-
-```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
-
-
-
-textcount_sp500_diff <- textcount_sp500_diff %>% 
-  mutate(SP500_Daily_Closing_Difference_Price = diff,
-         Number_of_texts_sent = n_texts,
-         `Days_since_first_text` = as.numeric(as_date(Date) - min(as_date(Date)))
-        )
-
-
-model <- lm(SP500_Daily_Closing_Difference_Price ~ Number_of_texts_sent + `Days_since_first_text` , data = textcount_sp500_diff)
-ggPredict(model, se = TRUE, colorn = 4, interactive = TRUE, terms = "Number_of_texts_sent") 
-```
-
-***Statistical Interpretation:*** This model is *not* statistically significant: F(2,408) = 0.11, p \>.05, R<sup>2</sup> \< 0.01. Our texting is *not* predictive of the S&P 500 daily difference price.
-
-#### Dow Jones (Absolute) {.tabset .tabset-fade .tabset-pills}
-
-```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
-
-textcount_dj <- textcount_dj %>% 
-  mutate(Dow_Jones_Daily_Closing_Price = Close,
-         Number_of_texts_sent = n_texts,
-         `Days_since_first_text` = as.numeric(as_date(Date) - min(as_date(Date)))
-        )
-
-
-model <- lm(Dow_Jones_Daily_Closing_Price~ Number_of_texts_sent + `Days_since_first_text` , data = textcount_dj)
-ggPredict(model, se = TRUE, colorn = 4, interactive = TRUE) 
-
-
-
-```
-
-***Statistical Interpretation:*** This model *is* statistically significant: F(2, 408) = 750.28, p \< .01, R<sup>2</sup> = 0.79. Suggesting that, for every 1 text we send, the Dow Jones market price is expected to increase 3.49 points, after controlling for time. The statistical beta (slope) for our texts was significant at p \< 0.05, indicating that, after controlling for time, our texts have a *slight* influence on the market. The overall model explains 79% of the variance in the market price (Mostly explained by time, but it's fun to think our texts influence it a little bit!).
-
-#### Dow Jones (Daily Difference) {.tabset .tabset-fade .tabset-pills}
-
-```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
-
-
-textcount_dj_diff <- textcount_dj_diff %>% 
-  mutate(Dow_Jones_Daily_Closing_Difference_Price = diff,
-         Number_of_texts_sent = n_texts,
-         `Days_since_first_text` = as.numeric(as_date(Date) - min(as_date(Date)))
-        )
-
-
-model <- lm(Dow_Jones_Daily_Closing_Difference_Price ~ Number_of_texts_sent + `Days_since_first_text` , data = textcount_dj_diff)
-ggPredict(model, se = TRUE, colorn = 4, interactive = TRUE) 
-```
-
-***Statistical Interpretation:*** This model is *not* statistically significant: F(2,408) = 0.04, p \>.05, R<sup>2</sup> \< 0.01. Our texting is *not* predictive of the Dow Jones daily difference price.
-
-### Interaction Model Table and Visuals {.tabset .tabset-fade .tabset-pills}
-
-As can be seen in the model below, in the beginning of our relationship, our texts at day 0 (The lowest, darkest line) were predictive of an increase of market values (An upwards slope). However, the more time that passes, the relationship between our texting and change in market vaues is no longer there, and eventually turns negative!
-
-<br>
-
-We came up with the following stories, you can pick you're favorite:
-
-**Story 1:** When we were building our relationship, the universe wanted us to text more to establish our relationship. The better our relationship got, other positive outcomes occured, and the market was happy. Over time, as we became established, it's more important for us (Karina, especially) to focus on her work and texting could be a defferent.
-
-```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
 
 reg_table_in <- numdffinal_in %>% 
   left_join(estimatefinal_in, by = "name") %>% 
   left_join(estimatefinal_in2, by = "name") %>% 
+  left_join(estimatefinal_in3, by = "name") %>% 
   left_join(dendffinal_in   , by = "name") %>% 
   left_join(ffinal_in       , by = "name") %>% 
   left_join(pvalfinal_in    , by = "name") %>% 
-  left_join(rfinal_in       , by = "name") %>% 
   left_join(r2final_in      , by = "name") %>% 
   mutate(`Degrees of Freedom` = paste0("(", `Numerator DF`, ", " , `Denominator DF`, ")")) %>% 
-  select(`Market Name` = "name", `Unstandardized Beta (texts)` = "Unstandardized Beta", `Unstandardized Beta (texts*time)`,  `Degrees of Freedom`, `F-value`, `p-value`, R, `R-squared`) %>% 
+  select(`Market Name` = "name", `Unstandardized Beta (texts)`, `Unstandardized Beta (time)`,  `Unstandardized Beta (texts*time)`,  `Degrees of Freedom`, `F-value`, `p-value`, `R-squared`) %>% 
   mutate_if(is.numeric, round, 2) %>% 
-  mutate(`Unstandardized Beta (texts*time)` = round(estimatefinal_in2$`Unstandardized Beta (texts*time)`, 4),
-    `Unstandardized Beta (texts)`   = ifelse(`Unstandardized Beta (texts)`     == 0.00, "< 0.01", `Unstandardized Beta (texts)`),
+  mutate(
+    `Unstandardized Beta (texts)` = round(estimatefinal_in$`Unstandardized Beta (texts)`, 4),
+    `Unstandardized Beta (time)`  = round(estimatefinal_in2$`Unstandardized Beta (time)`, 4),
+    `Unstandardized Beta (texts*time)` = round(estimatefinal_in3$`Unstandardized Beta (texts*time)`, 4),
     `F-value`               = ifelse(`F-value`                 == 0.00, "< 0.01", `F-value`    ),
-    `p-value`               = ifelse(`p-value`                 == 0.00, "< 0.01", `p-value`    ),
-    R                       = ifelse( R                        == 0.00, "< 0.01",  R           ),
-    `R-squared`             = ifelse(`R-squared`               == 0.00, "< 0.01", `R-squared`  ),
+    `p-value`               = ifelse(`p-value`                 == 0.00, "< .01", `p-value`    ),
+    `R-squared`             = ifelse(`R-squared`               == 0.00, "< .01", `R-squared` ),
     
     `Market Name` = ifelse(`Market Name` == "sp500", "S&P 500 close price (Absolute)", `Market Name`),
     `Market Name` = ifelse(`Market Name` == "sp500 difference", "S&P 500 close price (Daily Difference)", `Market Name`),
     `Market Name` = ifelse(`Market Name` == "Dow Jones", "Dow Jones close price (Absolute)", `Market Name`),
     `Market Name` = ifelse(`Market Name` == "Dow Jones difference", "Dow Jones close price (Daily Difference)", `Market Name`)
     ) %>% 
-    rename(`Unstandardized Statistical Beta (texts)` = "Unstandardized Beta (texts)",
-           `Unstandardized Statistical Beta (texts*time)` = "Unstandardized Beta (texts*time)")
- 
+    mutate(
+    `Unstandardized Beta (texts)` = ifelse(`Unstandardized Beta (texts)` > 0.00, 
+                                                            paste0(as.character(`Unstandardized Beta (texts)`), "*"), 
+                                                            `Unstandardized Beta (texts)`), 
+         
+         `Unstandardized Beta (time)` = ifelse(`Unstandardized Beta (time)` > 0.00, 
+                                                           paste0(as.character(`Unstandardized Beta (time)`), "*"), 
+                                                           `Unstandardized Beta (time)`),
+         `Unstandardized Beta (texts*time)`= ifelse(`Unstandardized Beta (texts*time)` < 0.00, 
+                                                                 paste0(as.character(`Unstandardized Beta (texts*time)`), "*"), 
+                                                                 `Unstandardized Beta (texts*time)`),
+     `Unstandardized Beta (texts*time)`= ifelse(`Unstandardized Beta (texts*time)` == "2e-04", 
+                                                                 "0.0002", 
+                                                                 `Unstandardized Beta (texts*time)`),
+         ) %>% 
+  
+    rename(`Texts` = "Unstandardized Beta (texts)",
+           `Time` = "Unstandardized Beta (time)",
+           `Texts*Time` = "Unstandardized Beta (texts*time)",
+           `Index Name` = "Market Name")
+
 
 
 reg_table_in %>% 
   kbl(align = "c", escape = FALSE) %>% 
+  add_header_above( c("", "Regression Coefficients" = 3, "Full Model Descriptives" = 4)) %>% 
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = TRUE, font_size = 16) %>% 
-  add_footnote(label = "\nPredictor variable = Daily quanitity of texts sent between Neil and Karina\nOutcome variable = S&P 500 daily closing price\nAll models controlled for time and the interaction term between texting and time is included",notation = "none") 
+  add_footnote(label = "\nPredictor variable = Daily quantity of texts sent between Neil and Karina\nOutcome Variable = Corresponding index closing price (Absolute closing value or Daily Difference closing value)\nAll models controlled for time and the interaction term between texting and time is included\n*p<.05 for individual regression coefficient",notation = "none") 
 
 ```
 
-#### S&P 500 interaction (Absolute) {.tabset .tabset-fade .tabset-pills}
+<br>
+**Model Scatterplots & Interpretations**
+
+<br>
+
+**As can be seen in the visualized models below, in the beginning of our relationship, our texts at day 0 (The lowest, darkest line) were predictive of an increase of absolute market values (An upwards slope). However, the more time that passes, the relationship between our texting and change in market values is no longer there, and eventually turns negative!**
+
+<br>
+
+**We welcome all our guests to share any ideas on why that might be during our wedding. :)**
+
+
+### S&P 500 (Absolute) {.tabset .tabset-fade .tabset-pills}
 
 ```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
 model <- lm( `SP500_Closing_Price` ~ Number_of_texts_sent + `Days_since_first_text` + Number_of_texts_sent*`Days_since_first_text`, data = textcount_sp500)
@@ -1271,12 +1185,51 @@ model <- lm( `SP500_Closing_Price` ~ Number_of_texts_sent + `Days_since_first_te
 ggPredict(model, se = TRUE,  interactive = TRUE, terms = c("n_texts", "Days_since_first_text")) 
 ```
 
-***Statistical Interpretation:*** This model *is* statistically significant: F(3, 407) = 1347.84, p \<.01, R<sup>2</sup> = 0.91. Suggesting that, for every 1 text we send, the S&P 500 market price is expected to increase 1.07 points (p \<.01) - however, for every day that passes, the statistical beta (slope) is expected to *decrease* by 0.0028 points (p \<.01). The chart above shows the expected change in slope at 0, 200, 400, 600, & 800 days since we started texting. As can be seen from the chart above, after enough time, the relationship turns from positive to negative!
+***Statistical Interpretation:*** This model *is* statistically significant: F(3, 407) = 1347.84, p \<.01, R<sup>2</sup> = 0.91. Suggesting that, for every 1 text we send, the S&P 500 index price is expected to increase 1.07 points at day 0 (p \<.01) - however, for every day that passes, the regression coefficient (slope) is expected to *decrease* by 0.0028 points (p \<.01). The chart above shows the expected change in slope at 0, 200, 400, 600, & 800 days since we started texting. As can be seen from the chart above, after enough time, the relationship turns from positive to negative!
 
-# 
+
+### S&P 500 (Daily Difference) {.tabset .tabset-fade .tabset-pills}
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
+model <- lm( `diff` ~ Number_of_texts_sent + `Days_since_first_text` + Number_of_texts_sent*`Days_since_first_text`, data = textcount_sp500)
+#summary(model)
+
+ggPredict(model, se = TRUE,  interactive = TRUE, terms = c("n_texts", "Days_since_first_text")) 
+```
+
+***Statistical Interpretation:*** This model is *not* statistically significant: F(3, 407) = 0.24, p \>.05, R<sup>2</sup> \< 0.01. Our texting is *not* predictive of the S&P 500 daily difference price.
+
+
+### Dow Jones (Absolute) {.tabset .tabset-fade .tabset-pills}
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
+model <- lm( `Dow_Jones_Daily_Closing_Price` ~ Number_of_texts_sent + `Days_since_first_text` + Number_of_texts_sent*`Days_since_first_text`, data = textcount_dj)
+#summary(model)
+
+ggPredict(model, se = TRUE,  interactive = TRUE, terms = c("n_texts", "Days_since_first_text")) 
+```
+
+***Statistical Interpretation:*** This model *is* statistically significant: F(3, 407) = 519.61, p \<.01, R<sup>2</sup> = 0.79. Suggesting that, for every 1 text we send, the Dow Jones index price is expected to increase 11.40 points at day 0 (p \<.01) - however, for every day that passes, the regression coefficient (slope) is expected to *decrease* by 0.0368 points (p \<.01). The chart above shows the expected change in slope at 0, 200, 400, 600, & 800 days since we started texting. As can be seen from the chart above, after enough time, the relationship turns from positive to negative!
+
+
+### Dow Jones (Daily Difference) {.tabset .tabset-fade .tabset-pills}
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
+model <- lm( `diff` ~ Number_of_texts_sent + `Days_since_first_text` + Number_of_texts_sent*`Days_since_first_text`, data = textcount_dj)
+#summary(model)
+
+ggPredict(model, se = TRUE,  interactive = TRUE, terms = c("n_texts", "Days_since_first_text")) 
+```
+
+***Statistical Interpretation:*** This model is *not* statistically significant: F(3, 407) = 1.31, p \>.05, R<sup>2</sup> \< 0.01. Our texting is *not* predictive of the Dow Jones daily difference price.
+
+
+# &nbsp;
 
 <center><img src="KN.png" width="20%"/></center>
 
 <center><img src="final_image.png" width="20%"/></center>
+
+[**Click here to go back to our wedding website**](https://www.theknot.com/us/karina-convers-and-neil-yetz-aug-2025)
 
 ~Interested in how these charts were made?: [Click here to see our Github repository!](https://github.com/ndyetz/ourloveinnumbers.github.io)~
