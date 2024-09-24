@@ -190,7 +190,15 @@ hover_range_quant <- function(data) {
     style(hovertext = paste0("We got engaged on "                                                 , format(as_date(`We Get Engaged!`), "%b %d, %Y"), "!\nNeil hired a photographer to capture the moment at Mt. Hood Meadows ski resort.") , traces = 16 ) %>%
     style(hovertext = paste0("We take our first trip as an engaged couple to Tahiti on "          , format(as_date(`Tahiti Trip`), "%b %d, %Y"), ".\nWe sailed on a Yacht to different islands for 10 days!")                               , traces = 17 ) %>% 
     style(hovertext = paste0("We bought a 1 acre piece of land in La Pine, OR on "                , format(as_date(`We Buy Property`), "%b %d, %Y"), ".\nOur plan is to build a getaway cabin on the land!")                               , traces = 18 ) %>% 
-    style(hoverinfo = "none", traces = 19:34)# %>% 
+    style(hoverinfo = "none", traces = 19:34) %>% 
+    style(visible='legendonly',  traces = 4:6) %>% 
+    style(visible='legendonly',  traces = 8:13) %>% 
+    style(visible='legendonly',  traces = 15) %>% 
+    style(visible='legendonly',  traces = 17:18) %>% 
+    style(visible='legendonly',  traces = 20:22) %>% 
+    style(visible='legendonly',  traces = 24:29) %>% 
+    style(visible='legendonly',  traces = 31) %>% 
+    style(visible='legendonly',  traces = 33:34) 
   #  rangeslider(start = min(as.numeric(texts_quant_graph$week_of)) - 30, end = max(as.numeric(texts_quant_graph$week_of)) + 50, thickness = ".05")  
 }
 
@@ -200,7 +208,7 @@ hover_range_words <- function(data) {
   ggplotly(data)%>% 
     #  layout(hovermode = 'x') %>%
     style(hovertext = paste0("Our first kiss was on "                                            , format(as_date(`First Kiss`), "%b %d, %Y"), " !")                                                                                     , traces = 9  ) %>% 
-    style(hovertext = paste0("We take our first trip to New York together on "                   , format(as_date(`New York`), "%b %d, %Y"), ". \nThis is also the first time Neil met Karina's parents.")                               , traces = 10  ) %>% 
+    style(hovertext = paste0("We take our first trip to New York together on "                   , format(as_date(`New York`), "%b %d, %Y"), ". \nThis is also the first time Neil met Karina's parents.")                               , traces = 10) %>% 
     style(hovertext = paste0("Our first time ever snowboarding together was on "                 , format(as_date(`Snowboarding`), "%b %d, %Y"), ". \nNeil proved he can shred to Karina!")                                              , traces = 11  ) %>% 
     style(hovertext = paste0("Karina flies to Alpine, CA to meet Neil's parents on "             , format(as_date(`Meet Parents`), "%b %d, %Y"), ". \nWe played card games all New Years Eve and kissed at midnight!")                   , traces = 12  ) %>% 
     style(hovertext = paste0("We make it official, we decide we want to be in a relationship on " , format(as_date(Relationship), "%b %d, %Y"), '. \nWe also said "I love you" in person for the first time on this day.')                , traces = 13  ) %>% 
@@ -215,7 +223,7 @@ hover_range_words <- function(data) {
     style(hovertext = paste0("We got engaged on "                                                , format(as_date(`We Get Engaged!`), "%b %d, %Y"), "!\nNeil hired a photographer to capture the moment at Mt. Hood Meadows ski resort.") , traces = 22 ) %>%
     style(hovertext = paste0("We take our first trip as an engaged couple to Tahiti on"          , format(as_date(`Tahiti Trip`), "%b %d, %Y"), ".\nWe sailed on a Yacht to different islabns for 10 days!")                               , traces = 23 ) %>% 
     style(hovertext = paste0("We bought a 1 acre piece of land in La Pine, OR on "               , format(as_date(`We Buy Property`), "%b %d, %Y"), ".\nOur plan is to build a getaway cabin on the land!")                               , traces = 24 ) %>%
-    style(hoverinfo = "none", traces = 25:40)# %>% 
+    style(hoverinfo = "none", traces = 25:40) 
    # rangeslider(start = min(as.numeric(texts_combine_filter_graph_total$week_of)) - 30, end = max(as.numeric(texts_combine_filter_graph_total$week_of)) + 40, thickness = .10)
 }
 

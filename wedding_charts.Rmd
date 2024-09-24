@@ -46,10 +46,49 @@ p {
 ```
 
 ```{css, echo=FALSE}
-h1, h2, h3 {
+/* add this css to your stylesheet or add it within a style tag in the head of your document */
+
+.js div#preloader {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 999;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  
+  /* You can change the background color and image URL here.  This solution works with animated .svg and animated .gif */
+  background: #ffffff url('https://raw.githubusercontent.com/ndyetz/ourloveinnumbers.github.io/refs/heads/main/loading_gif.gif') no-repeat center center;
+}
+
+```
+
+```{=html}
+<div id="preloader"></div>
+```
+```{js, echo=FALSE}
+
+
+// add the javascript below to the head of your doc inside a script tag
+
+// this line adds a class of js to your html element, we add the class with javascript instead of just putting it in the html so if javascript isn't available, the preloader does not show up, because without javascript it won't fade out and would just be there forever.
+document.documentElement.classList.add("js");
+
+// dom is loaded
+jQuery(document).ready(function($) {  
+// fade out preloader
+$('#preloader').fadeOut('slow',function(){$(this).remove();});
+
+});
+
+```
+
+```{css, echo=FALSE}
+h1 {
   font-family: Georgia, serif;
   font-weight: bold;
   color: #64798B;
+  text-align: center;
 }
 ```
 
@@ -100,7 +139,7 @@ h1, h2, h3 {
 #source("private_key.R")
 ```
 
-#   {.tabset .tabset-fade .tabset-pills .break}
+#  Have Fun Clicking Through the Tabs Below {.tabset .tabset-fade .tabset-pills .break}
 
 ## Home<br>Page {.tabset .tabset-fade .tabset-pills}
 
@@ -108,17 +147,17 @@ h1, h2, h3 {
 
 <center>![](love_in_charts.png){width="80%"}</center>
 
-<center>![](names.png){width="50%"}</center>
+<center>![](names.png){width="30%"}</center>
 
 <center>![](together.png){width="70%"}</center>
+
+<center>[**Click here to go back to our wedding website**](https://www.theknot.com/us/karina-convers-and-neil-yetz-aug-2025)</center>
 
 ## Texting<br>Data {.tabset .tabset-fade .tabset-pills}
 
 ### Word<br>Cloud {.tabset .tabset-fade .tabset-pills}
 
-We created a word cloud of the words we text to each other most often below:
-
-**"*Baby*", "*Babe*", "*Love*", and "*Lol*" are a few of our most frequently used words!**
+**Over the course of our relationship, we texted some words more than other. See our word cloud below.**
 
 ```{r, echo = FALSE}
 #Word cloud image in markdown below. 
@@ -126,13 +165,11 @@ We created a word cloud of the words we text to each other most often below:
 
 <center><img src="word_cloud.png" width="80%"/></center>
 
-### Our texts over time {.tabset .tabset-fade .tabset-pills}
+**"*Baby*", "*Babe*", "*Love*", and "*Lol*" are a few of our most frequently used words!**
 
-**Sent Texts Quantity**
+### Our Texts Over Time {.tabset .tabset-fade .tabset-pills}
 
-<br>
-
-***Our first winter together*****, texting \~600 times a week was the norm. Since Neil moved in, our texting slowed down quite a bit.**
+**Our first winter together, texting \~600 times a week was the norm. Since Neil moved in, our texting slowed down quite a bit.**
 
 ```{r, echo = FALSE, out.height= "100%", out.width = "100%", warning = FALSE}
 #Custom Functions
@@ -140,15 +177,11 @@ p_texts_quant_time <- line_plots_quant(data = texts_quant_graph, x = week_of, y 
 hover_range_quant(p_texts_quant_time)
 ```
 
-<sup>*Hover over the chart and milestones for more information about our milestones and texting. Or click on the chart legend to show/hide any milestones or trends.*</sup>
+<sup>*Hover over the chart and milestones for more information about our milestones and texting. Or click on the chart legend to show/hide any additional relationship milestones.*</sup>
 
-<br>
+**There seems to be a *slight* downward trend in the length of the texts that we send each other - however, certain events cause outliers.**
 
-**Average Character Count Per Text**
-
-<br>
-
-**There seems to be a *slight* downward trend in the length of the texts that we send each other - however, certain events seem to spike longer texts towards one another. The week after we got engaged, Neil's texting character count increased dramatically!**
+**The week after we got engaged, Neil's texting character count increased dramatically!**
 
 ```{r, echo = FALSE, out.height= "100%", out.width = "100%", warning = FALSE}
 
@@ -156,17 +189,13 @@ texts_char_time_graph <- line_plots_quant(data = texts_char_time, x = week_of, y
 hover_range_quant(texts_char_time_graph)
 ```
 
-<sup>*Hover over the chart and milestones for more information about our milestones and texting. Or click on the chart legend to show/hide any milestones or trends.*</sup>
+<sup>*Hover over the chart and milestones for more information about our milestones and texting. Or click on the chart legend to show/hide any additional relationship milestones.*</sup>
 
 ### Total<br>Texts {.tabset .tabset-fade .tabset-pills}
 
-*Below are two bar charts showing the total number of texts we have sent to each other and the average number of text characters in each of our text messages to each other.*
-
 <br>
 
-<br>
-
-**Neil doesn't always respond! Karina has sent over 1,000 more texts to Neil since they have known each other.**
+**Neil doesn't always respond!**
 
 ```{r, echo = FALSE, out.height= "100%", out.width = "100%"}
 #Overall texts
@@ -194,7 +223,7 @@ ggplotly(p_sent) #%>%
 
 <br> <br>
 
-**But when Neil responds, he has more to say! Neil's sent texts are 5 characters longer, on average.**
+**But when Neil responds, he has more to say!**
 
 ```{r, echo = FALSE, out.height= "100%", out.width = "100%"}
 
@@ -224,9 +253,7 @@ ggplotly(p_character_sent) %>%
 
 #### Overall {.tabset .tabset-fade .tabset-pills}
 
-*In the chart below, we selected words that we use frequently in texts to each other, or we feel are special to us.*
-
-**Look below to see that Karina says "*Baby*" a lot, and Neil "*Laughs Out Loud*" a lot.**
+**Karina texts "*Baby*" a lot, while Neil texts "Babe" more. Neil's 2nd favorite thing to text is "*Laugh Out Loud.*"**
 
 ```{r, echo = FALSE, out.height= "100%", out.width = "100%"}
 # Count of chosen words.
@@ -263,15 +290,11 @@ ggplotly(ptotal)  %>%
 
 #### Over Time {.tabset .tabset-fade .tabset-pills}
 
-*Take a look at our trends in the selected words we text each other below!*
-
-<br>
-
-***For better interpretability*****, we have highlighted certain sections of this graph to tell a few stories. Check out the tabs below to see some interesting trends we found in or texting!**
+***W*****e have highlighted certain sections of this graph to tell a few stories. Check out the tabs below to see some interesting trends we found in our texting!**
 
 ##### "Love<br>you"
 
-**Right after we decided to make it an official relationship, "Love you" made its way into our regular texting. We were quick to say we love each other... And we** *love*\*\* that!\*\*
+**Right after we decided to make it official, "Love you" made its way into our regular texting. We were quick to say we love each other... And we *love* that!**
 
 ```{r, echo = FALSE, fig.height= 10, out.height= "100%", out.width = "100%", warning = FALSE}
 
@@ -310,7 +333,7 @@ style(hoverinfo = "none", traces = 5:6)
 
 ##### "Baby" vs "Babe"
 
-**At the beginning of their relationship, Neil rarely used the word "Baby" but overtime he seems to mimic the way Karina used the word. An increase in Neil texting the word "Baby" can be seen after we move in together.**
+**At the beginning of their relationship, Neil used "Babe" instead of "Baby", but overtime he seems to mimic the way Karina used the word. A significant increase in Neil texting the word "Baby" can be seen after we move in together.**
 
 ```{r, echo = FALSE, fig.height= 10, out.height= "100%", out.width = "100%", warning = FALSE}
 
@@ -350,7 +373,7 @@ style(hoverinfo = "none", traces = 5:6)
 
 <sup>*Click on the chart legend to show/hide any milestones or trends.*</sup>
 
-**Furthermore, if you look at the trend of the word "Babe" among each of us, Neil has used "Babe" much less in his current texts than with Karina, but Karina rarely used that word to start with!**
+**Karina rarely used the word "Babe" to start with!**
 
 ```{r, echo = FALSE, fig.height= 10, out.height= "100%", out.width = "100%", warning = FALSE}
 
@@ -391,7 +414,7 @@ style(hoverinfo = "none", traces = 5:6)
 
 ##### An increase in "Ben" {.tabset .tabset-fade .tabset-pills}
 
-**Notice how Ben (Karina's son) becomes a topic of conversation much more frequently after he was introduced to Neil.**
+**Notice how Ben (Karina's son) becomes a topic of conversation more frequently after he was introduced to Neil.**
 
 ```{r, echo = FALSE, fig.height= 10, out.height= "100%", out.width = "100%", warning = FALSE}
 
@@ -612,13 +635,15 @@ hover_range_words(pall)
 
 ## Travel<br>Data {.tabset .tabset-fade .tabset-pills}
 
-**A collage of us together in some of our favorite trips!**
+**A collage of us together on some of our favorite trips!**
 
-<center><img src="collage.png" width="65%"/></center>
+<center><img src="collage.png" width="100%"/></center>
+
+<br>
 
 **A Map of the places we have traveled together!**
 
-```{r, out.height= "75%", out.width = "75%", echo = FALSE, eval=TRUE}
+```{r, out.height= "100%", out.width = "100%", echo = FALSE, eval=TRUE}
 
 
 travel <- suppress(read_csv("travel_neil.csv"))
@@ -634,8 +659,8 @@ map <- google_map(
   key = private_key,
   data = travel, 
   search_box = FALSE,
-  width = 1000,
-  height = 600
+  width = 900,
+  height = 512
 )
 
 map %>%
@@ -648,7 +673,7 @@ map %>%
 
 <center><img src="nkmeadows.png" width="200%"/></center>
 
-**Snowboarding is one of our favorite hobbies** and we get data from our Mt. Hood Meadows annual ski passes. Thanks to Mt. Hood Meadows for or snowboard data!
+**Snowboarding is one of our favorite hobbies. Thanks to Mt. Hood Meadows for our snowboarding data!**
 
 <br>
 
@@ -685,13 +710,13 @@ mt_hood %>%
 
 Take a look at how awesome our local ski resort is. We love Mt. Hood Meadows!
 
-<center><img src="meadow_map.jpg" width="75%"/></center>
+<center><img src="meadow_map.jpg" width="100%"/></center>
 
 ### Chairlift<br>Data {.tabset .tabset-fade .tabset-pills}
 
 #### Over Time {.tabset .tabset-fade .tabset-pills}
 
-Each bar below represents the amount we used each ski lift at Mt. Hood Meadows ski resort on each date we snowboarded.
+**On our busiest days, we achieved a 15,000+ vertical!**
 
 **By Vertical Feet Gained**
 
@@ -718,9 +743,9 @@ ggplotly(vertical_feet) %>%
 
 <sup>*Hover over each dot to see how much vertical feet we gained on each date we snowboarded at Mt. Hood Meadows ski resort.*</sup>
 
-**By number of Runs Completed**
+**We seem to tap out around 15 runs in a day!**
 
-Hover over each dot to see how many runs we took on each date.
+**By number of Runs Completed**
 
 ```{r, echo = FALSE,  out.height= "100%", out.width = "100%"}
 
@@ -749,6 +774,8 @@ ggplotly(total_runs) %>%
 
 Each box below represents the amount we used the ski lifts at Mt. Hood Meadows ski resort.
 
+**Mt. Hood Express gets us the most elevation gain.**
+
 **In vertical feet gained**
 
 ```{r, echo = FALSE,  out.height= "100%", out.width = "100%"}
@@ -771,6 +798,8 @@ plot_ly(
 
 <sup>*Hover over each box to see how much vertical feet we have gained on each chairlift at Mt. Hood Meadows ski resort!*</sup>
 
+**But we are not ashamed to take Easy Rider to get us to the Beginners Freestyle Park!**
+
 **By number of runs**
 
 ```{r, echo = FALSE,  out.height= "100%", out.width = "100%"}
@@ -791,11 +820,15 @@ plot_ly(
 
 <sup>*Hover over each box to see how many times we have taken each chairlift at Mt. Hood Meadows ski resort!*</sup>
 
-## Financial<br>Data {.tabset .tabset-fade .tabset-pills}
+## Discretionary<br>Spending {.tabset .tabset-fade .tabset-pills}
 
 ### Our Overall Spending Habits {.tabset .tabset-fade .tabset-pills}
 
-**Each square below corresponds to the percentage *disposable income* (i.e. necessary expenses like mortgage, utilities, car payments, student loans, etc. are not included) we spend on selected categories. We seem especially interested in spending our disposable income on bars/restaurants and Amazon products!**
+**Each square below corresponds to a percentage of our disposable income spent on a given category (i.e. this excludes boring spending like mortgage, utilities, student loans, or car payments).**
+
+<br>
+
+**Besides the obvious Bars & Restaruants and Amazon spending, we were surprised to see how much we spent on Chipotle and Golf!**
 
 ```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%" }
 
@@ -822,7 +855,7 @@ plot_ly(
 
 <br>
 
-**Karina spends the most percentage of her disposable income on Amazon purchases and other merchandise!**
+**Karina likes to buy things and travel!**
 
 ```{r, message = FALSE, warning = FALSE, echo = FALSE, out.height= "100%", out.width = "100%" }
 Karina_fig <- plot_ly(
@@ -845,7 +878,7 @@ Karina_fig
 
 <br>
 
-**Neil spends the majority of his disposable income on bars & Restaurants. Makes sense, he loves to eat and drink!**
+**Neil like Bars & Restaurants. Makes sense, he loves to eat and drink! Some notable mentions include Pet Expenses, Snowboarding Gear, and Concerts!**
 
 ```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
 
@@ -869,19 +902,15 @@ Neil_fig
 
 ## Market<br>Comparisons {.tabset .tabset-fade .tabset-pills}
 
-<center><img src="sp500dow.png" width="80%"/></center>
-
-**As seen in the tabs below,** our relationship milestones seem to have a ***huge impact*** of the S&P 500 and Dow Jones Market increases. Since we first met, both the S&P 500 and Dow Jones the markets have risen dramatically!
+**Since we first met, both the S&P 500 and Dow Jones have gone up dramatically! We decided to examine if our relationship milestones or other relationship data could be responsible.**
 
 <br>
 
-We like to contribute each markets' success to our milestones!
+At first glance, an obvious takeaway is that the market went up over the course of our relationship. There might be something else going on here that we dive into in the next tab. But for now, enjoy how our relationship impacted the market!
 
 <br>
 
-### Market Trends {.tabset .tabset-fade .tabset-pills}
-
-**The S&P 500 Market & our milestones**
+**The S&P 500 & our milestones**
 
 ```{r, echo = FALSE,  out.height= "100%", out.width = "100%", warning = FALSE}
 sp500 <- macro_data$`S&P 500`
@@ -966,7 +995,7 @@ ggplotly(sp500_graph) %>%
 
 <sup>*Hover over the chart and milestones for more information about our milestones and the market price. Or click on the chart legend to show/hide any trends.*</sup>
 
-**The Dow Jones Market & our Milestones**
+**The Dow Jones & our Milestones**
 
 ```{r, echo = FALSE,  out.height= "100%", out.width = "100%", warning = FALSE}
 dowjones <- macro_data$`Dow Jones`
@@ -1052,21 +1081,23 @@ ggplotly(dowjones_graph) %>%
 
 <sup>*Hover over the chart and milestones for more information about our milestones and the market price. Or click on the chart legend to show/hide any trends.*</sup>
 
-## Texting Data & Market <br>Correlates {.tabset .tabset-fade .tabset-pills}
+<center>![](sp500dow.png){width="80%"}</center>
 
-***For fun*****, we decided to see if our texting data is predictive of the S&P 500 and Dow Jones market prices.** **We share a passion for working with quantitative data and this was a fun way for us to show off that passion. Karina works regularly with data models in her job in asset management and Neil used to teach statistics to undergraduate/graduate college students.**
+## Deeper<br>Dive {.tabset .tabset-fade .tabset-pills}
 
-<br>
-
-*According to the models in the table below*, when correlated to the absolute market prices of the S&P 500 and Dow Jones markets (controlling for time), ***our texting is predictive of the change in the absolute market price*****.** The relationship is positive and statistically significant.
+***First, w*****e decided to see if our texting data is predictive of the market.**
 
 <br>
 
-However, when compared to the daily difference between the start/close of each market price (controlling for time), our models were no longer predictive.
+**According to the models in the table below, when correlated to the closing daily values of the S&P 500 and Dow Jones indices (controlling for time), *our texting is predictive of the change in the absolute market price*. The relationship is positive and statistically significant.**
 
 <br>
 
-<sup>Note: These models are completely for fun and should *not* be take seriously.</sup>
+**However, when compared to the daily movements in the market across each index (controlling for time), our models were no longer predictive... :(**
+
+<br>
+
+<sup>Note: These models are completely for fun and should *not* be taken seriously. :)</sup>
 
 <br>
 
@@ -1092,16 +1123,17 @@ reg_table <- numdffinal %>%
     `R-squared`             = ifelse(`R-squared`               == 0.00, "< 0.01", `R-squared`  ),
     
     `Market Name` = ifelse(`Market Name` == "sp500", "S&P 500 close price (Absolute)", `Market Name`),
-    `Market Name` = ifelse(`Market Name` == "sp500 difference", "S&P 500 close price (Daily Difference)", `Market Name`),
+    `Market Name` = ifelse(`Market Name` == "sp500 difference", "S&P 500 close price (Daily Change)", `Market Name`),
     `Market Name` = ifelse(`Market Name` == "Dow Jones", "Dow Jones close price (Absolute)", `Market Name`),
-    `Market Name` = ifelse(`Market Name` == "Dow Jones difference", "Dow Jones close price (Daily Difference)", `Market Name`)
-  ) 
+    `Market Name` = ifelse(`Market Name` == "Dow Jones difference", "Dow Jones close price (Daily Change)", `Market Name`)
+  ) %>% 
+    rename(`Unstandardized Statistical Beta` = "Unstandardized Beta")
 
 
 reg_table %>% 
   kbl(align = "c", escape = FALSE) %>% 
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = TRUE, font_size = 16) %>% 
-  add_footnote(label = "\nPredictor variable = Daily quanitity of texts sent between Neil and Karina\nOutcome variable = Corresponding market closing price (Absolute closing value or Daily difference closing value)\nAll models controlled for time",notation = "none")
+  add_footnote(label = "\nPredictor variable = Daily quantity of texts sent between Neil and Karina\nOutcome variable = Corresponding market closing price (Absolute closing value or Daily difference closing value)\nAll models controlled for time",notation = "none")
   
 
 ```
@@ -1124,7 +1156,7 @@ ggPredict(model, se = TRUE, colorn = 4, interactive = TRUE, terms = "Number_of_t
 
 ```
 
-***Interpretation:*** This model *is* statistically significant: F(2, 408) = 2003.30, p \<.01, R<sup>2</sup> = 0.91. Suggesting that, for every 1 text we send, the S&P 500 market price is expected to increase 0.47 points, after controlling for time. The beta (slope) for our texts was significant at p \< 0.05, indicating that, after controlling for time, our texts have a *very very slight* influence on the market. The overall model explains 91% of the variance in the market price (Mostly explained by time, but it's fun to think our texts influence it a little bit!).
+***Statistical Interpretation:*** This model *is* statistically significant: F(2, 408) = 2003.30, p \<.01, R<sup>2</sup> = 0.91. Suggesting that, for every 1 text we send, the S&P 500 market price is expected to increase 0.47 points, after controlling for time. The statistical beta (slope) for our texts was significant at p \< 0.05, indicating that, after controlling for time, our texts have a *slight* influence on the market. The overall model explains 91% of the variance in the market price (Mostly explained by time, but it's fun to think our texts influence it a little bit!).
 
 #### S&P 500 (Daily Difference) {.tabset .tabset-fade .tabset-pills}
 
@@ -1143,7 +1175,7 @@ model <- lm(SP500_Daily_Closing_Difference_Price ~ Number_of_texts_sent + `Days_
 ggPredict(model, se = TRUE, colorn = 4, interactive = TRUE, terms = "Number_of_texts_sent") 
 ```
 
-***Interpretation:*** This model is *not* statistically significant: F(2,408) = 0.11, p \>.05, R<sup>2</sup> \< 0.01. Our texting is *not* predictive of the S&P 500 daily difference price.
+***Statistical Interpretation:*** This model is *not* statistically significant: F(2,408) = 0.11, p \>.05, R<sup>2</sup> \< 0.01. Our texting is *not* predictive of the S&P 500 daily difference price.
 
 #### Dow Jones (Absolute) {.tabset .tabset-fade .tabset-pills}
 
@@ -1163,7 +1195,7 @@ ggPredict(model, se = TRUE, colorn = 4, interactive = TRUE)
 
 ```
 
-***Interpretation:*** This model *is* statistically significant: F(2, 408) = 750.28, p \< .01, R<sup>2</sup> = 0.79. Suggesting that, for every 1 text we send, the Dow Jones market price is expected to increase 3.49 points, after controlling for time. The beta (slope) for our texts was significant at p \< 0.05, indicating that, after controlling for time, our texts have a *very very slight* influence on the market. The overall model explains 79% of the variance in the market price (Mostly explained by time, but it's fun to think our texts influence it a little bit!).
+***Statistical Interpretation:*** This model *is* statistically significant: F(2, 408) = 750.28, p \< .01, R<sup>2</sup> = 0.79. Suggesting that, for every 1 text we send, the Dow Jones market price is expected to increase 3.49 points, after controlling for time. The statistical beta (slope) for our texts was significant at p \< 0.05, indicating that, after controlling for time, our texts have a *slight* influence on the market. The overall model explains 79% of the variance in the market price (Mostly explained by time, but it's fun to think our texts influence it a little bit!).
 
 #### Dow Jones (Daily Difference) {.tabset .tabset-fade .tabset-pills}
 
@@ -1181,11 +1213,17 @@ model <- lm(Dow_Jones_Daily_Closing_Difference_Price ~ Number_of_texts_sent + `D
 ggPredict(model, se = TRUE, colorn = 4, interactive = TRUE) 
 ```
 
-This model is *not* statistically significant: F(2,408) = 0.04, p \>.05, R<sup>2</sup> \< 0.01. Our texting is *not* predictive of the Dow Jones daily difference price.
+***Statistical Interpretation:*** This model is *not* statistically significant: F(2,408) = 0.04, p \>.05, R<sup>2</sup> \< 0.01. Our texting is *not* predictive of the Dow Jones daily difference price.
 
 ### Interaction Model Table and Visuals {.tabset .tabset-fade .tabset-pills}
 
-For the more statistically fluent, we also found an interaction between number of texts sent & time on the S&P 500 absolute closing price. As can be seen in the models below, in the beginning of our relationship, our texts were predictive of an increase in the market values. However, the more time that passes, the relationship between our texting and market value turns negative! Therefore, the more time that passes, and the more we text, the worse the absolute market value is expected to be!
+As can be seen in the model below, in the beginning of our relationship, our texts at day 0 (The lowest, darkest line) were predictive of an increase of market values (An upwards slope). However, the more time that passes, the relationship between our texting and change in market vaues is no longer there, and eventually turns negative!
+
+<br>
+
+We came up with the following stories, you can pick you're favorite:
+
+**Story 1:** When we were building our relationship, the universe wanted us to text more to establish our relationship. The better our relationship got, other positive outcomes occured, and the market was happy. Over time, as we became established, it's more important for us (Karina, especially) to focus on her work and texting could be a defferent.
 
 ```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
 
@@ -1211,13 +1249,16 @@ reg_table_in <- numdffinal_in %>%
     `Market Name` = ifelse(`Market Name` == "sp500 difference", "S&P 500 close price (Daily Difference)", `Market Name`),
     `Market Name` = ifelse(`Market Name` == "Dow Jones", "Dow Jones close price (Absolute)", `Market Name`),
     `Market Name` = ifelse(`Market Name` == "Dow Jones difference", "Dow Jones close price (Daily Difference)", `Market Name`)
-  ) 
+    ) %>% 
+    rename(`Unstandardized Statistical Beta (texts)` = "Unstandardized Beta (texts)",
+           `Unstandardized Statistical Beta (texts*time)` = "Unstandardized Beta (texts*time)")
+ 
 
 
 reg_table_in %>% 
   kbl(align = "c", escape = FALSE) %>% 
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = TRUE, font_size = 16) %>% 
-  add_footnote(label = "\nPredictor variable = Daily quanitity of texts sent between Neil and Karina\nOutcome variable = Corresponding market closing price (Absolute closing value or Daily difference closing value)\nAll models controlled for time and the interaction term between texting and time is included",notation = "none")
+  add_footnote(label = "\nPredictor variable = Daily quanitity of texts sent between Neil and Karina\nOutcome variable = S&P 500 daily closing price\nAll models controlled for time and the interaction term between texting and time is included",notation = "none") 
 
 ```
 
@@ -1230,7 +1271,7 @@ model <- lm( `SP500_Closing_Price` ~ Number_of_texts_sent + `Days_since_first_te
 ggPredict(model, se = TRUE,  interactive = TRUE, terms = c("n_texts", "Days_since_first_text")) 
 ```
 
-***Interpretation:*** This model *is* statistically significant: F(3, 407) = 1347.84, p \<.01, R<sup>2</sup> = 0.91. Suggesting that, for every 1 text we send, the S&P 500 market price is expected to increase 1.07 points - however, for every day that passes, the beta (slope) is expected to *decrease* by 0.0028 points. The chart above shows the expected change in slope at 0, 200, 400, 600, & 800 days since we started texting. As can be seen from the chart above, after enough time, the relationship turns from positive to negative!
+***Statistical Interpretation:*** This model *is* statistically significant: F(3, 407) = 1347.84, p \<.01, R<sup>2</sup> = 0.91. Suggesting that, for every 1 text we send, the S&P 500 market price is expected to increase 1.07 points (p \<.01) - however, for every day that passes, the statistical beta (slope) is expected to *decrease* by 0.0028 points (p \<.01). The chart above shows the expected change in slope at 0, 200, 400, 600, & 800 days since we started texting. As can be seen from the chart above, after enough time, the relationship turns from positive to negative!
 
 # 
 
