@@ -9,6 +9,18 @@ output:
     toc_float: true
 ---
 
+
+```{=html}
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-W9SRJ6HG');</script>
+<!-- End Google Tag Manager -->
+
+```
+
 ```{r, echo = FALSE}
 # Change to html if necessary
 #
@@ -28,7 +40,14 @@ output:
     body { background-color: #FFFFFF; }
     pre, pre:not([class]) { background-color: #FFFFFF; }
 </style>
+
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W9SRJ6HG"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
 ```
+
 ```{=html}
 
 <style type="text/css">
@@ -979,7 +998,7 @@ ggplotly(sp500_graph) %>%
   style(hovertext = paste0("We take our first trip to New York together on "                   , format(as_date(`New York`), "%b %d, %Y"), ".\nThis is also the first time Neil Met Karina's parents.")                               , traces = 4  ) %>% 
   style(hovertext = paste0("Our first time ever snowboarding together was on "                 , format(as_date(`Snowboarding`), "%b %d, %Y"), ".\nNeil proved he can shred to Karina!")                                              , traces = 5  ) %>% 
   style(hovertext = paste0("Karina flies to Alpine, CA to meet Neil's parents on "             , format(as_date(`Meet Parents`), "%b %d, %Y"), ".\nWe played card games all New Years Eve and kissed at midnight!")                   , traces = 6  ) %>% 
-  style(hovertext = paste0("We make it official, we decide we want to be in a relationship on" , format(as_date(Relationship), "%b %d, %Y"), '.\nWe also said "I love you" in person for the first time on this day.')                , traces = 7  ) %>% 
+  style(hovertext = paste0("We make it official, we decide we want to be in a relationship on " , format(as_date(Relationship), "%b %d, %Y"), '.\nWe also said "I love you" in person for the first time on this day.')                , traces = 7  ) %>% 
   style(hovertext = paste0("We go snow boarding with Karina's son, Ben, on "                   , format(as_date(`Neil Meets Ben`), "%b %d, %Y"), ".\nIt's the first time Neil met Ben.")                                                , traces = 8  ) %>% 
   style(hovertext = paste0("We build our first piece of IKEA furniture together on "           , format(as_date(`Build Furniture`), "%b %d, %Y"), ".\nSafe to say we didn't fight while building it.")                                         , traces = 9  ) %>% 
   style(hovertext = paste0("We built a duck fence on "                                         , format(as_date(`Duck Fence`), "%b %d, %Y"), ".\nOur first outside project!")                                                           , traces = 10 ) %>% 
@@ -989,7 +1008,7 @@ ggplotly(sp500_graph) %>%
   style(hovertext = paste0("Neil moved in with Karina on "                                     , format(as_date(`Neil moves in`), "%b %d, %Y"), ".")                                                                                   , traces =  14) %>% 
   style(hovertext = paste0("We go scuba diving for the first time in Key Largo, FL on "        , format(as_date(`Scuba Diving`), "%b %d, %Y"), "!")                                                                                    , traces =  15) %>%
   style(hovertext = paste0("We got engaged on "                                                , format(as_date(`We Get Engaged!`), "%b %d, %Y"), "!\nNeil hired a photographer to capture the moment at Mt. Hood Meadows ski resort.") , traces = 16 ) %>%
-  style(hovertext = paste0("We take our first trip as an engaged coupel to Tahiti on"          , format(as_date(`Tahiti Trip`), "%b %d, %Y"), ".\nWe sailed on a Yach to different islabds for 10 days!")                               , traces =  17) %>% 
+  style(hovertext = paste0("We take our first trip as an engaged couple to Tahiti on "          , format(as_date(`Tahiti Trip`), "%b %d, %Y"), ".\nWe sailed on a Yacht to different islands for 10 days!")                               , traces =  17) %>% 
   style(hovertext = paste0("We bought a 1 acre piece of land in La Pine, OR on "               , format(as_date(`We Buy Property`), "%b %d, %Y"), ".\nOur plan is to build a getaway cabin on the land!")                               , traces =  18) %>% 
   style(hoverinfo = "none", traces = 19:35)
 
@@ -1064,7 +1083,7 @@ ggplotly(dowjones_graph) %>%
   style(hovertext = paste0("We take our first trip to New York together on "                   , format(as_date(`New York`), "%b %d, %Y"), ".\nThis is also the first time Neil Met Karina's parents.")                               , traces = 4  ) %>% 
   style(hovertext = paste0("Our first time ever snowboarding together was on "                 , format(as_date(`Snowboarding`), "%b %d, %Y"), ".\nNeil proved he can shred to Karina!")                                              , traces = 5  ) %>% 
   style(hovertext = paste0("Karina flies to Alpine, CA to meet Neil's parents on "             , format(as_date(`Meet Parents`), "%b %d, %Y"), ".\nWe played card games all New Years Eve and kissed at midnight!")                   , traces = 6  ) %>% 
-  style(hovertext = paste0("We make it official, we decide we want to be in a relationship on" , format(as_date(Relationship), "%b %d, %Y"), '.\nWe also said "I love you" in person for the first time on this day.')                , traces = 7  ) %>% 
+  style(hovertext = paste0("We make it official, we decide we want to be in a relationship on " , format(as_date(Relationship), "%b %d, %Y"), '.\nWe also said "I love you" in person for the first time on this day.')                , traces = 7  ) %>% 
   style(hovertext = paste0("We go snow boarding with Karina's son, Ben, on "                   , format(as_date(`Neil Meets Ben`), "%b %d, %Y"), ".\nIt's the first time Neil met Ben.")                                                , traces = 8  ) %>% 
   style(hovertext = paste0("We build our first piece of IKEA furniture together on "           , format(as_date(`Build Furniture`), "%b %d, %Y"), ".\nSafe to say we didn't fight while building it.")                                         , traces = 9  ) %>% 
   style(hovertext = paste0("We built a duck fence on "                                         , format(as_date(`Duck Fence`), "%b %d, %Y"), ".\nOur first outside project!")                                                           , traces = 10 ) %>% 
@@ -1074,7 +1093,7 @@ ggplotly(dowjones_graph) %>%
   style(hovertext = paste0("Neil moved in with Karina on "                                     , format(as_date(`Neil moves in`), "%b %d, %Y"), ".")                                                                                   , traces =  14) %>% 
   style(hovertext = paste0("We go scuba diving for the first time in Key Largo, FL on "        , format(as_date(`Scuba Diving`), "%b %d, %Y"), "!")                                                                                    , traces =  15) %>%
   style(hovertext = paste0("We got engaged on "                                                , format(as_date(`We Get Engaged!`), "%b %d, %Y"), "!\nNeil hired a photographer to capture the moment at Mt. Hood Meadows ski resort.") , traces = 16 ) %>%
-  style(hovertext = paste0("We take our first trip as an engaged coupel to Tahiti on"          , format(as_date(`Tahiti Trip`), "%b %d, %Y"), ".\nWe sailed on a Yach to different islabds for 10 days!")                               , traces =  17) %>% 
+  style(hovertext = paste0("We take our first trip as an engaged couple to Tahiti on "          , format(as_date(`Tahiti Trip`), "%b %d, %Y"), ".\nWe sailed on a Yacht to different islands for 10 days!")                               , traces =  17) %>% 
   style(hovertext = paste0("We bought a 1 acre piece of land in La Pine, OR on "               , format(as_date(`We Buy Property`), "%b %d, %Y"), ".\nOur plan is to build a getaway cabin on the land!")                               , traces =  18) %>% 
   style(hoverinfo = "none", traces = 19:35)
 
