@@ -330,7 +330,7 @@ plove <- ggplot(love, aes(x = week_of, y = `Count of particular word(s) used in 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
   scale_x_date(date_labels="%b %Y",date_breaks  ="1 month") + 
   labs(title = "",
-       x = "") +
+       x = "", , color = "&#9644; <b>Word(s)</b><br>&#9670; <b>Milestone</b><br>") +
   theme(
 #   strip.background = element_rect(
 #     color="#64798B",  linewidth =1, linetype="solid"
@@ -371,7 +371,7 @@ pbaby <- ggplot(baby, aes(x = week_of, y = `Count of particular word(s) used in 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
   scale_x_date(date_labels="%b %Y",date_breaks  ="1 month") + 
   labs(title = "",
-       x = "") +
+       x = "", color = "&#9644; <b>Word(s)</b><br>&#9670; <b>Milestone</b><br>") +
   theme(
 #   strip.background = element_rect(
 #     color="#64798B",  linewidth =1, linetype="solid"
@@ -410,7 +410,7 @@ pbabe <- ggplot(babe, aes(x = week_of, y = `Count of particular word(s) used in 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
   scale_x_date(date_labels="%b %Y",date_breaks  ="1 month") + 
   labs(title = "",
-       x = "") +
+       x = "", , color = "&#9644; <b>Word(s)</b><br>&#9670; <b>Milestone</b><br>") +
   theme(
 #   strip.background = element_rect(
 #     color="#64798B",  linewidth =1, linetype="solid"
@@ -452,7 +452,7 @@ pben <- ggplot(ben, aes(x = week_of, y = `Count of particular word(s) used in ou
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
   scale_x_date(date_labels="%b %Y",date_breaks  ="1 month") + 
   labs(title = "",
-       x = "") +
+       x = "", , color = "&#9644; <b>Word(s)</b><br>&#9670; <b>Milestone</b><br>") +
   theme(
 #   strip.background = element_rect(
 #     color="#64798B",  linewidth =1, linetype="solid"
@@ -496,7 +496,7 @@ plol <- ggplot(lol, aes(x = week_of, y = `Count of particular word(s) used in ou
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
   scale_x_date(date_labels="%b %Y",date_breaks  ="1 month") + 
   labs(title = "",
-       x = "") +
+       x = "", color = "&#9644; <b>Word(s)</b><br>&#9670; <b>Milestone</b><br>") +
   theme(
 #   strip.background = element_rect(
 #     color="#64798B",  linewidth =1, linetype="solid"
@@ -537,7 +537,7 @@ pmorn <- ggplot(morn, aes(x = week_of, y = `Count of particular word(s) used in 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
   scale_x_date(date_labels="%b %Y",date_breaks  ="1 month") + 
   labs(title = "",
-       x = "") +
+       x = "", color = "&#9644; <b>Word(s)</b><br>&#9670; <b>Milestone</b><br>") +
   theme(
 #   strip.background = element_rect(
 #     color="#64798B",  linewidth =1, linetype="solid"
@@ -573,7 +573,7 @@ pbabe <- ggplot(texts_combine_filter_graph_groups, aes(x = week_of, y = `Count o
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
   scale_x_date(date_labels="%b %Y",date_breaks  ="1 month") + 
   labs(title = "",
-       x = "") +
+       x = "", color = "&#9644; <b>Word(s)</b><br>&#9670; <b>Milestone</b><br>") +
   theme(
 #   strip.background = element_rect(
 #     color="#64798B",  linewidth =1, linetype="solid"
@@ -948,7 +948,7 @@ sp500_graph <- ggplot(sp500, aes(x = Date, y = `Close/Last`) )+
 #  scale_y_continuous("S&P500", sec.axis = sec_axis(~(.), name = "Dow Jones"), limits = c(3500, max(sp500$`Close`)), , expand = c(0, 0, .14, 0)) +
   theme_classic() +
   scale_y_continuous(limits = c(3500, max(sp500$`Close/Last`)), expand = c(0, 0, .14, 0)) +
-  labs(title="", x="", color = "Special Event") +
+  labs(title="", x="", color = "&#9644; <b>Close Price</b><br>&#9670; <b>Milestone</b><br>") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
   scale_x_date(date_labels="%b %Y",date_breaks  ="1 month") +
 
@@ -1014,7 +1014,7 @@ ggplotly(sp500_graph) %>%
 
 ```
 
-<sup>*Hover over the chart and milestones for more information about our milestones and the market price. Or click on the chart legend to show/hide any trends.*</sup>
+<sup>*Hover over the chart and milestones for more information about our milestones and the market price. Or click on the chart legend to show/hide any Milestones.*</sup>
 
 **The Dow Jones & our Milestones**
 
@@ -1033,7 +1033,7 @@ dowjones_graph <- ggplot(dowjones, aes(x = Date, y = `Close/Last`) )+
 #  scale_y_continuous("S&P500", sec.axis = sec_axis(~(.), name = "Dow Jones"), limits = c(3500, max(sp500$`Close`)), , expand = c(0, 0, .14, 0)) +
   theme_classic() +
   scale_y_continuous(limits = c(27000, max(dowjones$`Close/Last`)), expand = c(0, 0, .14, 0)) +
-  labs(title="", x="", color = "Special Event") +
+  labs(title="", x="", color = "&#9644; <b>Close Price</b><br>&#9670; <b>Milestone</b><br>") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
   scale_x_date(date_labels="%b %Y",date_breaks  ="1 month") +
 
@@ -1100,7 +1100,7 @@ ggplotly(dowjones_graph) %>%
 
 ```
 
-<sup>*Hover over the chart and milestones for more information about our milestones and the market price. Or click on the chart legend to show/hide any trends.*</sup>
+<sup>*Hover over the chart and milestones for more information about our milestones and the market price. Or click on the chart legend to show/hide any Milestones.*</sup>
 
 <center>![](sp500dow.png){width="80%"}</center>
 

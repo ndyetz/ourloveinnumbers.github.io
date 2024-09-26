@@ -836,7 +836,6 @@ pvalfinal_in <- bind_rows(pvalfinal_in, pval_in)
 
 
 
-
 #Financial data
 finance <- finance %>% 
   filter(`Proposed Category` != "0") %>% 

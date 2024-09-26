@@ -74,7 +74,7 @@ line_plots_quant <- function(data, x, y) {
     scale_color_manual(values = c( "#F0A0FF", "#0075DC", "#993F00", "#4C005C", "#191919",  "#005C31", "#F8766D","#2BCE48", "#00BFC4", "#FFCC99", "#808080",  "#94FFB5", "#8F7C00", "#9DCC00", "#C20088", "#003380", "#FFA405", "#FFA8BB" )) +
     theme_classic() +
     scale_y_continuous(expand = c(0, 0, .14, 0)) +
-    labs(title= "" , x="") +
+    labs(title= "" , x="", color = "&#9644; <b>Sender</b><br>&#9670; <b>Milestone</b><br>") +
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
     scale_x_date(date_labels="%b %Y",date_breaks  ="1 month") +
 
@@ -130,7 +130,7 @@ line_plots_words <- function(data, x, y) {
     theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
     scale_x_date(date_labels="%b %Y",date_breaks  ="1 month") +
     labs(title = "",
-         x = "") +
+         x = "", color = "&#9644; <b>Word(s)</b><br>&#9670; <b>Milestone</b><br>") +
     geom_point(aes(x = (`First Kiss`)     , y = max(`Count of particular word(s) used in our texts`) , color = "First Kiss"      ), shape=18, size = 4) +
     geom_point(aes(x = (`New York`)       , y = max(`Count of particular word(s) used in our texts`) , color = "New York"        ), shape=18, size = 4) +
     geom_point(aes(x = (`Snowboarding`)   , y = max(`Count of particular word(s) used in our texts`) , color = "Snowboarding"    ), shape=18, size = 4) +
