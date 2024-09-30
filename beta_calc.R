@@ -16,12 +16,15 @@ library(writexl)
 
 
 #Custom functions
+#detects stocks that did not get picked up in symbols (Indication the stock does not exist or symbol is written incorrectly)
 myfun <- function(x) {
   df <- get(x)
   return(df)
 }
 
 sp500 <- read_csv("D:/Git/ourloveinnumbers.github.io/sp500.csv")
+
+# changing two ticker names (Sometimes, there is a slight change based on source). Ticker names must match Yahoo names.
 
 sp500 <- sp500 %>% 
   mutate(ticker = ifelse(ticker == "BRK.B", "BRK-B", ticker),
@@ -31,24 +34,26 @@ sp500 <- sp500 %>%
 
 
 #Add stock ticker names. Ticker name must be the EXACT name (case sensitive)
-#symbols <- c(sp500$ticker)
+#SP500 stocks on 9/28/2024
+symbols <- c(sp500$ticker)
 
-symbols <- c("SPY",
-             "AMZN",
-             "ABNB",
-             "UBER",
-             "CMG",
-             "ALK",
-             "MODG",
-             "GOLF",
-             "MTN",
-             "SBUX",
-             "MTCH"
-)
+#List of stocks for our portfolio.
+#symbols <- c("SPY",
+#             "AMZN",
+#             "ABNB",
+#             "UBER",
+#             "CMG",
+#             "ALK",
+#             "MODG",
+#             "GOLF",
+#             "MTN",
+#             "SBUX",
+#             "MTCH"
+#)
 
 # Descriptive names of portfolio - must match order of symbols
-Asset_name <- as_tibble(c("S&P 500", "Amazon", "AirBnB", "Uber", "Chipotle", "Alaska Airlines", "Callaway", "Titleist", "Vail Resorts","Starbucks", "Tinder"))
-Asset_name <- Asset_name %>% rename(`Asset Name` = "value")
+#Asset_name <- as_tibble(c("S&P 500", "Amazon", "AirBnB", "Uber", "Chipotle", "Alaska Airlines", "Callaway", "Titleist", "Vail Resorts","Starbucks", "Tinder"))
+#Asset_name <- Asset_name %>% rename(`Asset Name` = "value")
 
 
 #Start and end dates of interest, must be in "YYYY-MM-DD" format
@@ -62,21 +67,24 @@ prices <-
              from = start_date ,
              to = end_date,
              auto.assign = TRUE, warnings = FALSE) %>% 
-  map(~Cl(get(.))) %>%                          # <- Currently getting the adjusted closing price... Would "Close" (Cl) be better?
+  map(~Ad(get(.))) %>%                          # <- Currently getting the adjusted closing price... Would "Close" (Cl) be better?
   reduce(merge) %>% 
   `colnames<-`(symbols)
 
 
-# Stocks to remove because they provide incomplete data.
+# Stocks to remove because they provide incomplete data. Check if any seem off-base.
 remove <- prices %>% as_tibble() %>%  select_if(~  any(is.na(.))) 
 
 
-#Removes any columns with an NA value
+#Removes any columns with an NA value (Stocks that did not exist during some point between start and end date)
+#Code below will remove entire dates if there is missing data (And likely produce errors.)
 prices <- prices[ , colSums(!is.na(prices)) == nrow(prices)] 
 
 #Check if NA remove worked. If correct, This should output a nrowsx0 table
 prices %>% as_tibble() %>%  select_if(~  any(is.na(.))) 
-  
+
+
+#Checks for stocks that exist in "symbols" but were not pulled. Indication of error if end table is NOT nrowx0
 #yahoo_symbols <- ls()
 #lapply(yahoo_symbols, myfun)
 #yahoo_symbols <- as_tibble(yahoo_symbols)
@@ -84,12 +92,13 @@ prices %>% as_tibble() %>%  select_if(~  any(is.na(.)))
 #yahoo_symbols <- yahoo_symbols %>% 
 #  rename(ticker = "value")
 #
+# Any tickers in here indicate problems. check on symbol name. Table should be nrowx0.
 #sp500_check <- sp500 %>%
 #  anti_join(yahoo_symbols, by = "ticker")
 #
 #
 
-# Set to monthly... I don't think we need to do it monthly, I am only doing that because the example was that way.
+# Set to monthly.
 prices_monthly <- to.monthly(prices, indexAt = "last", OHLC = FALSE)
 
 #Return calculator function (Bit of a black box to me, Karina can help?)
@@ -100,7 +109,7 @@ portfolio_returns_xts_rebalanced_monthly <-
   `colnames<-`("returns") 
 
 
-# Getting indexes at monthly and Returns = log(returns) - log(lag(returns)) lag is currently lagging by 1 (deafult). Ask Karina if this makes sense?
+# Getting indexes at monthly and Returns = log(returns) - log(lag(returns)) lag is currently lagging by 1 (default).
 asset_returns_long <-  
   prices %>% 
   to.monthly(indexAt = "last", OHLC = FALSE) %>% 
@@ -165,17 +174,18 @@ beta_assets <-
   select(-data)
 
 #Adds in descriptive names of tickers
-beta_assets <- bind_cols(Asset_name, beta_assets) 
+#beta_assets <- bind_cols(Asset_name, beta_assets) # <- only un-comment if you have list of ticker full names (With matching ticker name).
 
 #Format final dataset
 final_betas <- beta_assets %>% 
   mutate(term = "Market Returns",
          Dates = paste(start_date, "-", end_date)) %>% 
-  select(`Asset Name`, Ticker = "asset", term, Dates, `Beta` = "estimate", "Standard Error" = std.error, `t-value` = "statistic", "p-value" = p.value)
+  select(#`Asset Name`,  # <- only uncomment if you have list of ticker full names .
+         Ticker = "asset", term, Dates, `Beta` = "estimate", "Standard Error" = std.error, `t-value` = "statistic", "p-value" = p.value)
 
 
 
 #Output Betas to excel & .csv
-write_xlsx(final_betas, "D:/Git/ourloveinnumbers.github.io/final_betas.xlsx")
-write_csv(final_betas, "D:/Git/ourloveinnumbers.github.io/final_betas.csv")
-#write_csv(final_betas, "D:/Git/ourloveinnumbers.github.io/SP500_final_betas.csv")
+#write_xlsx(final_betas, "D:/Git/ourloveinnumbers.github.io/final_betas.xlsx")
+#write_csv(final_betas, "D:/Git/ourloveinnumbers.github.io/final_betas.csv")
+write_csv(final_betas, "D:/Git/ourloveinnumbers.github.io/SP500_final_betas.csv")
