@@ -15,18 +15,45 @@ library(broom)
 library(writexl)
 
 
+#Custom functions
+myfun <- function(x) {
+  df <- get(x)
+  return(df)
+}
+
+sp500 <- read_csv("D:/Git/ourloveinnumbers.github.io/sp500.csv")
+
+sp500 <- sp500 %>% 
+  mutate(ticker = ifelse(ticker == "BRK.B", "BRK-B", ticker),
+         ticker = ifelse(ticker == "BF.B", "BF-B", ticker)
+         )
+
+
 
 #Add stock ticker names. Ticker name must be the EXACT name (case sensitive)
-symbols <- c("SPY", "AMZN", "ABNB", "UBER","CMG", "ALK", "MODG", "GOLF", "MTN" , "SBUX")
+#symbols <- c(sp500$ticker)
+
+symbols <- c("SPY",
+             "AMZN",
+             "ABNB",
+             "UBER",
+             "CMG",
+             "ALK",
+             "MODG",
+             "GOLF",
+             "MTN",
+             "SBUX",
+             "MTCH"
+)
 
 # Descriptive names of portfolio - must match order of symbols
-Asset_name <- as_tibble(c("S&P 500", "Amazon", "AirBnB", "Uber", "Chipotle", "Alaska Airlines", "Callaway", "Titleist", "Vail Resorts","Starbucks"))
+Asset_name <- as_tibble(c("S&P 500", "Amazon", "AirBnB", "Uber", "Chipotle", "Alaska Airlines", "Callaway", "Titleist", "Vail Resorts","Starbucks", "Tinder"))
 Asset_name <- Asset_name %>% rename(`Asset Name` = "value")
 
 
 #Start and end dates of interest, must be in "YYYY-MM-DD" format
-start_date <- "2022-06-27"
-end_date   <- "2024-09-23"
+start_date <- "2022-10-03"
+end_date   <- "2024-09-20"
 
 
 #Pull Prices
@@ -35,19 +62,41 @@ prices <-
              from = start_date ,
              to = end_date,
              auto.assign = TRUE, warnings = FALSE) %>% 
-  map(~Ad(get(.))) %>%                          # <- Currently getting the adjusted closing price... Would "Close" (Cl) be better?
+  map(~Cl(get(.))) %>%                          # <- Currently getting the adjusted closing price... Would "Close" (Cl) be better?
   reduce(merge) %>% 
   `colnames<-`(symbols)
 
 
-# Set to monthly... I odn't think we neeed to do it monthly, I am only doing that because the example was that way.
+# Stocks to remove because they provide incomplete data.
+remove <- prices %>% as_tibble() %>%  select_if(~  any(is.na(.))) 
+
+
+#Removes any columns with an NA value
+prices <- prices[ , colSums(!is.na(prices)) == nrow(prices)] 
+
+#Check if NA remove worked. If correct, This should output a nrowsx0 table
+prices %>% as_tibble() %>%  select_if(~  any(is.na(.))) 
+  
+#yahoo_symbols <- ls()
+#lapply(yahoo_symbols, myfun)
+#yahoo_symbols <- as_tibble(yahoo_symbols)
+#
+#yahoo_symbols <- yahoo_symbols %>% 
+#  rename(ticker = "value")
+#
+#sp500_check <- sp500 %>%
+#  anti_join(yahoo_symbols, by = "ticker")
+#
+#
+
+# Set to monthly... I don't think we need to do it monthly, I am only doing that because the example was that way.
 prices_monthly <- to.monthly(prices, indexAt = "last", OHLC = FALSE)
 
 #Return calculator function (Bit of a black box to me, Karina can help?)
 asset_returns_xts <- na.omit(Return.calculate(prices_monthly, method = "log"))
 
 portfolio_returns_xts_rebalanced_monthly <- 
-  Return.portfolio(asset_returns_xts,, rebalance_on = "months") %>%
+  Return.portfolio(asset_returns_xts, rebalance_on = "months") %>%
   `colnames<-`("returns") 
 
 
@@ -125,5 +174,8 @@ final_betas <- beta_assets %>%
   select(`Asset Name`, Ticker = "asset", term, Dates, `Beta` = "estimate", "Standard Error" = std.error, `t-value` = "statistic", "p-value" = p.value)
 
 
-#Output Betas to excel
+
+#Output Betas to excel & .csv
 write_xlsx(final_betas, "D:/Git/ourloveinnumbers.github.io/final_betas.xlsx")
+write_csv(final_betas, "D:/Git/ourloveinnumbers.github.io/final_betas.csv")
+#write_csv(final_betas, "D:/Git/ourloveinnumbers.github.io/SP500_final_betas.csv")
