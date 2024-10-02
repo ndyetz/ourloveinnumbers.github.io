@@ -962,3 +962,67 @@ finance_summ_Karina <- finance_summ_Karina %>%
 #  group_by(`User`, `Quarter`) %>% 
 #  summarize(sum = sum(Amount))
 
+
+
+
+
+### Beta information
+
+betas <- read_csv("https://raw.githubusercontent.com/ndyetz/ourloveinnumbers.github.io/refs/heads/main/final_betas.csv", show_col_types = FALSE)
+
+betas <- betas %>% 
+  mutate_if(is.numeric, round, digits = 2) %>% 
+  select(`Asset Name`, Ticker, Beta, `Standard Error`)
+
+
+sp500_betas <- read_csv("https://raw.githubusercontent.com/ndyetz/ourloveinnumbers.github.io/refs/heads/main/SP500_final_betas.csv", show_col_types = FALSE)
+
+sp500_betas <- sp500_betas %>% 
+  mutate_if(is.numeric, round, digits = 2) %>% 
+  select(Ticker, Beta, `Standard Error`)
+  
+
+# Creating the front image - overlay word cloud (alpha = 0.15), text quant graph and S&P 500 with different colors
+#library(jpeg)
+#library(ggpubr)
+#
+#
+#together <- png::readPNG("together_no_date.PNG") 
+#im <- png::readPNG("word_cloud.PNG") 
+#
+#cloud <- matrix(rgb(im[,,1],im[,,2],im[,,3], im[,,4] * 0.15), nrow=dim(im)[1])
+#
+#
+#  ggplot(texts_quant_graph, aes(x = week_of, `# of texts sent`, color = `Sent by`)) + #<- only works if variable is labeled `Sent by`!
+#    background_image(together) +
+#
+#    geom_line(linewidth = .2) + 
+#    scale_color_manual(values = c( "#00BFC4", "black")) +
+#    theme_void() +
+# #  scale_y_continuous(expand = c(0, 0, .14, 0)) +
+#   # labs(title= "" , x="", color = "&#9644; <b>Sender</b><br>&#9670; <b>Milestone</b><br>") +
+#    theme(legend.position ="none")  +
+#    background_image(cloud) 
+#    #scale_x_date(date_labels="%b %Y",date_breaks  ="1 month")
+#
+#  
+#  ggsave("together_graphs.png", height = 576, width = 1154, units = "px",  device='png')
+#
+#
+#
+#together <- png::readPNG("together_graphs.PNG") 
+#
+#
+#ggplot(sp500, aes(x = Date, y = `Close/Last`) )+
+#  background_image(together) +
+#  geom_line(linewidth = .2, color = "#0086B9") + 
+# # scale_color_manual(values = "deepskyblue") +
+#  #  scale_y_continuous("S&P500", sec.axis = sec_axis(~(.), name = "Dow Jones"), limits = c(3500, max(sp500$`Close`)), , expand = c(0, 0, .14, 0)) +
+#  theme_void() +
+#  scale_y_continuous(limits = c(3500, max(sp500$`Close/Last`)), expand = c(0, 0, .0, 0)) +
+#  #labs(title="", x="", color = "&#9644; <b>Close Price</b><br>&#9670; <b>Milestone</b><br>") +
+#  theme(legend.position ="none")  +
+#  scale_x_date(date_labels="%b %Y",date_breaks  ="1 month") 
+#  
+#ggsave("together_graphs2.png", height = 576, width = 1154, units = "px",  device='png')
+#

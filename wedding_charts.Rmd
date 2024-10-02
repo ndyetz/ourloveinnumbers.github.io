@@ -168,7 +168,7 @@ h1 {
 
 <center>![](names.png){width="30%"}</center>
 
-<center>![](together.png){width="70%"}</center>
+<center>![](together_graphs2.png){width="70%"}</center>
 
 ## Texting<br>Data {.tabset .tabset-fade .tabset-pills}
 
@@ -1106,6 +1106,8 @@ ggplotly(dowjones_graph) %>%
 
 ## Deeper<br>Dive {.tabset .tabset-fade .tabset-pills}
 
+### Market Predictions & Texting {.tabset .tabset-fade .tabset-pills}
+
 **We decided to see if our texting data is predictive of the market.**
 
 <br>
@@ -1195,7 +1197,7 @@ reg_table_in %>%
 **We welcome all our guests to share any ideas on why that might be during our wedding. :)**
 
 
-### S&P 500 (Absolute) {.tabset .tabset-fade .tabset-pills}
+#### S&P 500 (Absolute) {.tabset .tabset-fade .tabset-pills}
 
 ```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
 model <- lm( `SP500_Closing_Price` ~ Number_of_texts_sent + `Days_since_first_text` + Number_of_texts_sent*`Days_since_first_text`, data = textcount_sp500)
@@ -1207,7 +1209,7 @@ ggPredict(model, se = TRUE,  interactive = TRUE, terms = c("n_texts", "Days_sinc
 ***Statistical Interpretation:*** This model *is* statistically significant: F(3, 407) = 1347.84, p \<.01, R<sup>2</sup> = 0.91. Suggesting that, for every 1 text we send, the S&P 500 index price is expected to increase 1.07 points at day 0 (p \<.01) - however, for every day that passes, the regression coefficient (slope) is expected to *decrease* by 0.0028 points (p \<.01). The chart above shows the expected change in slope at 0, 200, 400, 600, & 800 days since we started texting. As can be seen from the chart above, after enough time, the relationship turns from positive to negative!
 
 
-### S&P 500 (Daily Difference) {.tabset .tabset-fade .tabset-pills}
+#### S&P 500 (Daily Difference) {.tabset .tabset-fade .tabset-pills}
 
 ```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
 model <- lm( `diff` ~ Number_of_texts_sent + `Days_since_first_text` + Number_of_texts_sent*`Days_since_first_text`, data = textcount_sp500)
@@ -1219,7 +1221,7 @@ ggPredict(model, se = TRUE,  interactive = TRUE, terms = c("n_texts", "Days_sinc
 ***Statistical Interpretation:*** This model is *not* statistically significant: F(3, 407) = 0.24, p \>.05, R<sup>2</sup> \< 0.01. Our texting is *not* predictive of the S&P 500 daily difference price.
 
 
-### Dow Jones (Absolute) {.tabset .tabset-fade .tabset-pills}
+#### Dow Jones (Absolute) {.tabset .tabset-fade .tabset-pills}
 
 ```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
 model <- lm( `Dow_Jones_Daily_Closing_Price` ~ Number_of_texts_sent + `Days_since_first_text` + Number_of_texts_sent*`Days_since_first_text`, data = textcount_dj)
@@ -1231,7 +1233,7 @@ ggPredict(model, se = TRUE,  interactive = TRUE, terms = c("n_texts", "Days_sinc
 ***Statistical Interpretation:*** This model *is* statistically significant: F(3, 407) = 519.61, p \<.01, R<sup>2</sup> = 0.79. Suggesting that, for every 1 text we send, the Dow Jones index price is expected to increase 11.40 points at day 0 (p \<.01) - however, for every day that passes, the regression coefficient (slope) is expected to *decrease* by 0.0368 points (p \<.01). The chart above shows the expected change in slope at 0, 200, 400, 600, & 800 days since we started texting. As can be seen from the chart above, after enough time, the relationship turns from positive to negative!
 
 
-### Dow Jones (Daily Difference) {.tabset .tabset-fade .tabset-pills}
+#### Dow Jones (Daily Difference) {.tabset .tabset-fade .tabset-pills}
 
 ```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
 model <- lm( `diff` ~ Number_of_texts_sent + `Days_since_first_text` + Number_of_texts_sent*`Days_since_first_text`, data = textcount_dj)
@@ -1242,6 +1244,116 @@ ggPredict(model, se = TRUE,  interactive = TRUE, terms = c("n_texts", "Days_sinc
 
 ***Statistical Interpretation:*** This model is *not* statistically significant: F(3, 407) = 1.31, p \>.05, R<sup>2</sup> \< 0.01. Our texting is *not* predictive of the Dow Jones daily difference price.
 
+
+
+### CAPM<br>Betas {.tabset .tabset-fade .tabset-pills}
+<br>
+
+**Our spending patterns over the course of our relationship do show spending on brands and services that are generally well coordinated with the market (Betas > 1 below):**
+
+#### Our<br>Brands {.tabset .tabset-fade .tabset-pills}
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
+betas_out <- betas %>% 
+  filter(Ticker != "SPY") %>% 
+  anti_join(sp500_betas, by = "Ticker") %>% 
+  select(Ticker, Beta, `Standard Error`) %>% 
+  mutate(Ticker = ifelse(Ticker %in% sp500_betas$Ticker, Ticker, paste0(Ticker, "*")))
+
+
+betas_table <- betas %>% 
+  mutate(Ticker = ifelse(Ticker %in% sp500_betas$Ticker, Ticker, paste0(Ticker, "*")),
+         Ticker = ifelse(Ticker == "SPY*", "SPY", Ticker), 
+         `Asset Name` = ifelse(`Asset Name` == "S&P 500", "S&P 500 (Reference)", `Asset Name`)) %>% 
+  rename(Name = "Asset Name")
+
+#betas_table %>% 
+#  kbl(align = "c", escape = TRUE) %>% 
+#  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = TRUE, font_size = 16) %>% 
+#  add_footnote(label = "Date Range: 2022-10-03 - 2024-09-20") %>% 
+#  add_footnote(label = "*Ticker not present in S&P 500", notation = "none")
+
+
+
+datatable(betas_table, escape = FALSE, rownames = FALSE, options = list(pageLength = length(betas_table$Name)),
+            caption = htmltools::tags$caption(
+    style = 'caption-side: bottom; text-align: left;',
+    ' Date Range: 2022-10-03 - 2024-09-20 | *Ticker not present in S&P 500')) %>% 
+  formatRound(c("Beta", "Standard Error"), digits = 2) %>% 
+    formatStyle(
+    c(1:4),
+    target = "row",
+    fontWeight = styleEqual(c(1,2), "bold")
+  )
+
+```
+
+**Our Brands compared to the S&P 500** 
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
+
+betas_nosp <- betas_table %>% 
+  filter(Ticker != "SPY")
+
+
+sp500_betas_plus <- sp500_betas %>% 
+  mutate(Ticker = ifelse(Ticker %in% betas$Ticker, Ticker, "Other S&P 500 ticker")) %>% 
+  bind_rows(betas_out) %>%  
+  mutate(
+         Ticker = factor(Ticker, levels = c(betas_nosp$Ticker, "Other S&P 500 ticker"), labels = c(1:length(unique(betas$Ticker)) - 1)),
+         Ticker = factor(Ticker, labels = c(betas_nosp$Ticker, "Other S&P 500 ticker"), levels = c(1:length(unique(betas$Ticker)) - 1))
+         )
+
+
+p_sp500_betas <- ggplot(sp500_betas_plus, aes(x = Beta, fill = Ticker)) + 
+  geom_histogram(bins = 40) + 
+  scale_fill_manual(values = c( "#ff9900", "#FF6A60", "#1fbad6", "#451400", "#007cba", "#104c8c", "#000000", "#87CEEB", "#006241", "#ef4a75", "grey", "blue")) +
+  geom_segment(aes(x= (mean(Beta[Ticker != "Other S&P 500 ticker"])), xend=   (mean(Beta[Ticker != "Other S&P 500 ticker"])), y=0, yend= 45 ), linewidth = .009, color = "deepskyblue") +
+  geom_point(aes(x = (mean(Beta[Ticker != "Other S&P 500 ticker"]))       , y = 45  ), size = 2.5, color = "deepskyblue", fill = "deepskyblue", shape = 18)  +
+  labs(y = "") +
+  scale_y_continuous(expand = c(0, 0, .14, 0)) +
+ # geom_vline(xintercept  = mean(betas$Beta), color = "blue", show.legend = TRUE) +
+  theme_classic() 
+
+  
+ticker_hist <- ggplotly(p_sp500_betas, tooltip = c("count", "Ticker")) %>% 
+  style(hovertext = paste0("Name: ", betas_table$Name[2]  ,"\nTicker: ",  betas_table$Ticker[2] , "\nBeta: ", betas_table$Beta[2]  ), traces = 1  ) %>% 
+  style(hovertext = paste0("Name: ", betas_table$Name[3]  ,"\nTicker: ",  betas_table$Ticker[3] , "\nBeta: ", betas_table$Beta[3]  ), traces = 2  ) %>% 
+  style(hovertext = paste0("Name: ", betas_table$Name[4]  ,"\nTicker: ",  betas_table$Ticker[4] , "\nBeta: ", betas_table$Beta[4]  ), traces = 3  ) %>% 
+  style(hovertext = paste0("Name: ", betas_table$Name[5]  ,"\nTicker: ",  betas_table$Ticker[5] , "\nBeta: ", betas_table$Beta[5]  ), traces = 4  ) %>% 
+  style(hovertext = paste0("Name: ", betas_table$Name[6]  ,"\nTicker: ",  betas_table$Ticker[6] , "\nBeta: ", betas_table$Beta[6]  ), traces = 5  ) %>% 
+  style(hovertext = paste0("Name: ", betas_table$Name[7]  ,"\nTicker: ",  betas_table$Ticker[7] , "\nBeta: ", betas_table$Beta[7]  ), traces = 6  ) %>% 
+  style(hovertext = paste0("Name: ", betas_table$Name[8]  ,"\nTicker: ",  betas_table$Ticker[8] , "\nBeta: ", betas_table$Beta[8]  ), traces = 7  ) %>% 
+  style(hovertext = paste0("Name: ", betas_table$Name[9]  ,"\nTicker: ",  betas_table$Ticker[9] , "\nBeta: ", betas_table$Beta[9]  ), traces = 8  ) %>% 
+  style(hovertext = paste0("Name: ", betas_table$Name[10] ,"\nTicker: ",  betas_table$Ticker[10], "\nBeta: ", betas_table$Beta[10] ), traces = 9  ) %>% 
+  style(hovertext = paste0("Name: ", betas_table$Name[11] ,"\nTicker: ",  betas_table$Ticker[11], "\nBeta: ", betas_table$Beta[11] ), traces = 10 )  %>% 
+  style(hovertext = paste("Mean Beta of our brands:", (round(mean(sp500_betas_plus$Beta[sp500_betas_plus$Ticker != "Other S&P 500 ticker"]), 2))), traces = 23)
+
+
+ticker_hist
+
+```
+<sup>*Ticker not present in S&P 500</sup>
+
+
+#### The S&P 500 Index Betas {.tabset .tabset-fade .tabset-pills}
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
+datatable(sp500_betas, escape = FALSE, rownames = FALSE, options = list(pageLength = length(betas_table$Name)),
+            caption = htmltools::tags$caption(
+    style = 'caption-side: bottom; text-align: left;',
+    'Date Range: 2022-10-03 - 2024-09-20')) %>% 
+  formatRound(c("Beta", "Standard Error"), digits = 2) 
+```
+
+**Our Brands compared to the S&P 500** 
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
+
+ticker_hist
+
+```
+<sup>*Ticker not present in S&P 500</sup>
 
 # &nbsp;
 

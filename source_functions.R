@@ -15,6 +15,7 @@ library(pals)
 library(ggiraph)
 library(ggiraphExtra)
 library(ggeffects)
+library(DT)
 
 
 # Special Dates - Keep at top - add any more special ones!
