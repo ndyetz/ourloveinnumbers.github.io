@@ -1265,7 +1265,7 @@ betas_table <- betas %>%
   mutate(Ticker = ifelse(Ticker %in% sp500_betas$Ticker, Ticker, paste0(Ticker, "*")),
          Ticker = ifelse(Ticker == "SPY*", "SPY", Ticker), 
          `Asset Name` = ifelse(`Asset Name` == "S&P 500", "S&P 500 (Reference)", `Asset Name`)) %>% 
-  rename(Name = "Asset Name")
+  rename(Company = "Asset Name")
 
 #betas_table %>% 
 #  kbl(align = "c", escape = TRUE) %>% 
@@ -1275,7 +1275,7 @@ betas_table <- betas %>%
 
 
 
-datatable(betas_table, escape = FALSE, rownames = FALSE, options = list(pageLength = length(betas_table$Name)),
+datatable(betas_table, escape = FALSE, rownames = FALSE, options = list(pageLength = length(betas_table$Company)),
             caption = htmltools::tags$caption(
     style = 'caption-side: bottom; text-align: left;',
     ' Date Range: 2022-10-03 - 2024-09-20 | *Ticker not present in S&P 500')) %>% 
@@ -1308,8 +1308,8 @@ sp500_betas_plus <- sp500_betas %>%
 p_sp500_betas <- ggplot(sp500_betas_plus, aes(x = Beta, fill = Ticker)) + 
   geom_histogram(bins = 40) + 
   scale_fill_manual(values = c( "#ff9900", "#FF6A60", "#1fbad6", "#451400", "#007cba", "#104c8c", "#000000", "#87CEEB", "#006241", "#ef4a75", "grey", "blue")) +
-  geom_segment(aes(x= (mean(Beta[Ticker != "Other S&P 500 ticker"])), xend=   (mean(Beta[Ticker != "Other S&P 500 ticker"])), y=0, yend= 45 ), linewidth = .009, color = "deepskyblue") +
-  geom_point(aes(x = (mean(Beta[Ticker != "Other S&P 500 ticker"]))       , y = 45  ), size = 2.5, color = "deepskyblue", fill = "deepskyblue", shape = 18)  +
+  geom_segment(aes(x= (mean(Beta[Ticker != "Other S&P 500 ticker"])), xend=   (mean(Beta[Ticker != "Other S&P 500 ticker"])), y=0, yend= 46 ), linewidth = .009, color = "deepskyblue") +
+  geom_point(aes(x = (mean(Beta[Ticker != "Other S&P 500 ticker"]))       , y = 46  ), size = 2.5, color = "deepskyblue", fill = "deepskyblue", shape = 16)  +
   labs(y = "") +
   scale_y_continuous(expand = c(0, 0, .14, 0)) +
  # geom_vline(xintercept  = mean(betas$Beta), color = "blue", show.legend = TRUE) +
@@ -1317,17 +1317,17 @@ p_sp500_betas <- ggplot(sp500_betas_plus, aes(x = Beta, fill = Ticker)) +
 
   
 ticker_hist <- ggplotly(p_sp500_betas, tooltip = c("count", "Ticker")) %>% 
-  style(hovertext = paste0("Name: ", betas_table$Name[2]  ,"\nTicker: ",  betas_table$Ticker[2] , "\nBeta: ", betas_table$Beta[2]  ), traces = 1  ) %>% 
-  style(hovertext = paste0("Name: ", betas_table$Name[3]  ,"\nTicker: ",  betas_table$Ticker[3] , "\nBeta: ", betas_table$Beta[3]  ), traces = 2  ) %>% 
-  style(hovertext = paste0("Name: ", betas_table$Name[4]  ,"\nTicker: ",  betas_table$Ticker[4] , "\nBeta: ", betas_table$Beta[4]  ), traces = 3  ) %>% 
-  style(hovertext = paste0("Name: ", betas_table$Name[5]  ,"\nTicker: ",  betas_table$Ticker[5] , "\nBeta: ", betas_table$Beta[5]  ), traces = 4  ) %>% 
-  style(hovertext = paste0("Name: ", betas_table$Name[6]  ,"\nTicker: ",  betas_table$Ticker[6] , "\nBeta: ", betas_table$Beta[6]  ), traces = 5  ) %>% 
-  style(hovertext = paste0("Name: ", betas_table$Name[7]  ,"\nTicker: ",  betas_table$Ticker[7] , "\nBeta: ", betas_table$Beta[7]  ), traces = 6  ) %>% 
-  style(hovertext = paste0("Name: ", betas_table$Name[8]  ,"\nTicker: ",  betas_table$Ticker[8] , "\nBeta: ", betas_table$Beta[8]  ), traces = 7  ) %>% 
-  style(hovertext = paste0("Name: ", betas_table$Name[9]  ,"\nTicker: ",  betas_table$Ticker[9] , "\nBeta: ", betas_table$Beta[9]  ), traces = 8  ) %>% 
-  style(hovertext = paste0("Name: ", betas_table$Name[10] ,"\nTicker: ",  betas_table$Ticker[10], "\nBeta: ", betas_table$Beta[10] ), traces = 9  ) %>% 
-  style(hovertext = paste0("Name: ", betas_table$Name[11] ,"\nTicker: ",  betas_table$Ticker[11], "\nBeta: ", betas_table$Beta[11] ), traces = 10 )  %>% 
-  style(hovertext = paste("Mean Beta of our brands:", (round(mean(sp500_betas_plus$Beta[sp500_betas_plus$Ticker != "Other S&P 500 ticker"]), 2))), traces = 23)
+  style(hovertext = paste0("Company: ", betas_table$Company[2]  ,"\nTicker: ",  betas_table$Ticker[2] , "\nBeta: ", betas_table$Beta[2]  ), traces = 1  ) %>% 
+  style(hovertext = paste0("Company: ", betas_table$Company[3]  ,"\nTicker: ",  betas_table$Ticker[3] , "\nBeta: ", betas_table$Beta[3]  ), traces = 2  ) %>% 
+  style(hovertext = paste0("Company: ", betas_table$Company[4]  ,"\nTicker: ",  betas_table$Ticker[4] , "\nBeta: ", betas_table$Beta[4]  ), traces = 3  ) %>% 
+  style(hovertext = paste0("Company: ", betas_table$Company[5]  ,"\nTicker: ",  betas_table$Ticker[5] , "\nBeta: ", betas_table$Beta[5]  ), traces = 4  ) %>% 
+  style(hovertext = paste0("Company: ", betas_table$Company[6]  ,"\nTicker: ",  betas_table$Ticker[6] , "\nBeta: ", betas_table$Beta[6]  ), traces = 5  ) %>% 
+  style(hovertext = paste0("Company: ", betas_table$Company[7]  ,"\nTicker: ",  betas_table$Ticker[7] , "\nBeta: ", betas_table$Beta[7]  ), traces = 6  ) %>% 
+  style(hovertext = paste0("Company: ", betas_table$Company[8]  ,"\nTicker: ",  betas_table$Ticker[8] , "\nBeta: ", betas_table$Beta[8]  ), traces = 7  ) %>% 
+  style(hovertext = paste0("Company: ", betas_table$Company[9]  ,"\nTicker: ",  betas_table$Ticker[9] , "\nBeta: ", betas_table$Beta[9]  ), traces = 8  ) %>% 
+  style(hovertext = paste0("Company: ", betas_table$Company[10] ,"\nTicker: ",  betas_table$Ticker[10], "\nBeta: ", betas_table$Beta[10] ), traces = 9  ) %>% 
+  style(hovertext = paste0("Company: ", betas_table$Company[11] ,"\nTicker: ",  betas_table$Ticker[11], "\nBeta: ", betas_table$Beta[11] ), traces = 10 )  %>% 
+  style(hovertext = paste("Mean Beta of our companies:", (round(mean(sp500_betas_plus$Beta[sp500_betas_plus$Ticker != "Other S&P 500 ticker"]), 2))), traces = 23)
 
 
 ticker_hist
@@ -1339,10 +1339,10 @@ ticker_hist
 #### The S&P 500 Index Betas {.tabset .tabset-fade .tabset-pills}
 
 ```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
-datatable(sp500_betas, escape = FALSE, rownames = FALSE, options = list(pageLength = length(betas_table$Name)),
+datatable(sp500_betas, escape = FALSE, rownames = FALSE, options = list(pageLength = length(betas_table$Company)),
             caption = htmltools::tags$caption(
     style = 'caption-side: bottom; text-align: left;',
-    'Date Range: 2022-10-03 - 2024-09-20')) %>% 
+    'Date Range: 2022-10-03 - 2024-09-20 | Note: GEV, KVUE, GEHC, VLTO, SW, & SOLV removed due to missing data in date range')  ) %>% 
   formatRound(c("Beta", "Standard Error"), digits = 2) 
 ```
 

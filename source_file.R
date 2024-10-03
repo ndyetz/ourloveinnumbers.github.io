@@ -976,10 +976,17 @@ betas <- betas %>%
 
 
 sp500_betas <- read_csv("https://raw.githubusercontent.com/ndyetz/ourloveinnumbers.github.io/refs/heads/main/SP500_final_betas.csv", show_col_types = FALSE)
+sp500_names <- read_csv("https://raw.githubusercontent.com/ndyetz/ourloveinnumbers.github.io/refs/heads/main/SP500.csv", show_col_types = FALSE)
+
+sp500_names <- sp500_names %>% 
+  mutate(ticker = ifelse(ticker == "BRK.B", "BRK-B", ticker),
+         ticker = ifelse(ticker == "BF.B", "BF-B", ticker)
+  )
 
 sp500_betas <- sp500_betas %>% 
   mutate_if(is.numeric, round, digits = 2) %>% 
-  select(Ticker, Beta, `Standard Error`)
+  left_join(sp500_names, by = c("Ticker" = "ticker")) %>% 
+  select(Company = "company", Ticker, Beta, `Standard Error`) 
   
 
 # Creating the front image - overlay word cloud (alpha = 0.15), text quant graph and S&P 500 with different colors
