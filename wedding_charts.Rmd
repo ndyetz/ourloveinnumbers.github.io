@@ -109,6 +109,7 @@ h1 {
   color: #64798B;
   text-align: center;
 }
+
 ```
 
 ```{css, echo = FALSE}
@@ -158,7 +159,7 @@ h1 {
 #source("private_key.R")
 ```
 
-#  Have Fun Clicking Through the Tabs Below {.tabset .tabset-fade .tabset-pills .break}
+# Have Fun Clicking Through the Tabs Below {.tabset .tabset-fade .tabset-pills .break}
 
 ## Home<br>Page {.tabset .tabset-fade .tabset-pills}
 
@@ -170,22 +171,20 @@ h1 {
 
 <center>![](together_graphs2.png){width="70%"}</center>
 
-## Texting<br>Data {.tabset .tabset-fade .tabset-pills}
-
-### Word<br>Cloud {.tabset .tabset-fade .tabset-pills}
-
-**Over the course of our relationship, we texted some words more than others. See our word cloud below.**
 <br>
 
-```{r, echo = FALSE}
-#Word cloud image in markdown below. 
-```
 
-**"Baby", "Babe", "Love", and "Lol" are a few of our most frequently used words!**
+<p style="font-family: Georgia, serif; font-size:10pt; font-style:bold">
+<center>
 
-<center><img src="word_cloud.png" width="80%"/></center>
+What better way to show our love than with data-driven charts and analyses? Each tab above provides insights to our love using various data sources. We pulled data from our phone service providers, annual ski passes, credit card statements, and more!
 
-**"ETA", "BTW", and "FYI" also make the top list.**
+</center>
+</p>
+
+## Texting<br>Data {.tabset .tabset-fade .tabset-pills}
+
+**We downloaded all of our text messaging data over the course of our relationship from T-Mobile and Verizon. We provide some insights in the tabs below. Enjoy!**
 
 ### Our Texts Over Time {.tabset .tabset-fade .tabset-pills}
 
@@ -268,6 +267,22 @@ ggplotly(p_character_sent) %>%
 ```
 
 <sup>*Click on the chart legend to show/hide any bars.*</sup>
+
+### Word<br>Cloud {.tabset .tabset-fade .tabset-pills}
+
+**Over the course of our relationship, we texted some words more than others. See our word cloud below.**
+<br>
+
+```{r, echo = FALSE}
+#Word cloud image in markdown below. 
+```
+
+**"Baby", "Babe", "Love", and "Lol" are a few of our most frequently used words!**
+
+<center><img src="word_cloud.png" width="80%"/></center>
+
+**"ETA", "BTW", and "FYI" also make the top list.**
+
 
 ### Our Favorite Words to Text {.tabset .tabset-fade .tabset-pills}
 
@@ -847,7 +862,7 @@ plot_ly(
 
 ### Our Overall Spending Habits {.tabset .tabset-fade .tabset-pills}
 
-**Besides the obvious Bars & Restaruants and Amazon spending, we were surprised to see how much we spent on Chipotle and Golf!**
+**Besides the obvious Bars & Restaurants and Amazon spending, we were surprised to see how much we spent on Chipotle and Golf!**
 
 ```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%" }
 
@@ -1106,6 +1121,8 @@ ggplotly(dowjones_graph) %>%
 
 ## Deeper<br>Dive {.tabset .tabset-fade .tabset-pills}
 
+The tabs below provide deeper insights using statistical modeling and analyses. Enjoy!
+
 ### Market Predictions & Texting {.tabset .tabset-fade .tabset-pills}
 
 **We decided to see if our texting data is predictive of the market.**
@@ -1336,6 +1353,36 @@ ticker_hist
 <sup>*Ticker not present in S&P 500</sup>
 
 
+
+**Customer Spending**
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
+
+good_service <- ggplot(cus_spend_long, aes(x = `Month-Year`, y = `Total Customer Spending (Billions)`, color = `Spending Type` )) +
+  geom_line() +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
+  scale_x_date(date_labels="%b %Y",date_breaks  ="1 month") +
+  scale_y_continuous(labels = scales::dollar_format(prefix="$"), n.breaks = 20, limits = c(0, 14000)) +
+  labs(x = "", y = "Total Customer Spending (Billions)") 
+
+good_service_plotly <- ggplotly(good_service) %>% 
+  layout(xaxis = list(autorange = FALSE), yaxis = list(autorange = TRUE)) %>% 
+    style(hovertext = paste0('Total Customer Spending (Billions): $', cus_spend_long$`Total Customer Spending (Billions)`[cus_spend_long$`Spending Type` == "Durable goods"], 
+                 '<br>Month-Year: ', format(as.Date(cus_spend_long$`Month-Year`[cus_spend_long$`Spending Type` == "Durable goods"]), "%B-%Y"),
+                 '<br>Spending Type: ', cus_spend_long$`Spending Type`[cus_spend_long$`Spending Type` == "Durable goods"]), traces = 1) %>% 
+    style(hovertext = paste0('Total Customer Spending (Billions): $', cus_spend_long$`Total Customer Spending (Billions)`[cus_spend_long$`Spending Type` == "Nondurable goods"], 
+                 '<br>Month-Year: ', format(as.Date(cus_spend_long$`Month-Year`[cus_spend_long$`Spending Type` == "Nondurable goods"]), "%B-%Y"),
+                 '<br>Spending Type: ', cus_spend_long$`Spending Type`[cus_spend_long$`Spending Type` == "Nondurable goods"]), traces = 2) %>% 
+    style(hovertext = paste0('Total Customer Spending (Billions): $', cus_spend_long$`Total Customer Spending (Billions)`[cus_spend_long$`Spending Type` == "Services"],
+                 '<br>Month-Year: ', format(as.Date(cus_spend_long$`Month-Year`[cus_spend_long$`Spending Type` == "Services"]), "%B-%Y"),
+                 '<br>Spending Type: ', cus_spend_long$`Spending Type`[cus_spend_long$`Spending Type` == "Services"]), traces = 3) 
+
+good_service_plotly 
+```
+<sup>*Click on the chart legend to show/hide any Spending Types. Y-axis will automatically readjust.*</sup>
+
+
 #### The S&P 500 Index Betas {.tabset .tabset-fade .tabset-pills}
 
 ```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
@@ -1354,6 +1401,15 @@ ticker_hist
 
 ```
 <sup>*Ticker not present in S&P 500</sup>
+
+
+**Customer Spending**
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
+good_service_plotly 
+```
+<sup>*Click on the chart legend to show/hide any Spending Types. Y-axis will automatically readjust.*</sup>
+
 
 # &nbsp;
 

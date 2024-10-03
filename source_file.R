@@ -987,7 +987,34 @@ sp500_betas <- sp500_betas %>%
   mutate_if(is.numeric, round, digits = 2) %>% 
   left_join(sp500_names, by = c("Ticker" = "ticker")) %>% 
   select(Company = "company", Ticker, Beta, `Standard Error`) 
-  
+
+
+
+### Make charts for Karina from the Beta file she sent back
+
+cus_spend_names <- c("type", 
+                                                                                                                    "2022-September", "2022-October", "2022-November", "2022-December", 
+  "2023-January", "2023-February", "2023-March", "2023-April", "2023-May", "2023-June", "2023-July", "2023-August", "2023-September", "2023-October", "2023-November", "2023-December", 
+  "2024-January", "2024-February", "2024-March", "2024-April", "2024-May", "2024-June", "2024-July" 
+  )
+
+cus_spend <- read_excel("karina_betas.xlsx", sheet = "Cosolidated Customer Spending", range = "B4:Y6", col_names = cus_spend_names)
+
+
+cus_spend_long <- cus_spend %>% 
+  pivot_longer(-type, names_to = "Month-Year", values_to = "Total Customer Spending (Billions)") %>% 
+  mutate(`Month-Year` = ym(`Month-Year`)#, 
+        # `Month-Year` = format(as.Date(`Month-Year`), "%Y-%m")
+         ) %>% 
+  rename(`Spending Type` = "type")
+
+
+cus_spend_goods <- cus_spend_long %>% 
+  filter(`Spending Type` != "Services")
+
+cus_spend_service <- cus_spend_long %>% 
+  filter(`Spending Type` == "Services")
+
 
 # Creating the front image - overlay word cloud (alpha = 0.15), text quant graph and S&P 500 with different colors
 #library(jpeg)
