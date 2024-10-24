@@ -9,7 +9,6 @@ output:
     toc_float: true
 ---
 
-
 ```{=html}
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -18,9 +17,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-W9SRJ6HG');</script>
 <!-- End Google Tag Manager -->
-
 ```
-
 ```{r, echo = FALSE}
 # Change to html if necessary
 #
@@ -45,9 +42,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W9SRJ6HG"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
-
 ```
-
 ```{=html}
 
 <style type="text/css">
@@ -173,13 +168,10 @@ h1 {
 
 <br>
 
-
 <p style="font-family: Georgia, serif; font-size:10pt; font-style:bold">
-<center>
 
-What better way to show our love than with data-driven charts and analyses? Each tab above provides insights to our love using various data sources. We pulled data from our phone service providers, annual ski passes, credit card statements, and more!
+<center>What better way to show our love than with data-driven charts and analyses? Each tab above provides insights to our love using various data sources. We pulled data from our phone service providers, annual ski passes, credit card statements, and more!</center>
 
-</center>
 </p>
 
 ## Texting<br>Data {.tabset .tabset-fade .tabset-pills}
@@ -270,8 +262,7 @@ ggplotly(p_character_sent) %>%
 
 ### Word<br>Cloud {.tabset .tabset-fade .tabset-pills}
 
-**Over the course of our relationship, we texted some words more than others. See our word cloud below.**
-<br>
+**Over the course of our relationship, we texted some words more than others. See our word cloud below.** <br>
 
 ```{r, echo = FALSE}
 #Word cloud image in markdown below. 
@@ -282,7 +273,6 @@ ggplotly(p_character_sent) %>%
 <center><img src="word_cloud.png" width="80%"/></center>
 
 **"ETA", "BTW", and "FYI" also make the top list.**
-
 
 ### Our Favorite Words to Text {.tabset .tabset-fade .tabset-pills}
 
@@ -718,34 +708,7 @@ In the first tab, we display the runs at our local ski resort, Mt. Hood Meadows 
 
 *Take a look at the charts of our snowboarding data in the tabs below!*
 
-### Mt. Hood Meadows Ski Resort {.tabset .tabset-fade .tabset-pills}
 
-**Mt. Hood Meadows Ski Resort Runs on Google Maps.**
-
-```{r,  out.height= "75%", out.width = "75%", echo = FALSE, eval=TRUE}
-
-mt_hood <- google_map(
-  key = private_key,
-  data = travel, 
-  search_box = FALSE,
-  width = 1000,
-  height = 600, 
-  location = c(45.3390, -121.6652), 
-  zoom = 14#,
-#  map_type = "hybrid"
-) 
-
-mt_hood %>% 
-  googleway::add_markers(lat = 45.34802365909766, lon = -121.65863752775641, mouse_over = "This is where we got engaged! <br>Right in front of a waterfall in Heather Canyon!", update_map_view = FALSE)
-```
-
-<sup>*Hover over the marker to see where we got engaged!*</sup>
-
-**Mt. Hood Trail Map**
-
-Take a look at how awesome our local ski resort is. We love Mt. Hood Meadows!
-
-<center><img src="meadow_map.jpg" width="100%"/></center>
 
 ### Chairlift<br>Data {.tabset .tabset-fade .tabset-pills}
 
@@ -805,6 +768,9 @@ ggplotly(total_runs) %>%
 
 <sup>*Hover over each dot to see how many times we took the ski lift on each date we snowboarded at Mt. Hood Meadows ski resort.*</sup>
 
+
+
+
 #### Overall {.tabset .tabset-fade .tabset-pills}
 
 Each box below represents the amount we used the ski lifts at Mt. Hood Meadows ski resort.
@@ -855,31 +821,41 @@ plot_ly(
 
 <sup>*Hover over each box to see how many times we have taken each chairlift at Mt. Hood Meadows ski resort!*</sup>
 
+
+### Mt. Hood Meadows Ski Resort {.tabset .tabset-fade .tabset-pills}
+
+**Mt. Hood Meadows Ski Resort Runs on Google Maps.**
+
+```{r,  out.height= "75%", out.width = "75%", echo = FALSE, eval=TRUE}
+
+mt_hood <- google_map(
+  key = private_key,
+  data = travel, 
+  search_box = FALSE,
+  width = 1000,
+  height = 600, 
+  location = c(45.3390, -121.6652), 
+  zoom = 14#,
+#  map_type = "hybrid"
+) 
+
+mt_hood %>% 
+  googleway::add_markers(lat = 45.34802365909766, lon = -121.65863752775641, mouse_over = "This is where we got engaged! <br>Right in front of a waterfall in Heather Canyon!", update_map_view = FALSE)
+```
+
+<sup>*Hover over the marker to see where we got engaged!*</sup>
+
+**Mt. Hood Trail Map**
+
+Take a look at how awesome our local ski resort is. We love Mt. Hood Meadows!
+
+<center><img src="meadow_map.jpg" width="100%"/></center>
+
 ## Discretionary<br>Spending {.tabset .tabset-fade .tabset-pills}
 
-**Each box below corresponds to a percentage of our disposable income spent on a given category (i.e. this excludes boring spending like mortgage, utilities, student loans, or car payments).**
-<br>
-
-### Our Overall Spending Habits {.tabset .tabset-fade .tabset-pills}
-
-**Besides the obvious Bars & Restaurants and Amazon spending, we were surprised to see how much we spent on Chipotle and Golf!**
-
-```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%" }
+**Each box below corresponds to a percentage of our disposable income spent on a given category (i.e. this excludes boring spending like mortgage, utilities, student loans, or car payments). We analyzed our spending habits over the course of our relationship.** <br>
 
 
-plot_ly(
-  finance_summ,
-  labels = ~`Proposed Category`,
-  parents = NA,
-  values = ~ Amount,
-  type = 'treemap',
-   marker=list(colors=col[["name"]]),
-  marker = list(`Proposed Category` = ~`Proposed Category`),
-  hovertemplate = "%{value}% of our spending is on %{label}.<extra></extra>"
-) %>% 
-  layout(title= list(text = ""))
-
-```
 
 <sup>*Hover over each box to see what percentage we spend on each category*</sup>
 
@@ -936,9 +912,30 @@ Neil_fig
 
 <sup>*Hover over each box to see what percentage Neil spends on each category.*</sup>
 
+### Our Overall Spending Habits {.tabset .tabset-fade .tabset-pills}
+
+**Besides the obvious Bars & Restaurants and Amazon spending, we were surprised to see how much we spent on Chipotle and Golf!**
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%" }
+
+
+plot_ly(
+  finance_summ,
+  labels = ~`Proposed Category`,
+  parents = NA,
+  values = ~ Amount,
+  type = 'treemap',
+   marker=list(colors=col[["name"]]),
+  marker = list(`Proposed Category` = ~`Proposed Category`),
+  hovertemplate = "%{value}% of our spending is on %{label}.<extra></extra>"
+) %>% 
+  layout(title= list(text = ""))
+
+```
+
 ## Market<br>Comparisons {.tabset .tabset-fade .tabset-pills}
 
-**Since we first met, both the S&P 500 and Dow Jones have gone up dramatically! We decided to examine if our relationship milestones or other relationship data could be responsible.**
+**Since we first met, the S&P 500 has gone up dramatically! We decided to examine if our relationship milestones or other relationship data could be responsible.**
 
 <br>
 
@@ -1031,97 +1028,97 @@ ggplotly(sp500_graph) %>%
 
 <sup>*Hover over the chart and milestones for more information about our milestones and the market price. Or click on the chart legend to show/hide any Milestones.*</sup>
 
-**The Dow Jones & our Milestones**
+```{r, echo = FALSE,  out.height= "100%", out.width = "100%", warning = FALSE, eval = FALSE}
 
-```{r, echo = FALSE,  out.height= "100%", out.width = "100%", warning = FALSE}
-dowjones <- macro_data$`Dow Jones`
-
-dowjones <- dowjones %>% 
-  mutate(Date = as_date(Date)) %>% 
-  filter(Date < "2024-8-22") %>% 
-  select(Date, `Close/Last` = "Close") %>% 
-  mutate(source = "Dow Jones") 
-
-
-dowjones_graph <- ggplot(dowjones, aes(x = Date, y = `Close/Last`) )+
- geom_line(linewidth = .6) + 
-#  scale_y_continuous("S&P500", sec.axis = sec_axis(~(.), name = "Dow Jones"), limits = c(3500, max(sp500$`Close`)), , expand = c(0, 0, .14, 0)) +
-  theme_classic() +
-  scale_y_continuous(limits = c(27000, max(dowjones$`Close/Last`)), expand = c(0, 0, .14, 0)) +
-  labs(title="", x="", color = "&#9644; <b>Close Price</b><br>&#9670; <b>Milestone</b><br>") +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
-  scale_x_date(date_labels="%b %Y",date_breaks  ="1 month") +
-
-  geom_point(aes(x = (`Tinder Match`)   , y = max(`Close/Last`) , color = "Tinder Match"    ), shape=18, size = 4) +    
-  geom_point(aes(x = (`First Kiss`)     , y = max(`Close/Last`) , color = "First Kiss"      ), shape=18, size = 4) +
-  geom_point(aes(x = (`New York`)       , y = max(`Close/Last`) , color = "New York"        ), shape=18, size = 4) +
-  geom_point(aes(x = (`Snowboarding`)   , y = max(`Close/Last`) , color = "Snowboarding"    ), shape=18, size = 4) +
-  geom_point(aes(x = (`Meet Parents`)   , y = max(`Close/Last`) , color = "Meet Parents"    ), shape=18, size = 4) +
-  geom_point(aes(x = (Relationship)     , y = max(`Close/Last`) , color = "Relationship"    ), shape=18, size = 4) +
-  geom_point(aes(x = (`Neil Meets Ben`) , y = max(`Close/Last`) , color = "Neil Meets Ben"  ), shape=18, size = 4) +
-  geom_point(aes(x = (`Build Furniture`), y = max(`Close/Last`) , color = "Build Furniture" ), shape=18, size = 4) +
-  geom_point(aes(x = (`Duck Fence`)     , y = max(`Close/Last`) , color = "Duck Fence"      ), shape=18, size = 4) +
-  geom_point(aes(x = (`Chicago`)        , y = max(`Close/Last`) , color = "Chicago"         ), shape=18, size = 4) +
-  geom_point(aes(x = (`Duck Pond`)      , y = max(`Close/Last`) , color = "Duck Pond"       ), shape=18, size = 4) +
-  geom_point(aes(x = (`Dirt Bikes`)     , y = max(`Close/Last`) , color = "Dirt Bikes"      ), shape=18, size = 4) +
-  geom_point(aes(x = (`Neil moves in` ) , y = max(`Close/Last`) , color = "Neil moves in"   ), shape=18, size = 4) +
-  geom_point(aes(x = (`Scuba Diving` )  , y = max(`Close/Last`) , color = "Scuba Diving"    ), shape=18, size = 4) +
-  geom_point(aes(x = (`We Get Engaged!`), y = max(`Close/Last`) , color = "We Get Engaged!" ), shape=18, size = 4) +   
-  geom_point(aes(x = (`Tahiti Trip`)    , y = max(`Close/Last`) , color = "Tahiti Trip"     ), shape=18, size = 4) +
-  geom_point(aes(x = (`We Buy Property`), y = max(`Close/Last`) , color = "We Buy Property" ), shape=18, size = 4) +
-  
-  
-  geom_segment(aes(x=       (`Tinder Match`)            ,       xend=   (`Tinder Match`)                        , y=27000, yend= `Close/Last` , color =                          "Tinder Match"                        ), linewidth = .05) +
-  geom_segment(aes(x=       (`First Kiss`)            ,         xend=   (`First Kiss`)                          , y=27000, yend= `Close/Last` , color =                            "First Kiss"                        ), linewidth = .05) +
-  geom_segment(aes(x=       (`New York`)              ,         xend=   (`New York`)                            , y=27000, yend= `Close/Last` , color =                             "New York"                         ), linewidth = .05) +
-  geom_segment(aes(x=       (`Snowboarding`)          ,         xend=   (`Snowboarding`)                        , y=27000, yend= `Close/Last` , color =                            "Snowboarding"                      ), linewidth = .05) +
-  geom_segment(aes(x=       (`Meet Parents`)          ,         xend=   (`Meet Parents`)                        , y=27000, yend= `Close/Last` , color =                            "Meet Parents"                      ), linewidth = .05) +
-  geom_segment(aes(x=       (Relationship)            ,         xend=   (Relationship)                          , y=27000, yend= `Close/Last` , color =                            "Relationship"                      ), linewidth = .05) +
-  geom_segment(aes(x=       (`Neil Meets Ben`)        ,         xend=   (`Neil Meets Ben`)                      , y=27000, yend= `Close/Last` , color =                            "Neil Meets Ben"                    ), linewidth = .05) +
-  geom_segment(aes(x=       (`Build Furniture`)       ,         xend=   (`Build Furniture`)                     , y=27000, yend= `Close/Last` , color =                            "Build Furniture"                   ), linewidth = .05) +
-  geom_segment(aes(x=       (`Duck Fence`)            ,         xend=   (`Duck Fence`)                          , y=27000, yend= `Close/Last` , color =                            "Duck Fence"                        ), linewidth = .05) +
-  geom_segment(aes(x=       (`Chicago`)               ,         xend=   (`Chicago`)                             , y=27000, yend= `Close/Last` , color =                            "Chicago"                           ), linewidth = .05) +
-  geom_segment(aes(x=       (`Duck Pond`)             ,         xend=   (`Duck Pond`)                           , y=27000, yend= `Close/Last` , color =                            "Duck Pond"                         ), linewidth = .05) +
-  geom_segment(aes(x=       (`Dirt Bikes`)            ,         xend=   (`Dirt Bikes`)                          , y=27000, yend= `Close/Last` , color =                            "Dirt Bikes"                        ), linewidth = .05) +
-  geom_segment(aes(x=       (`Neil moves in` )        ,         xend=   (`Neil moves in` )                      , y=27000, yend= `Close/Last` , color =                            "Neil moves in"                     ), linewidth = .05) +
-  geom_segment(aes(x=       (`Scuba Diving` )         ,         xend=   (`Scuba Diving` )                       , y=27000, yend= `Close/Last` , color =                            "Scuba Diving"                      ), linewidth = .05) +
-  geom_segment(aes(x=       (`We Get Engaged!`)       ,         xend=   (`We Get Engaged!`)                     , y=27000, yend= `Close/Last` , color =                            "We Get Engaged!"                   ), linewidth = .05) +
-  geom_segment(aes(x=       (`Tahiti Trip`)           ,         xend=   (`Tahiti Trip`)                         , y=27000, yend= `Close/Last` , color =                            "Tahiti Trip"                       ), linewidth = .05) +
-  geom_segment(aes(x=       (`We Buy Property`)       ,         xend=   (`We Buy Property`)                     , y=27000, yend= `Close/Last` , color =                            "We Buy Property"                   ), linewidth = .05) 
-  
-
-
-ggplotly(dowjones_graph) %>% 
-#  layout(hovermode = 'x') %>%
-  style(hovertext = paste0("We matched on Tinder on "                                          , format(as_date(`Tinder Match`), "%b %d, %Y"), "!")                                                                                      , traces = 2  ) %>% 
-  style(hovertext = paste0("Our first kiss was on "                                            , format(as_date(`First Kiss`), "%b %d, %Y"), "!")                                                                                      , traces = 3  ) %>% 
-  style(hovertext = paste0("We take our first trip to New York together on "                   , format(as_date(`New York`), "%b %d, %Y"), ".\nThis is also the first time Neil Met Karina's parents.")                               , traces = 4  ) %>% 
-  style(hovertext = paste0("Our first time ever snowboarding together was on "                 , format(as_date(`Snowboarding`), "%b %d, %Y"), ".\nNeil proved he can shred to Karina!")                                              , traces = 5  ) %>% 
-  style(hovertext = paste0("Karina flies to Alpine, CA to meet Neil's parents on "             , format(as_date(`Meet Parents`), "%b %d, %Y"), ".\nWe played card games all New Years Eve and kissed at midnight!")                   , traces = 6  ) %>% 
-  style(hovertext = paste0("We make it official, we decide we want to be in a relationship on " , format(as_date(Relationship), "%b %d, %Y"), '.\nWe also said "I love you" in person for the first time on this day.')                , traces = 7  ) %>% 
-  style(hovertext = paste0("We go snow boarding with Karina's son, Ben, on "                   , format(as_date(`Neil Meets Ben`), "%b %d, %Y"), ".\nIt's the first time Neil met Ben.")                                                , traces = 8  ) %>% 
-  style(hovertext = paste0("We build our first piece of IKEA furniture together on "           , format(as_date(`Build Furniture`), "%b %d, %Y"), ".\nSafe to say we didn't fight while building it.")                                         , traces = 9  ) %>% 
-  style(hovertext = paste0("We built a duck fence on "                                         , format(as_date(`Duck Fence`), "%b %d, %Y"), ".\nOur first outside project!")                                                           , traces = 10 ) %>% 
-  style(hovertext = paste0("We take a trip to Chicago on "                                     , format(as_date(`Chicago`), "%b %d, %Y"), ".\nNeil got to meet some of Karina's grad school peers.")                                    , traces = 11 ) %>% 
-  style(hovertext = paste0("We built a duck pond on "                                          , format(as_date(`Duck Pond`), "%b %d, %Y"), ".\nA continuation of the duck fence project.")                                             , traces =  12) %>% 
-  style(hovertext = paste0("We bought our dirt bikes on "                                      , format(as_date(`Dirt Bikes`), "%b %d, %Y"), ".\nWe each have a Yamaha TTR230 and we love them!")                                       , traces =  13) %>% 
-  style(hovertext = paste0("Neil moved in with Karina on "                                     , format(as_date(`Neil moves in`), "%b %d, %Y"), ".")                                                                                   , traces =  14) %>% 
-  style(hovertext = paste0("We go scuba diving for the first time in Key Largo, FL on "        , format(as_date(`Scuba Diving`), "%b %d, %Y"), "!")                                                                                    , traces =  15) %>%
-  style(hovertext = paste0("We got engaged on "                                                , format(as_date(`We Get Engaged!`), "%b %d, %Y"), "!\nNeil hired a photographer to capture the moment at Mt. Hood Meadows ski resort.") , traces = 16 ) %>%
-  style(hovertext = paste0("We take our first trip as an engaged couple to Tahiti on "          , format(as_date(`Tahiti Trip`), "%b %d, %Y"), ".\nWe sailed on a Yacht to different islands for 10 days!")                               , traces =  17) %>% 
-  style(hovertext = paste0("We bought a 1 acre piece of land in La Pine, OR on "               , format(as_date(`We Buy Property`), "%b %d, %Y"), ".\nOur plan is to build a getaway cabin on the land!")                               , traces =  18) %>% 
-  style(hoverinfo = "none", traces = 19:35)
-
-
+##**The Dow Jones & our Milestones**
+#
+#dowjones <- macro_data$`Dow Jones`
+#
+#dowjones <- dowjones %>% 
+#  mutate(Date = as_date(Date)) %>% 
+#  filter(Date < "2024-8-22") %>% 
+#  select(Date, `Close/Last` = "Close") %>% 
+#  mutate(source = "Dow Jones") 
+#
+#
+#dowjones_graph <- ggplot(dowjones, aes(x = Date, y = `Close/Last`) )+
+# geom_line(linewidth = .6) + 
+##  scale_y_continuous("S&P500", sec.axis = sec_axis(~(.), name = "Dow Jones"), limits = c(3500, max(sp500$`Close`)), , expand = c(0, 0, .14, 0)) +
+#  theme_classic() +
+#  scale_y_continuous(limits = c(27000, max(dowjones$`Close/Last`)), expand = c(0, 0, .14, 0)) +
+#  labs(title="", x="", color = "&#9644; <b>Close Price</b><br>&#9670; <b>Milestone</b><br>") +
+#  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
+#  scale_x_date(date_labels="%b %Y",date_breaks  ="1 month") +
+#
+#  geom_point(aes(x = (`Tinder Match`)   , y = max(`Close/Last`) , color = "Tinder Match"    ), shape=18, size = 4) +    
+#  geom_point(aes(x = (`First Kiss`)     , y = max(`Close/Last`) , color = "First Kiss"      ), shape=18, size = 4) +
+#  geom_point(aes(x = (`New York`)       , y = max(`Close/Last`) , color = "New York"        ), shape=18, size = 4) +
+#  geom_point(aes(x = (`Snowboarding`)   , y = max(`Close/Last`) , color = "Snowboarding"    ), shape=18, size = 4) +
+#  geom_point(aes(x = (`Meet Parents`)   , y = max(`Close/Last`) , color = "Meet Parents"    ), shape=18, size = 4) +
+#  geom_point(aes(x = (Relationship)     , y = max(`Close/Last`) , color = "Relationship"    ), shape=18, size = 4) +
+#  geom_point(aes(x = (`Neil Meets Ben`) , y = max(`Close/Last`) , color = "Neil Meets Ben"  ), shape=18, size = 4) +
+#  geom_point(aes(x = (`Build Furniture`), y = max(`Close/Last`) , color = "Build Furniture" ), shape=18, size = 4) +
+#  geom_point(aes(x = (`Duck Fence`)     , y = max(`Close/Last`) , color = "Duck Fence"      ), shape=18, size = 4) +
+#  geom_point(aes(x = (`Chicago`)        , y = max(`Close/Last`) , color = "Chicago"         ), shape=18, size = 4) +
+#  geom_point(aes(x = (`Duck Pond`)      , y = max(`Close/Last`) , color = "Duck Pond"       ), shape=18, size = 4) +
+#  geom_point(aes(x = (`Dirt Bikes`)     , y = max(`Close/Last`) , color = "Dirt Bikes"      ), shape=18, size = 4) +
+#  geom_point(aes(x = (`Neil moves in` ) , y = max(`Close/Last`) , color = "Neil moves in"   ), shape=18, size = 4) +
+#  geom_point(aes(x = (`Scuba Diving` )  , y = max(`Close/Last`) , color = "Scuba Diving"    ), shape=18, size = 4) +
+#  geom_point(aes(x = (`We Get Engaged!`), y = max(`Close/Last`) , color = "We Get Engaged!" ), shape=18, size = 4) +   
+#  geom_point(aes(x = (`Tahiti Trip`)    , y = max(`Close/Last`) , color = "Tahiti Trip"     ), shape=18, size = 4) +
+#  geom_point(aes(x = (`We Buy Property`), y = max(`Close/Last`) , color = "We Buy Property" ), shape=18, size = 4) +
+#  
+#  
+#  geom_segment(aes(x=       (`Tinder Match`)            ,       xend=   (`Tinder Match`)                        , y=27000, yend= `Close/Last` , color =                          "Tinder Match"              #          ), linewidth = .05) +
+#  geom_segment(aes(x=       (`First Kiss`)            ,         xend=   (`First Kiss`)                          , y=27000, yend= `Close/Last` , color =                            "First Kiss"              #          ), linewidth = .05) +
+#  geom_segment(aes(x=       (`New York`)              ,         xend=   (`New York`)                            , y=27000, yend= `Close/Last` , color =                             "New York"               #          ), linewidth = .05) +
+#  geom_segment(aes(x=       (`Snowboarding`)          ,         xend=   (`Snowboarding`)                        , y=27000, yend= `Close/Last` , color =                            "Snowboarding"            #          ), linewidth = .05) +
+#  geom_segment(aes(x=       (`Meet Parents`)          ,         xend=   (`Meet Parents`)                        , y=27000, yend= `Close/Last` , color =                            "Meet Parents"            #          ), linewidth = .05) +
+#  geom_segment(aes(x=       (Relationship)            ,         xend=   (Relationship)                          , y=27000, yend= `Close/Last` , color =                            "Relationship"            #          ), linewidth = .05) +
+#  geom_segment(aes(x=       (`Neil Meets Ben`)        ,         xend=   (`Neil Meets Ben`)                      , y=27000, yend= `Close/Last` , color =                            "Neil Meets Ben"          #          ), linewidth = .05) +
+#  geom_segment(aes(x=       (`Build Furniture`)       ,         xend=   (`Build Furniture`)                     , y=27000, yend= `Close/Last` , color =                            "Build Furniture"         #          ), linewidth = .05) +
+#  geom_segment(aes(x=       (`Duck Fence`)            ,         xend=   (`Duck Fence`)                          , y=27000, yend= `Close/Last` , color =                            "Duck Fence"              #          ), linewidth = .05) +
+#  geom_segment(aes(x=       (`Chicago`)               ,         xend=   (`Chicago`)                             , y=27000, yend= `Close/Last` , color =                            "Chicago"                 #          ), linewidth = .05) +
+#  geom_segment(aes(x=       (`Duck Pond`)             ,         xend=   (`Duck Pond`)                           , y=27000, yend= `Close/Last` , color =                            "Duck Pond"               #          ), linewidth = .05) +
+#  geom_segment(aes(x=       (`Dirt Bikes`)            ,         xend=   (`Dirt Bikes`)                          , y=27000, yend= `Close/Last` , color =                            "Dirt Bikes"              #          ), linewidth = .05) +
+#  geom_segment(aes(x=       (`Neil moves in` )        ,         xend=   (`Neil moves in` )                      , y=27000, yend= `Close/Last` , color =                            "Neil moves in"           #          ), linewidth = .05) +
+#  geom_segment(aes(x=       (`Scuba Diving` )         ,         xend=   (`Scuba Diving` )                       , y=27000, yend= `Close/Last` , color =                            "Scuba Diving"            #          ), linewidth = .05) +
+#  geom_segment(aes(x=       (`We Get Engaged!`)       ,         xend=   (`We Get Engaged!`)                     , y=27000, yend= `Close/Last` , color =                            "We Get Engaged!"         #          ), linewidth = .05) +
+#  geom_segment(aes(x=       (`Tahiti Trip`)           ,         xend=   (`Tahiti Trip`)                         , y=27000, yend= `Close/Last` , color =                            "Tahiti Trip"             #          ), linewidth = .05) +
+#  geom_segment(aes(x=       (`We Buy Property`)       ,         xend=   (`We Buy Property`)                     , y=27000, yend= `Close/Last` , color =                            "We Buy Property"         #          ), linewidth = .05) 
+#  
+#
+#
+#ggplotly(dowjones_graph) %>% 
+##  layout(hovermode = 'x') %>%
+#  style(hovertext = paste0("We matched on Tinder on "                                          , format(as_date(`Tinder Match`), "%b %d, %Y"), "!")                                                          #                            , traces = 2  ) %>% 
+#  style(hovertext = paste0("Our first kiss was on "                                            , format(as_date(`First Kiss`), "%b %d, %Y"), "!")                                                            #                          , traces = 3  ) %>% 
+#  style(hovertext = paste0("We take our first trip to New York together on "                   , format(as_date(`New York`), "%b %d, %Y"), ".\nThis is also the first time Neil Met Karina's parents.")      #                         , traces = 4  ) %>% 
+#  style(hovertext = paste0("Our first time ever snowboarding together was on "                 , format(as_date(`Snowboarding`), "%b %d, %Y"), ".\nNeil proved he can shred to Karina!")                     #                         , traces = 5  ) %>% 
+#  style(hovertext = paste0("Karina flies to Alpine, CA to meet Neil's parents on "             , format(as_date(`Meet Parents`), "%b %d, %Y"), ".\nWe played card games all New Years Eve and kissed at #midnight!")                   , traces = 6  ) %>% 
+#  style(hovertext = paste0("We make it official, we decide we want to be in a relationship on " , format(as_date(Relationship), "%b %d, %Y"), '.\nWe also said "I love you" in person for the first time on #this day.')                , traces = 7  ) %>% 
+#  style(hovertext = paste0("We go snow boarding with Karina's son, Ben, on "                   , format(as_date(`Neil Meets Ben`), "%b %d, %Y"), ".\nIt's the first time Neil met Ben.")                     #                           , traces = 8  ) %>% 
+#  style(hovertext = paste0("We build our first piece of IKEA furniture together on "           , format(as_date(`Build Furniture`), "%b %d, %Y"), ".\nSafe to say we didn't fight while building it.")       #                                  , traces = 9  ) %>% 
+#  style(hovertext = paste0("We built a duck fence on "                                         , format(as_date(`Duck Fence`), "%b %d, %Y"), ".\nOur first outside project!")                                #                           , traces = 10 ) %>% 
+#  style(hovertext = paste0("We take a trip to Chicago on "                                     , format(as_date(`Chicago`), "%b %d, %Y"), ".\nNeil got to meet some of Karina's grad school peers.")         #                           , traces = 11 ) %>% 
+#  style(hovertext = paste0("We built a duck pond on "                                          , format(as_date(`Duck Pond`), "%b %d, %Y"), ".\nA continuation of the duck fence project.")                  #                           , traces =  12) %>% 
+#  style(hovertext = paste0("We bought our dirt bikes on "                                      , format(as_date(`Dirt Bikes`), "%b %d, %Y"), ".\nWe each have a Yamaha TTR230 and we love them!")            #                           , traces =  13) %>% 
+#  style(hovertext = paste0("Neil moved in with Karina on "                                     , format(as_date(`Neil moves in`), "%b %d, %Y"), ".")                                                         #                          , traces =  14) %>% 
+#  style(hovertext = paste0("We go scuba diving for the first time in Key Largo, FL on "        , format(as_date(`Scuba Diving`), "%b %d, %Y"), "!")                                                          #                          , traces =  15) %>%
+#  style(hovertext = paste0("We got engaged on "                                                , format(as_date(`We Get Engaged!`), "%b %d, %Y"), "!\nNeil hired a photographer to capture the moment at Mt. #Hood Meadows ski resort.") , traces = 16 ) %>%
+#  style(hovertext = paste0("We take our first trip as an engaged couple to Tahiti on "          , format(as_date(`Tahiti Trip`), "%b %d, %Y"), ".\nWe sailed on a Yacht to different islands for 10 days!")  #                             , traces =  17) %>% 
+#  style(hovertext = paste0("We bought a 1 acre piece of land in La Pine, OR on "               , format(as_date(`We Buy Property`), "%b %d, %Y"), ".\nOur plan is to build a getaway cabin on the land!")    #                           , traces =  18) %>% 
+#  style(hoverinfo = "none", traces = 19:35)
+#
+##<sup>*Hover over the chart and milestones for more information about our milestones and the market price. Or click on the chart legend to show/hide any Milestones.*</sup>
+#
 ```
 
-<sup>*Hover over the chart and milestones for more information about our milestones and the market price. Or click on the chart legend to show/hide any Milestones.*</sup>
-
-<center>![](sp500dow.png){width="80%"}</center>
+<center>![](sp500.jpg){width="50%"}</center>
 
 ## Deeper<br>Dive {.tabset .tabset-fade .tabset-pills}
 
-The tabs below provide deeper insights using statistical modeling and analyses. Enjoy!
+So how do we explain why our relationship had such a positive impact on the market? We took some liberties with analytical tools at our disposal to try to logically explain it.
 
 ### Market Predictions & Texting {.tabset .tabset-fade .tabset-pills}
 
@@ -1129,11 +1126,11 @@ The tabs below provide deeper insights using statistical modeling and analyses. 
 
 <br>
 
-**According to the models in the table below, when correlated to the closing daily values of the S&P 500 and Dow Jones indices (controlling for time), our texting is predictive of the change in the absolute market price. The relationship is positive and statistically significant and our impact on the absolute market changes over time.**
+**According to the models in the table below, when correlated to the closing daily values of the S&P 500 (controlling for time), our texting is predictive of the change in the absolute market price. The relationship is positive and statistically significant and our impact on the absolute market changes over time.**
 
 <br>
 
-**However, when compared to the daily movements in the market across each index (controlling for time), our models were no longer predictive... :(**
+**However, when compared to the daily movements in the S&P 500 index (controlling for time), our models were no longer predictive... :(**
 
 <br>
 
@@ -1142,7 +1139,6 @@ The tabs below provide deeper insights using statistical modeling and analyses. 
 <br>
 
 **Model Descriptives**
-
 
 ```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
 
@@ -1166,10 +1162,10 @@ reg_table_in <- numdffinal_in %>%
     `p-value`               = ifelse(`p-value`                 == 0.00, "< .01", `p-value`    ),
     `R-squared`             = ifelse(`R-squared`               == 0.00, "< .01", `R-squared` ),
     
-    `Market Name` = ifelse(`Market Name` == "sp500", "S&P 500 close price (Absolute)", `Market Name`),
-    `Market Name` = ifelse(`Market Name` == "sp500 difference", "S&P 500 close price (Daily Difference)", `Market Name`),
-    `Market Name` = ifelse(`Market Name` == "Dow Jones", "Dow Jones close price (Absolute)", `Market Name`),
-    `Market Name` = ifelse(`Market Name` == "Dow Jones difference", "Dow Jones close price (Daily Difference)", `Market Name`)
+    `Market Name` = ifelse(`Market Name` == "sp500", "Absolute Close Price", `Market Name`),
+    `Market Name` = ifelse(`Market Name` == "sp500 difference", "Daily Difference Close Price", `Market Name`) #,
+ #   `Market Name` = ifelse(`Market Name` == "Dow Jones", "Dow Jones close price (Absolute)", `Market Name`),
+  #  `Market Name` = ifelse(`Market Name` == "Dow Jones difference", "Dow Jones close price (Daily Difference)", `Market Name`)
     ) %>% 
     mutate(
     `Unstandardized Beta (texts)` = ifelse(`Unstandardized Beta (texts)` > 0.00, 
@@ -1190,7 +1186,7 @@ reg_table_in <- numdffinal_in %>%
     rename(`Texts` = "Unstandardized Beta (texts)",
            `Time` = "Unstandardized Beta (time)",
            `Texts*Time` = "Unstandardized Beta (texts*time)",
-           `Index Name` = "Market Name")
+           `S&P 500 Index` = "Market Name")
 
 
 
@@ -1198,12 +1194,11 @@ reg_table_in %>%
   kbl(align = "c", escape = FALSE) %>% 
   add_header_above( c("", "Regression Coefficients" = 3, "Full Model Descriptives" = 4)) %>% 
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = TRUE, font_size = 16) %>% 
-  add_footnote(label = "\nPredictor variable = Daily quantity of texts sent between Neil and Karina\nOutcome Variable = Corresponding index closing price (Absolute closing value or Daily Difference closing value)\nAll models controlled for time and the interaction term between texting and time is included\n*p<.05 for individual regression coefficient",notation = "none") 
+  add_footnote(label = "\n*p<.05 for individual regression coefficient\nPredictor variable = Daily quantity of texts sent between Neil and Karina\nOutcome Variable = S&P 500 close price",notation = "none") 
 
 ```
 
-<br>
-**Model Scatterplots & Interpretations**
+<br> **Model Scatterplots & Interpretations**
 
 <br>
 
@@ -1212,7 +1207,6 @@ reg_table_in %>%
 <br>
 
 **We welcome all our guests to share any ideas on why that might be during our wedding. :)**
-
 
 #### S&P 500 (Absolute) {.tabset .tabset-fade .tabset-pills}
 
@@ -1225,7 +1219,6 @@ ggPredict(model, se = TRUE,  interactive = TRUE, terms = c("n_texts", "Days_sinc
 
 ***Statistical Interpretation:*** This model *is* statistically significant: F(3, 407) = 1347.84, p \<.01, R<sup>2</sup> = 0.91. Suggesting that, for every 1 text we send, the S&P 500 index price is expected to increase 1.07 points at day 0 (p \<.01) - however, for every day that passes, the regression coefficient (slope) is expected to *decrease* by 0.0028 points (p \<.01). The chart above shows the expected change in slope at 0, 200, 400, 600, & 800 days since we started texting. As can be seen from the chart above, after enough time, the relationship turns from positive to negative!
 
-
 #### S&P 500 (Daily Difference) {.tabset .tabset-fade .tabset-pills}
 
 ```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
@@ -1237,40 +1230,46 @@ ggPredict(model, se = TRUE,  interactive = TRUE, terms = c("n_texts", "Days_sinc
 
 ***Statistical Interpretation:*** This model is *not* statistically significant: F(3, 407) = 0.24, p \>.05, R<sup>2</sup> \< 0.01. Our texting is *not* predictive of the S&P 500 daily difference price.
 
-
+```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%", eval = FALSE}
 #### Dow Jones (Absolute) {.tabset .tabset-fade .tabset-pills}
+#
+#model <- lm( `Dow_Jones_Daily_Closing_Price` ~ Number_of_texts_sent + `Days_since_first_text` + Number_of_texts_sent*`Days_since_first_text`, data = textcount_dj)
+##summary(model)
+#
+#ggPredict(model, se = TRUE,  interactive = TRUE, terms = c("n_texts", "Days_since_first_text")) 
+#
+#
+##*#***Statistical Interpretation:*** This model *is* statistically significant: F(3, 407) = 519.61, p \<.01, R<sup>2</sup> = 0.79. Suggesting that, for every 1 text we send, the Dow Jones index price is 
+##*#expected to increase 11.40 points at day 0 (p \<.01) - however, for every day that passes, the regression coefficient (slope) is expected to *decrease* by 0.0368 points (p \<.01). The chart above shows ##the 
+#*#expected change in slope at 0, 200, 400, 600, & 800 days since we started texting. As can be seen from the chart above, after enough time, the relationship turns from positive to negative!
 
-```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
-model <- lm( `Dow_Jones_Daily_Closing_Price` ~ Number_of_texts_sent + `Days_since_first_text` + Number_of_texts_sent*`Days_since_first_text`, data = textcount_dj)
-#summary(model)
-
-ggPredict(model, se = TRUE,  interactive = TRUE, terms = c("n_texts", "Days_since_first_text")) 
 ```
 
-***Statistical Interpretation:*** This model *is* statistically significant: F(3, 407) = 519.61, p \<.01, R<sup>2</sup> = 0.79. Suggesting that, for every 1 text we send, the Dow Jones index price is expected to increase 11.40 points at day 0 (p \<.01) - however, for every day that passes, the regression coefficient (slope) is expected to *decrease* by 0.0368 points (p \<.01). The chart above shows the expected change in slope at 0, 200, 400, 600, & 800 days since we started texting. As can be seen from the chart above, after enough time, the relationship turns from positive to negative!
-
-
+```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%", eval = FALSE}
 #### Dow Jones (Daily Difference) {.tabset .tabset-fade .tabset-pills}
+#
+#model <- lm( `diff` ~ Number_of_texts_sent + `Days_since_first_text` + Number_of_texts_sent*`Days_since_first_text`, data = textcount_dj)
+##summary(model)
+#
+#ggPredict(model, se = TRUE,  interactive = TRUE, terms = c("n_texts", "Days_since_first_text")) 
+#
+#
+###***Statistical Interpretation:*** This model is *not* statistically significant: F(3, 407) = 1.31, p \>.05, R<sup>2</sup> \< 0.01. Our texting is *not* predictive of the Dow Jones daily difference price.
 
-```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
-model <- lm( `diff` ~ Number_of_texts_sent + `Days_since_first_text` + Number_of_texts_sent*`Days_since_first_text`, data = textcount_dj)
-#summary(model)
-
-ggPredict(model, se = TRUE,  interactive = TRUE, terms = c("n_texts", "Days_since_first_text")) 
 ```
-
-***Statistical Interpretation:*** This model is *not* statistically significant: F(3, 407) = 1.31, p \>.05, R<sup>2</sup> \< 0.01. Our texting is *not* predictive of the Dow Jones daily difference price.
-
-
 
 ### CAPM<br>Betas {.tabset .tabset-fade .tabset-pills}
-<br>
 
-**Our spending patterns over the course of our relationship do show spending on brands and services that are generally well coordinated with the market (Betas > 1 below):**
+One interesting factor about our spending that corresponds to the overall market performance, is that some of our favorite brands move in line with the market, or in fact are even more volatile in the direction that the market moves, i.e. when the market goes up, our brands go up even more (Betas \> 1)
 
 #### Our<br>Brands {.tabset .tabset-fade .tabset-pills}
 
 ```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
+
+
+betas <- betas %>% 
+  filter(Ticker != "MTCH")
+
 betas_out <- betas %>% 
   filter(Ticker != "SPY") %>% 
   anti_join(sp500_betas, by = "Ticker") %>% 
@@ -1282,7 +1281,8 @@ betas_table <- betas %>%
   mutate(Ticker = ifelse(Ticker %in% sp500_betas$Ticker, Ticker, paste0(Ticker, "*")),
          Ticker = ifelse(Ticker == "SPY*", "SPY", Ticker), 
          `Asset Name` = ifelse(`Asset Name` == "S&P 500", "S&P 500 (Reference)", `Asset Name`)) %>% 
-  rename(Company = "Asset Name")
+  rename(Company = "Asset Name") %>% 
+  filter(Ticker != "MTCH")
 
 #betas_table %>% 
 #  kbl(align = "c", escape = TRUE) %>% 
@@ -1292,7 +1292,7 @@ betas_table <- betas %>%
 
 
 
-datatable(betas_table, escape = FALSE, rownames = FALSE, options = list(pageLength = length(betas_table$Company)),
+datatable(betas_table, escape = FALSE, rownames = FALSE, options = list(pageLength = length(betas_table$Company), paging = FALSE),
             caption = htmltools::tags$caption(
     style = 'caption-side: bottom; text-align: left;',
     ' Date Range: 2022-10-03 - 2024-09-20 | *Ticker not present in S&P 500')) %>% 
@@ -1305,12 +1305,13 @@ datatable(betas_table, escape = FALSE, rownames = FALSE, options = list(pageLeng
 
 ```
 
-**Our Brands compared to the S&P 500** 
+**In the chart below, we wanted to illustrate the overall distribution of S&P500 stocks by their Betas. Note, most of our favorite brands show beta above 1, and few such as Uber and Tinder (MTCH) are quite meaningful outlines**
 
 ```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
 
 betas_nosp <- betas_table %>% 
-  filter(Ticker != "SPY")
+  filter(Ticker != "SPY",
+         Ticker != "MTCH")
 
 
 sp500_betas_plus <- sp500_betas %>% 
@@ -1324,8 +1325,8 @@ sp500_betas_plus <- sp500_betas %>%
 
 p_sp500_betas <- ggplot(sp500_betas_plus, aes(x = Beta, fill = Ticker)) + 
   geom_histogram(bins = 40) + 
-  scale_fill_manual(values = c( "#ff9900", "#FF6A60", "#1fbad6", "#451400", "#007cba", "#104c8c", "#000000", "#87CEEB", "#006241", "#ef4a75", "grey", "blue")) +
-  geom_segment(aes(x= (mean(Beta[Ticker != "Other S&P 500 ticker"])), xend=   (mean(Beta[Ticker != "Other S&P 500 ticker"])), y=0, yend= 46 ), linewidth = .009, color = "deepskyblue") +
+  scale_fill_manual(values = c( "#ff9900", "#FF6A60", "#1fbad6", "#451400", "#007cba", "#104c8c", "#000000", "#87CEEB", "#006241",  "grey", "blue")) +
+  geom_segment(aes(x= (mean(Beta[Ticker != "Other S&P 500 ticker"])), xend=   (mean(Beta[Ticker != "Other S&P 500 ticker"])), y=43, yend= 49 ), linewidth = .009, color = "deepskyblue") +
   geom_point(aes(x = (mean(Beta[Ticker != "Other S&P 500 ticker"]))       , y = 46  ), size = 2.5, color = "deepskyblue", fill = "deepskyblue", shape = 16)  +
   labs(y = "") +
   scale_y_continuous(expand = c(0, 0, .14, 0)) +
@@ -1343,45 +1344,67 @@ ticker_hist <- ggplotly(p_sp500_betas, tooltip = c("count", "Ticker")) %>%
   style(hovertext = paste0("Company: ", betas_table$Company[8]  ,"\nTicker: ",  betas_table$Ticker[8] , "\nBeta: ", betas_table$Beta[8]  ), traces = 7  ) %>% 
   style(hovertext = paste0("Company: ", betas_table$Company[9]  ,"\nTicker: ",  betas_table$Ticker[9] , "\nBeta: ", betas_table$Beta[9]  ), traces = 8  ) %>% 
   style(hovertext = paste0("Company: ", betas_table$Company[10] ,"\nTicker: ",  betas_table$Ticker[10], "\nBeta: ", betas_table$Beta[10] ), traces = 9  ) %>% 
-  style(hovertext = paste0("Company: ", betas_table$Company[11] ,"\nTicker: ",  betas_table$Ticker[11], "\nBeta: ", betas_table$Beta[11] ), traces = 10 )  %>% 
-  style(hovertext = paste("Mean Beta of our companies:", (round(mean(sp500_betas_plus$Beta[sp500_betas_plus$Ticker != "Other S&P 500 ticker"]), 2))), traces = 23)
+#  style(hovertext = paste0("Company: ", betas_table$Company[11] ,"\nTicker: ",  betas_table$Ticker[11], "\nBeta: ", betas_table$Beta[11] ), traces = 10 )  %>% 
+  style(hovertext = paste("Average Beta of our companies:", (round(mean(sp500_betas_plus$Beta[sp500_betas_plus$Ticker != "Other S&P 500 ticker"]), 2))), traces = 21) %>% 
+    style(hoverinfo = "none", traces = 20)
 
 
 ticker_hist
 
 ```
-<sup>*Ticker not present in S&P 500</sup>
 
+<sup>\*Ticker not present in S&P 500</sup>
+
+
+
+**Tinder Chart**
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
+p_tindersp500 <- ggplot(tindersp500_long, aes(x = Date, y = `Month Over Month %Change`, color = Company)) + 
+  geom_hline(yintercept = 0, color = "black", alpha = .5, linetype='dotted') +
+  geom_line() +
+  scale_color_manual(values = c( "#000000", "#FD2B7B")) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
+  scale_x_date(date_labels="%b %Y",date_breaks  ="1 month") +
+  scale_y_continuous(labels = scales::percent_format()) + # , n.breaks = 20, limits = c(0, 14000)) +
+  labs(x = "", color = "") #+
+#  theme(legend.position="none") 
+
+plotly_tindersp500 <- ggplotly(p_tindersp500) %>% 
+  style(hoverinfo = "none", traces = 1)
+
+plotly_tindersp500 
+
+```
 
 
 **Customer Spending**
 
 ```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
 
-good_service <- ggplot(cus_spend_long, aes(x = `Month-Year`, y = `Total Customer Spending (Billions)`, color = `Spending Type` )) +
+ndgoods_service <- ggplot(cus_spend_ndgoods_service, aes(x = `Month-Year`, y = `Total Customer Spending (Billions)`, color = `Spending Type` )) +
   geom_line() +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
   scale_x_date(date_labels="%b %Y",date_breaks  ="1 month") +
-  scale_y_continuous(labels = scales::dollar_format(prefix="$"), n.breaks = 20, limits = c(0, 14000)) +
-  labs(x = "", y = "Total Customer Spending (Billions)") 
+  scale_y_continuous(labels = scales::dollar_format(prefix="$")) + # , n.breaks = 20, limits = c(0, 14000)) +
+  labs(x = "", y = "Total Customer Spending (Billions)") +
+  theme(legend.position="none") +
+  facet_wrap(~`Spending Type`, scales = "free_y") 
 
-good_service_plotly <- ggplotly(good_service) %>% 
-  layout(xaxis = list(autorange = FALSE), yaxis = list(autorange = TRUE)) %>% 
-    style(hovertext = paste0('Total Customer Spending (Billions): $', cus_spend_long$`Total Customer Spending (Billions)`[cus_spend_long$`Spending Type` == "Durable goods"], 
-                 '<br>Month-Year: ', format(as.Date(cus_spend_long$`Month-Year`[cus_spend_long$`Spending Type` == "Durable goods"]), "%B-%Y"),
-                 '<br>Spending Type: ', cus_spend_long$`Spending Type`[cus_spend_long$`Spending Type` == "Durable goods"]), traces = 1) %>% 
-    style(hovertext = paste0('Total Customer Spending (Billions): $', cus_spend_long$`Total Customer Spending (Billions)`[cus_spend_long$`Spending Type` == "Nondurable goods"], 
+ndgoods_service_plotly <- ggplotly(ndgoods_service) %>% 
+   layout(hovermode = 'x') %>%
+    style(hovertext = paste0('Total Customer Spending (Billions): $', cus_spend_long$`Total Customer Spending (Billions)`[cus_spend_long$`Spending Type` == "Nondurable oods"], 
                  '<br>Month-Year: ', format(as.Date(cus_spend_long$`Month-Year`[cus_spend_long$`Spending Type` == "Nondurable goods"]), "%B-%Y"),
-                 '<br>Spending Type: ', cus_spend_long$`Spending Type`[cus_spend_long$`Spending Type` == "Nondurable goods"]), traces = 2) %>% 
+                 '<br>Spending Type: ', cus_spend_long$`Spending Type`[cus_spend_long$`Spending Type` == "Nondurable goods"]), traces = 1) %>% 
     style(hovertext = paste0('Total Customer Spending (Billions): $', cus_spend_long$`Total Customer Spending (Billions)`[cus_spend_long$`Spending Type` == "Services"],
                  '<br>Month-Year: ', format(as.Date(cus_spend_long$`Month-Year`[cus_spend_long$`Spending Type` == "Services"]), "%B-%Y"),
-                 '<br>Spending Type: ', cus_spend_long$`Spending Type`[cus_spend_long$`Spending Type` == "Services"]), traces = 3) 
+                 '<br>Spending Type: ', cus_spend_long$`Spending Type`[cus_spend_long$`Spending Type` == "Services"]), traces = 2) 
 
-good_service_plotly 
+
+ndgoods_service_plotly
 ```
-<sup>*Click on the chart legend to show/hide any Spending Types. Y-axis will automatically readjust.*</sup>
-
 
 #### The S&P 500 Index Betas {.tabset .tabset-fade .tabset-pills}
 
@@ -1393,25 +1416,28 @@ datatable(sp500_betas, escape = FALSE, rownames = FALSE, options = list(pageLeng
   formatRound(c("Beta", "Standard Error"), digits = 2) 
 ```
 
-**Our Brands compared to the S&P 500** 
+**Our Brands compared to the S&P 500**
 
 ```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
 
 ticker_hist
 
 ```
-<sup>*Ticker not present in S&P 500</sup>
 
+<sup>\*Ticker not present in S&P 500</sup>
+
+**Tinder Chart**
+```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
+plotly_tindersp500 
+```
 
 **Customer Spending**
 
 ```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
-good_service_plotly 
+ndgoods_service_plotly
 ```
-<sup>*Click on the chart legend to show/hide any Spending Types. Y-axis will automatically readjust.*</sup>
 
-
-# &nbsp;
+#  
 
 <center><img src="KN.png" width="20%"/></center>
 
