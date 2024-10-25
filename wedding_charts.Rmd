@@ -1114,7 +1114,6 @@ ggplotly(sp500_graph) %>%
 #
 ```
 
-<center>![](sp500.jpg){width="50%"}</center>
 
 ## Deeper<br>Dive {.tabset .tabset-fade .tabset-pills}
 
@@ -1260,7 +1259,7 @@ ggPredict(model, se = TRUE,  interactive = TRUE, terms = c("n_texts", "Days_sinc
 
 ### CAPM<br>Betas {.tabset .tabset-fade .tabset-pills}
 
-One interesting factor about our spending that corresponds to the overall market performance, is that some of our favorite brands move in line with the market, or in fact are even more volatile in the direction that the market moves, i.e. when the market goes up, our brands go up even more (Betas \> 1)
+One interesting factor about our spending that corresponds to the overall market performance, is that some of our favorite brands move in line with the market, or in fact are even more volatile in the direction that the market moves, i.e. when the market goes up, our brands go up even more (Betas \> 1).
 
 #### Our<br>Brands {.tabset .tabset-fade .tabset-pills}
 
@@ -1305,7 +1304,7 @@ datatable(betas_table, escape = FALSE, rownames = FALSE, options = list(pageLeng
 
 ```
 
-**In the chart below, we wanted to illustrate the overall distribution of S&P500 stocks by their Betas. Note, most of our favorite brands show beta above 1, and few such as Uber and Tinder (MTCH) are quite meaningful outlines**
+**In the chart below, we wanted to illustrate the overall distribution of S&P500 stocks by their Betas. Note, most of our favorite brands show a beta above 1!**
 
 ```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
 
@@ -1356,8 +1355,7 @@ ticker_hist
 <sup>\*Ticker not present in S&P 500</sup>
 
 
-
-**Tinder Chart**
+**However, our special mention goes to Match Group Inc. with a whooping beta of 2.29! After all, if not for its Tinder brand we would not be here today. The graph below illustrates how small changes in the market coincide in outsized movements in Tinder's share price.** 
 
 ```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
 p_tindersp500 <- ggplot(tindersp500_long, aes(x = Date, y = `Month Over Month %Change`, color = Company)) + 
@@ -1379,7 +1377,39 @@ plotly_tindersp500
 ```
 
 
-**Customer Spending**
+
+
+#### The S&P 500 Index Betas {.tabset .tabset-fade .tabset-pills}
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
+datatable(sp500_betas, escape = FALSE, rownames = FALSE, options = list(pageLength = length(betas_table$Company)),
+            caption = htmltools::tags$caption(
+    style = 'caption-side: bottom; text-align: left;',
+    'Date Range: 2022-10-03 - 2024-09-20 | Note: GEV, KVUE, GEHC, VLTO, SW, & SOLV removed due to missing data in date range')  ) %>% 
+  formatRound(c("Beta", "Standard Error"), digits = 2) 
+```
+
+**In the chart below, we wanted to illustrate the overall distribution of S&P500 stocks by their Betas. Note, most of our favorite brands show a beta above 1!**
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
+
+ticker_hist
+
+```
+
+<sup>\*Ticker not present in S&P 500</sup>
+
+
+
+**However, our special mention goes to Match Group Inc. with a whooping beta of 2.29! After all, if not for its Tinder brand we would not be here today. The graph below illustrates how small changes in the market coincide in outsized movements in Tinder's share price.** 
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
+plotly_tindersp500 
+```
+
+### Macro Spending Trends {.tabset .tabset-fade .tabset-pills}
+
+**Another explanation to the correlation between our relationship and the overall market could be that the early days of our relationship coincided with a broader increase in discretionary spending in the US. As seen in the charts below, everyone in the US has increased spending on nondurable goods and on services since we first met.**
 
 ```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
 
@@ -1405,37 +1435,7 @@ ndgoods_service_plotly <- ggplotly(ndgoods_service) %>%
 
 ndgoods_service_plotly
 ```
-
-#### The S&P 500 Index Betas {.tabset .tabset-fade .tabset-pills}
-
-```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
-datatable(sp500_betas, escape = FALSE, rownames = FALSE, options = list(pageLength = length(betas_table$Company)),
-            caption = htmltools::tags$caption(
-    style = 'caption-side: bottom; text-align: left;',
-    'Date Range: 2022-10-03 - 2024-09-20 | Note: GEV, KVUE, GEHC, VLTO, SW, & SOLV removed due to missing data in date range')  ) %>% 
-  formatRound(c("Beta", "Standard Error"), digits = 2) 
-```
-
-**Our Brands compared to the S&P 500**
-
-```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
-
-ticker_hist
-
-```
-
-<sup>\*Ticker not present in S&P 500</sup>
-
-**Tinder Chart**
-```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
-plotly_tindersp500 
-```
-
-**Customer Spending**
-
-```{r, message = FALSE, warning = FALSE, echo = FALSE,  out.height= "100%", out.width = "100%"}
-ndgoods_service_plotly
-```
+<sup>Source: U.S. Bureau of Economic Analysis</sup>
 
 #  
 
