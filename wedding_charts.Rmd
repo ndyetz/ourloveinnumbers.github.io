@@ -857,8 +857,6 @@ Take a look at how awesome our local ski resort is. We love Mt. Hood Meadows!
 
 
 
-<sup>*Hover over each box to see what percentage we spend on each category*</sup>
-
 ### Our Individual Spending Habits {.tabset .tabset-fade .tabset-pills}
 
 **Karina likes to buy things and and stay at AirBNBs. Activities and subscriptions also add up quite a bit.**
@@ -932,6 +930,9 @@ plot_ly(
   layout(title= list(text = ""))
 
 ```
+
+<sup>*Hover over each box to see what percentage we spend on each category.*</sup>
+
 
 ## Market<br>Comparisons {.tabset .tabset-fade .tabset-pills}
 
@@ -1425,7 +1426,7 @@ ndgoods_service <- ggplot(cus_spend_ndgoods_service, aes(x = `Month-Year`, y = `
 
 ndgoods_service_plotly <- ggplotly(ndgoods_service) %>% 
    layout(hovermode = 'x') %>%
-    style(hovertext = paste0('Total Customer Spending (Billions): $', cus_spend_long$`Total Customer Spending (Billions)`[cus_spend_long$`Spending Type` == "Nondurable oods"], 
+    style(hovertext = paste0('Total Customer Spending (Billions): $', cus_spend_long$`Total Customer Spending (Billions)`[cus_spend_long$`Spending Type` == "Nondurable goods"], 
                  '<br>Month-Year: ', format(as.Date(cus_spend_long$`Month-Year`[cus_spend_long$`Spending Type` == "Nondurable goods"]), "%B-%Y"),
                  '<br>Spending Type: ', cus_spend_long$`Spending Type`[cus_spend_long$`Spending Type` == "Nondurable goods"]), traces = 1) %>% 
     style(hovertext = paste0('Total Customer Spending (Billions): $', cus_spend_long$`Total Customer Spending (Billions)`[cus_spend_long$`Spending Type` == "Services"],
