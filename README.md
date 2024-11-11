@@ -3,7 +3,7 @@
 This repository stores all code used to create a website containing fun charts that help to illustrate our relationship. We utilized R and R-markdown to create the website. The main goal of this project was to create a website that showed off trends in my fiancee (to be my wife on August 2nd!) and my relationship. We had a lot of fun making it and I will detail some of the components below.
 
 ## Link to the website
-**However, to start, the live website is available here: https://ndyetz.github.io/ourloveinnumbers.github.io/**
+The live website is available here: https://ndyetz.github.io/ourloveinnumbers.github.io/
 
 # Information on each of the website's tabs
 
